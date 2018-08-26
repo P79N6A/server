@@ -1,6 +1,14 @@
 class WebResource
   module POSIX
 
+    # FIND(1)
+    def find p
+      (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 2048`.lines.map{|pth|POSIX.path pth.chomp} : []
+    end
+
+    # GLOB(7)
+    def glob; (Pathname.glob localPath).map &:R end
+
     # WebResource -> file(s)
     def selectNodes
       (if directory?

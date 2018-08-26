@@ -8,7 +8,7 @@ class WebResource
       abbr = env['q'].has_key? 'h'
       [{class: :msg,
         c: [([msg[Date].map{|d|
-                Markup[Date][d,env,11]},
+                Markup[Date][d,env]},
               {class: :creator,
                c: msg[Creator].map{|c|
                  Markup[Creator][c,env,msg.uri]}}, ' ',

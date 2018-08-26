@@ -42,8 +42,9 @@ class WebResource
     end
 
     def exist?; node.exist? end
-    def symlink?; node.symlink? end
     alias_method :e, :exist?
+
+    def symlink?; node.symlink? end
 
     def children; node.children.delete_if{|f|
         f.basename.to_s.index('.')==0
@@ -57,14 +58,6 @@ class WebResource
 
     # storage usage count
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
-
-    # FIND
-    def find p
-      (p && !p.empty?) ? `find #{sh} -ipath #{('*'+p+'*').sh} | head -n 2048`.lines.map{|pth|POSIX.path pth.chomp} : []
-    end
-
-    # GLOB
-    def glob; (Pathname.glob localPath).map &:R end
 
     # create container
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
