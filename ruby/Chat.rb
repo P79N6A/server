@@ -33,7 +33,7 @@ class WebResource
                    end
         location.filesResponse
       else
-        re.filesResponse R[Twitter + re.path].indexTweets
+        re.filesResponse R[Twitter + re.path + re.qs].indexTweets
       end}
 
   end
@@ -74,15 +74,11 @@ class WebResource
       # visit tweets
       graph.map{|u,r|
         r[Date].do{|t|
-          # find storage location
+          # map storage location
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "/#{time}#{slug}.e".R
-          # cache tweet
-          unless doc.e
-            puts u
-            doc.writeFile({u => r}.to_json)
-          end
+          doc.writeFile({u => r}.to_json) unless doc.e # update cache
           tweets << doc}}
       tweets
     end
