@@ -23,35 +23,39 @@ class WebResource
       FileUtils.ln_s node.expand_path, n.node.expand_path
     end
 
-    # read file at location
     def readFile; File.open(localPath).read end
 
-    # write file at location
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
 
-    # touch mapped node
     def touch
       dir.mkdir
       FileUtils.touch localPath
     end
 
-    # erase mapped node
+    def size; node.size rescue 0 end
+
+    def mtime; node.stat.mtime end
+    alias_method :m, :mtime
+
     def delete
       node.delete
     end
 
-    # contained children, minus hidden
+    def exist?; node.exist? end
+    def symlink?; node.symlink? end
+    alias_method :e, :exist?
+
     def children; node.children.delete_if{|f|
         f.basename.to_s.index('.')==0
       }.map &:R end
 
-    # dirname as resource reference
+    # dirname (resource reference)
     def dir; dirname.R if path end
 
-    # dirname as string
+    # dirname (string)
     def dirname; File.dirname path if path end
 
-    # storage-space usage
+    # storage usage count
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
 
     # FIND
@@ -62,25 +66,13 @@ class WebResource
     # GLOB
     def glob; (Pathname.glob localPath).map &:R end
 
-    # existence check on mapped fs-node
-    def exist?; node.exist? end
-    def symlink?; node.symlink? end
-    alias_method :e, :exist?
-
     # create container
     def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
 
-    # size of mapped node
-    def size; node.size rescue 0 end
-
-    # mtime of mapped node
-    def mtime; node.stat.mtime end
-    alias_method :m, :mtime
-
-    # storage path -> URI
+    # fs-path -> URI
     def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end
 
-    # URI -> storage path
+    # URI -> fs-path
     def localPath; @path ||= (URI.unescape(path[0]=='/' ? '.' + path : path)) end
 
     # Pathname
