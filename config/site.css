@@ -8,7 +8,7 @@
 body {font-family: sans-serif;margin: 0 2em 0 2em;background-color:#000;color: #fff}
 h1,h2,h3,h4,h5,h6 {background-color: white; color: black; display: inline-block; margin: 0;vertical-align:top}
 a    {text-decoration: none; font-weight: bold; background-color: white; color: black}
-a.date {float: right; font-weight: normal; font-size:.8em; background-color: #333; color: #cfcfcf}
+a.date {float: right; font-weight: normal; font-size:.8em; background-color: #000; color: #ccc}
 a.link {background-color: #bbb; color: #000}
 img, td, a {max-width: 100%; overflow: hidden; vertical-align:top}
 img.thumb, a {max-width: 28em}

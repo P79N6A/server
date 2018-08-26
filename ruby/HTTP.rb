@@ -7,7 +7,14 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
-      puts (method == 'GET' ? ' ' : '') + method + " \e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m\t<- \e[36;1m" + (env['HTTP_REFERER']||'') + "\e[0m"
+      referer = env['HTTP_REFERER']
+      referrer = if referer
+                   r = referer.R
+                   " \e[36;1m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                 else
+                   ' '
+                 end
+      puts (method == 'GET' ? ' ' : '') + method + referrer + "\e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m"
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
