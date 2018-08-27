@@ -32,7 +32,7 @@ class WebResource
           graph[r] = {'uri' => r , Type => R[Resource]}}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       elsif re.parts[0].match /^\d\d\d\d$/
-        # date glob
+        # glob local datetime-index
         glob = '*twitter.com*'
         location = if re.basename == glob
                      re
@@ -41,7 +41,7 @@ class WebResource
                    end
         location.filesResponse
       else
-        # generic tweet handler
+        # tweet  caching/RDFize
         re.filesResponse R[Twitter + re.path + re.qs].indexTweets
       end}
 
