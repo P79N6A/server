@@ -133,11 +133,13 @@ ads.*
 *.cloudflare.com
 *.cloudfront.net
 *.cloudinary.com
+*.club
 *.cnbc.com
 *.cnbcfm.com
 *.cnevids.com
 *.cnn.com
 *.co
+*.comodo.com
 *.comodo.net
 *.company-target.com
 *.compendium.com
@@ -292,6 +294,7 @@ connectignite.com
 *.i10c.net
 *.ic-live.com
 *.idealmedia.com
+*.iesnare.com
 *.iframe.ly
 *.iglobalstores.com
 *.iheart.com
@@ -304,6 +307,7 @@ connectignite.com
 *.inquisitr.com
 *.innity.net
 *.insightexpressai.com
+*.insigit.com
 *.instagram.com
 *.instinctiveads.com
 *.intellitxt.com
@@ -541,6 +545,7 @@ connectignite.com
 *.sinaimg.cn
 *.sinajs.cn
 *.sinclairstoryline.com
+*.site
 *.sitelock.com
 *.sitescout.com
 *.sitewit.com
@@ -738,6 +743,7 @@ pitchfork.com
 po.st
 polldaddy.com
 profitrumour.com
+retargetcore.com
 ritogaga.com
 rpxnow.com
 sc-static.net
