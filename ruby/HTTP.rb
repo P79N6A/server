@@ -10,11 +10,11 @@ class WebResource
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
-                   " \e[36;1m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                   " \e[36;1m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m ❱ "
                  else
                    ' '
                  end
-      puts (method == 'GET' ? ' ' : '') + method + referrer + "\e[32;1m" + (env['HTTP_HOST']||'') + "\e[2m" + env['REQUEST_PATH'] + "\e[0m"
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + (env['HTTP_HOST']||'') + "\e[0m" + env['REQUEST_PATH']
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
