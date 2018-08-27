@@ -24,7 +24,13 @@ class WebResource
   module HTTP
 
     Host['twitter.com'] = Host['www.twitter.com'] = -> re {
-      if re.parts[0].match /^\d\d\d\d$/ # date index
+      if re.path == '/'
+        graph = {}
+        open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+          r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+          graph[r] = {'uri' => r , Type => R[Resource]}}
+        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
+      elsif re.parts[0].match /^\d\d\d\d$/ # date index
         glob = '*twitter.com*'
         location = if re.basename == glob
                      re
@@ -38,12 +44,6 @@ class WebResource
 
   end
   module Webize
-
-    def twitter
-      open(localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-        readURI = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-        readURI.R.indexTweets}
-    end
 
     def fetchTweets
       nokogiri.css('div.tweet > div.content').map{|t|
