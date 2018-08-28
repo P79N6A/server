@@ -116,6 +116,7 @@ ads.*
 *.cbsnews.com
 *.ccgateway.net
 *.cdnjquery.com
+cdn.*
 *.cedexis-test.com
 *.cedexis.com
 *.cfigroup.com
@@ -744,6 +745,7 @@ pitchfork.com
 po.st
 polldaddy.com
 profitrumour.com
+putjs.com
 retargetcore.com
 ritogaga.com
 rpxnow.com
