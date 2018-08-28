@@ -140,6 +140,7 @@ cdn.*
 *.cnevids.com
 *.cnn.com
 *.co
+*.communityq.com
 *.comodo.com
 *.comodo.net
 *.company-target.com
@@ -163,6 +164,7 @@ connectignite.com
 *.crashlytics.com
 *.crazyegg.com
 *.createsend1.com
+*.crsspxl.com
 *.criteo.com
 *.criteo.net
 *.crosno.net
@@ -238,6 +240,7 @@ connectignite.com
 *.footprint.net
 *.foxnews.com
 *.fqtag.com
+*.freelancer.com
 *.france24.com
 *.franklyinc.com
 *.fwmrm.net
@@ -320,6 +323,8 @@ geoip.*
 *.internetbrands.com
 *.intgr.net
 *.investingchannel.com
+issuu.com
+*.issuu.com
 *.io
 *.ioam.de
 *.ionicframework.com
@@ -339,6 +344,8 @@ geoip.*
 *.kampyle.com
 *.kapamilya.com
 *.kargo.com
+*.kck.st
+*.kickstarter.com
 *.kinja-img.com
 *.kinja-static.com
 *.kissmetrics.com
@@ -378,6 +385,7 @@ geoip.*
 *.mdpcdn.com
 *.media
 *.media.net
+*.media-amazon.com
 *.mediavoice.com
 *.mediawallahscript.com
 *.mequoda.com
@@ -389,6 +397,8 @@ geoip.*
 *.miamiherald.com
 *.micpn.com
 *.microsoft.com
+*.mirabelanalytics.com
+*.mirabelsmarketingmanager.com
 *.mirs.com
 *.mktoresp.com
 *.mmtro.com
@@ -564,6 +574,7 @@ geoip.*
 *.spotxchange.com
 *.spoutable.com
 *.springboardplatform.com
+*.squarespace.com
 *.ssl-images-amazon.com
 *.sstatic.net
 *.stackadapt.com
@@ -665,6 +676,7 @@ geoip.*
 *.wistia.com
 *.wistia.net
 *.wixapps.net
+*.wix.com
 *.wordpress.com
 *.worldnow.com
 *.wp.com
