@@ -25,7 +25,7 @@ class WebResource
 
     Host['twitter.com'] = Host['www.twitter.com'] = -> re {
       if re.path == '/'
-        # follow list
+        # show follow list
         graph = {}
         open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
           r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
@@ -41,7 +41,7 @@ class WebResource
                    end
         location.filesResponse
       else
-        # tweet  caching/RDFize
+        # default caching and RDFizing passthrough
         re.filesResponse R[Twitter + re.path + re.qs].indexTweets
       end}
 
@@ -68,22 +68,23 @@ class WebResource
     end
 
     def indexTweets
+      newPosts = []
       graph = {}
-      tweets = []
       fetchTweets{|s,p,o|
         graph[s] ||= {'uri'=>s}
         graph[s][p] ||= []
         graph[s][p].push o}
-      # visit tweets
-      graph.map{|u,r|
+      graph.map{|u,r| # visit tweet resource
         r[Date].do{|t|
-          # map storage location
+          # find storage location
           slug = (u.sub(/https?/,'.').gsub(/\W/,'.')).gsub /\.+/,'.'
           time = t[0].to_s.gsub(/[-T]/,'/').sub(':','/').sub /(.00.00|Z)$/, ''
           doc = "/#{time}#{slug}.e".R
-          doc.writeFile({u => r}.to_json) unless doc.e # update cache
-          tweets << doc}}
-      tweets
+          if !doc.e # update cache
+            doc.writeFile({u => r}.to_json)
+            newPosts << doc
+          end}}
+      newPosts
     end
 
     def triplrChatLog &f
