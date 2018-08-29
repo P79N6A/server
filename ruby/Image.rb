@@ -5,7 +5,7 @@ class WebResource
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
   end
 
-  # TODO Dedupe video embeds within request
+  # TODO Dedupe video embeds within response representation
   module Webize
 
     def triplrImage &f

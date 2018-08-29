@@ -27,9 +27,13 @@ class WebResource
       if re.path == '/'
         # show follow list
         graph = {}
+        # shuffle account-names and assign to groups of 16
         open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+          # account-group URL
           r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+          # add group to graph
           graph[r] = {'uri' => r , Type => R[Resource]}}
+        # return graph
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       elsif re.parts[0].match /^\d\d\d\d$/
         # glob local datetime-index
