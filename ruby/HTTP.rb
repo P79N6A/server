@@ -36,11 +36,11 @@ class WebResource
     alias_method :env, :environment
 
     def HEAD
-      self.GET.do{| s, h, b|
-                 [  s, h,[]]} end
-    def OPTIONS; [200,{},[]]  end
-    def POST;    [202,{},[]]  end
-    def PUT;     [202,{},[]]  end
+     self.GET.do{| s, h, b|
+                 [ s, h, []] } end
+    def OPTIONS; [200,{},[]]   end
+    def POST;    [202,{},[]]   end
+    def PUT;     [202,{},[]]   end
 
     def GET
       @r[:Response] = {}
@@ -102,7 +102,7 @@ class WebResource
         # client has entity, tell it
         [304, {}, []]
       else # produce entity
-        # if entity-producing lambda supplied, call it. otherwise use file-reference for body
+        # entity-producing lambda or file-reference
         body = body ? body.call : self
         # Rack handles file-reference response
         if body.class == WebResource
