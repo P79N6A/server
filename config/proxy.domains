@@ -8,8 +8,6 @@
 *.abs-cbn.com
 *.abtasty.com
 *.accuweather.com
-ad.*
-ads.*
 *.ad
 *.adblade.com
 *.addroplet.com
@@ -116,7 +114,6 @@ ads.*
 *.cbsnews.com
 *.ccgateway.net
 *.cdnjquery.com
-cdn.*
 *.cedexis-test.com
 *.cedexis.com
 *.cfigroup.com
@@ -148,12 +145,11 @@ cdn.*
 *.condenastdigital.com
 *.connatix.com
 *.connectignite.com
-connectignite.com
-*.contentignite.com
 *.consensu.org
 *.consumable.com
 *.consumersource.com
 *.consumertrack.com
+*.contentignite.com
 *.contentinsights.com
 *.contextweb.com
 *.conviva.com
@@ -164,11 +160,11 @@ connectignite.com
 *.crashlytics.com
 *.crazyegg.com
 *.createsend1.com
-*.crsspxl.com
 *.criteo.com
 *.criteo.net
 *.crosno.net
 *.crowdynews.com
+*.crsspxl.com
 *.crwdcntrl.net
 *.custhelp.com
 *.cwkuki.com
@@ -240,16 +236,15 @@ connectignite.com
 *.footprint.net
 *.foxnews.com
 *.fqtag.com
-*.freelancer.com
 *.france24.com
 *.franklyinc.com
+*.freelancer.com
 *.fwmrm.net
 *.fxcompared.com
 *.gannett-cdn.com
 *.gannettdigital.com
 *.gatehousemedia.com
 *.gcion.com
-geoip.*
 *.getdrip.com
 *.getsentry.com
 *.gfx.ms
@@ -309,8 +304,8 @@ geoip.*
 *.imrworldwide.com
 *.indexww.com
 *.infowars.com
-*.inquisitr.com
 *.innity.net
+*.inquisitr.com
 *.insightexpressai.com
 *.insigit.com
 *.instagram.com
@@ -323,13 +318,12 @@ geoip.*
 *.internetbrands.com
 *.intgr.net
 *.investingchannel.com
-issuu.com
-*.issuu.com
 *.io
 *.ioam.de
 *.ionicframework.com
 *.iperceptions.com
 *.ipify.org
+*.issuu.com
 *.ivwbox.de
 *.izooto.com
 *.janrain.com
@@ -384,8 +378,8 @@ issuu.com
 *.mcclatchydc.com
 *.mdpcdn.com
 *.media
-*.media.net
 *.media-amazon.com
+*.media.net
 *.mediavoice.com
 *.mediawallahscript.com
 *.mequoda.com
@@ -435,6 +429,7 @@ issuu.com
 *.newsinc.com
 *.newsmaxfeednetwork.com
 *.newsvine.com
+*.newsweek.com
 *.newyorker.com
 *.nexac.com
 *.nexage.com
@@ -445,6 +440,7 @@ issuu.com
 *.nuggad.net
 *.nytimes.com
 *.oath.com
+*.oculu.com
 *.olark.com
 *.omnitagjs.com
 *.omniture.com
@@ -558,6 +554,7 @@ issuu.com
 *.sinajs.cn
 *.sinclairstoryline.com
 *.site
+*.siteimprove.com
 *.sitelock.com
 *.sitescout.com
 *.sitewit.com
@@ -598,6 +595,7 @@ issuu.com
 *.tacdn.com
 *.talkingpointsmemo.com
 *.tapad.com
+*.td563.com
 *.tealiumiq.com
 *.telerik.com
 *.tempestpremium.com
@@ -675,8 +673,8 @@ issuu.com
 *.wishabi.net
 *.wistia.com
 *.wistia.net
-*.wixapps.net
 *.wix.com
+*.wixapps.net
 *.wordpress.com
 *.worldnow.com
 *.wp.com
@@ -706,8 +704,10 @@ issuu.com
 *.zqtk.net
 absorbingband.com
 ad-delivery.net
+ad.*
 adadvisor.net
 adrta.com
+ads.*
 analytics.*
 app-measurement.com
 bit.ly
@@ -717,8 +717,10 @@ broaddoor.com
 browser-update.org
 bttrack.com
 buff.ly
+cdn.*
 cfl.re
 chimpstatic.com
+connectignite.com
 dailycaller.com
 dapxl.com
 disqus.com
@@ -727,6 +729,7 @@ dlvr.it
 et.nytimes.com
 exit.sc
 freegeoip.net
+geoip.*
 getrockerbox.com
 github.com
 globalnews.ca
@@ -736,6 +739,7 @@ google.com
 healte.de
 ift.tt
 imgur.com
+issuu.com
 justicejudo.com
 kinja.com
 l
@@ -764,6 +768,7 @@ rpxnow.com
 sc-static.net
 scrubswim.com
 shop.pe
+siteimproveanalytics.com
 snag.gy
 storify.com
 sumo.com
