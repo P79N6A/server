@@ -104,11 +104,11 @@ class WebResource
       else # produce entity
         # entity-producing lambda or file-reference
         body = body ? body.call : self
-        # Rack handles file-reference response
+        # dispatch to Rack for file-reference handling
         if body.class == WebResource
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
             [s,h.update(env[:Response]),b]}
-        else # inlined body data
+        else
           [(env[:Status]||200), env[:Response], [body]]
         end
       end

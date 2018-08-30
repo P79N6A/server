@@ -82,7 +82,7 @@ header, nav, footer {display: none}
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
 
-    # CDNs - remote Images, local CSS and JS
+    # populate local static-cache
     Host['*.amazonaws.com'] = Host['*.ssl-images-amazon.com'] = Host['*.cloudfront.net'] = Host['*.wordpress.com'] = -> re {
       case re.ext
       when 'css'
