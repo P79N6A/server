@@ -65,7 +65,6 @@ class WebResource
                         {_: :body,
                          c: ["\n",
                              link[:up, '&#9650;'],
-                             #({_: :a, id: :upgrade, class: :lock, href: 'https://'+@r['HTTP_HOST']+(path||'')} unless @r['rack.url_scheme'] == 'https'),
                              link[:prev, '&#9664;'],
                              link[:next, '&#9654;'],
                              if graph.empty?

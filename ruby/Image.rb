@@ -31,23 +31,23 @@ class WebResource
 
     #redirect to og:image linked in HTML metadata
     WrappedImage = -> re {
-      img = R['https://'+re.env['HTTP_HOST']+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
+      img = R['https://'+re.host+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
       loc = img.host ? ('https://' + img.host + img.path) : img.path
       [302,{'Location' => loc},[]]}
 
     CachedImage = -> re {
-      hash = (re.env['HTTP_HOST']+re.path).sha2
+      hash = (re.host+re.path).sha2
       file = R['/.cache/'+hash[0..2]+'/'+hash[3..-1] + '.' + re.ext]
     }
 
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
-      if !re.ext.empty? # image file
-        if 'i.imgur.com' == re.env['HTTP_HOST']
+      if !re.ext.empty?
+        if 'i.imgur.com' == re.host
           CachedImage[re]
         else
           [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
         end
-      else # web page
+      else
         WrappedImage[re]
       end}
 
@@ -56,7 +56,7 @@ class WebResource
         WrappedImage[re]
       else
         graph = {}
-        open('https://'+re.env['HTTP_HOST']+re.path).read.scan(/https:\/\/.*?jpg/){|f|
+        open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
           unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
             graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
           end}

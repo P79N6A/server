@@ -7,6 +7,10 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
+      host = env['HTTP_HOST'] || 'localhost'
+      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
+      path = Pathname.new(rawpath).expand_path.to_s
+      path += '/' if path[-1] != '/' && rawpath[-1] == '/'
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -14,12 +18,9 @@ class WebResource
                  else
                    ' '
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + (env['HTTP_HOST']||'') + "\e[0m" + env['REQUEST_PATH']
-      rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-      path = Pathname.new(rawpath).expand_path.to_s
-      path += '/' if path[-1] != '/' && rawpath[-1] == '/'
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
       env['q'] = parseQs env['QUERY_STRING']
-      path.R.environment(env).send method
+      R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
        method=='HEAD' ? [] : [[x.class,x.message,x.backtrace].join("\n")]]
@@ -47,10 +48,9 @@ class WebResource
       @r[:links] = {}
       return fileResponse if node.file?                                                        # static file
       return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # to current time-dir
-      hostname = @r['HTTP_HOST']                                                               # (hostname -> lambda) mapping
-      return Host[hostname][self] if Host[hostname]                                            #  hostname match
-      wildcard = hostname.split('.')[1..-1].unshift('*').join '.'                              #  wildcard subdomain match
-      return Host[wildcard][self] if Host[wildcard]
+      return Host[host][self] if Host[host]                                                    # hostname mapping
+      hosts = host.split('.')[1..-1].unshift('*').join '.'                                     # wildcard-subdomain mapping
+      return Host[hosts][self] if Host[hosts]
       filesResponse                                                                            # file-mapped resources
     end
 

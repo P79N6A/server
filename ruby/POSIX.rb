@@ -99,9 +99,6 @@ class WebResource
     # name suffix
     def ext; (File.extname uri)[1..-1] || '' end
 
-    # TLD of host
-    def tld; host && host.split('.')[-1] || '' end
-
     # SHA2 hashed URI
     def sha2; to_s.sha2 end
 

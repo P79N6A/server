@@ -70,11 +70,10 @@ class WebResource < RDF::URI
 
     # original URL on file at third-party - network lookup
     Short = -> re {
-      host = re.env['HTTP_HOST']
-      scheme = 'http' + (InsecureShorteners.member?(host) ? '' : 's') + '://'
-      source = scheme + host + re.path
+      scheme = 'http' + (InsecureShorteners.member?(re.host) ? '' : 's') + '://'
+      source = scheme + re.host + re.path
       dest = nil
-      cache = R['/.cache/' + host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
+      cache = R['/.cache/' + re.host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
       if cache.exist?
         dest = cache.readFile
       else
