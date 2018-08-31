@@ -2,12 +2,8 @@
 # IN is a proxy in front of the local daemon (aka 'reverse')
 # OUT is a proxy to inspect/log traffic heading to the internet
 
-# browser requests go OUT unless earmarked to IN with an entry in <../config/proxy.domains>
-# cache-oblivious apps also goes IN via routing rules. useful for inspecting hidden "phone home" traffic
-
-# other scripts:
-# 'proxyhosts' to output hosts-pattern for environment var NO_PROXY or paste into OS-managed proxy config
-# 'browse' to launch a browser configured with 'proxyhosts' output
+# requests with special handling go to IN, being tossed from default OUT path, see <../config/proxy.domains> entries
+# as the routing rules apply to all non-proxy uids you may see plenty of hidden "phone home" traffic depending on how much crapware is installed
 
 # initialize session
 tmux new-session -s web -d -c ~/web
