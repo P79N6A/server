@@ -7,7 +7,8 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
-      host = env['HTTP_HOST'] || 'localhost'
+      env['q'] = parseQs env['QUERY_STRING']
+      host = env['q']['host'] || env['HTTP_HOST'] || 'localhost'
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
@@ -19,7 +20,6 @@ class WebResource
                    ' '
                  end
       puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
-      env['q'] = parseQs env['QUERY_STRING']
       R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
@@ -46,12 +46,12 @@ class WebResource
     def GET
       @r[:Response] = {}
       @r[:links] = {}
-      return fileResponse if node.file?                                                        # static file
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # to current time-dir
-      return Host[host][self] if Host[host]                                                    # hostname mapping
-      hosts = host.split('.')[1..-1].unshift('*').join '.'                                     # wildcard-subdomain mapping
+      return fileResponse if node.file?                    # static file
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # time-dir
+      return Host[host][self] if Host[host]                # hostname lambda
+      hosts = host.split('.')[1..-1].unshift('*').join '.' # wildcard-subdomain lambda
       return Host[hosts][self] if Host[hosts]
-      filesResponse                                                                            # file-mapped resources
+      filesResponse                                        # static files
     end
 
     def fileResponse
