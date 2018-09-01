@@ -1,14 +1,12 @@
 #!/bin/sh
 # IN is a proxy in front of the local daemon (aka 'reverse')
-# OUT is a proxy to inspect/log traffic heading to the internet
-
-# requests with special handling go to IN, being tossed from default OUT path, see <../config/proxy.domains> entries
-# as the routing rules apply to all non-proxy uids you may see plenty of hidden "phone home" traffic depending on how much crapware is installed
+# OUT is a proxy to inspect/log traffic heading to internet
+# requests with our handling go to IN, tossed from default OUT path via proxy-exception list, see <../config/proxy.domains>
 
 # initialize session
 tmux new-session -s web -d -c ~/web
 
-# configure routing
+# configure routing. default HTTP/HTTPS ports to IN proxy
 proxy_uid=$(id -u)
 routeconfig=$(realpath ~/src/pw/sh/routes)
 su -c "sh $routeconfig $proxy_uid"
