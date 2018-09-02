@@ -1,7 +1,8 @@
 # coding: utf-8
 class WebResource
   module HTTP
-    Methods = %w{HEAD GET OPTIONS POST PUT}
+#    Methods = %w{HEAD GET OPTIONS POST PUT}
+    Methods = %w{HEAD GET OPTIONS}
     include URIs
 
     def self.call env
