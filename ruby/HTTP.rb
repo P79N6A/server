@@ -9,9 +9,11 @@ class WebResource
       return [405,{},[]] unless Methods.member? method
       env['q'] = parseQs env['QUERY_STRING']
       host = env['q']['host'] || env['HTTP_HOST'] || 'localhost'
+
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
+
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -19,7 +21,7 @@ class WebResource
                  else
                    ' '
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path + ' ' + env['REMOTE_ADDR']
       R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
