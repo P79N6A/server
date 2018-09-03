@@ -1,12 +1,30 @@
 #!/bin/sh
-# IN is a proxy in front of the local daemon (aka 'reverse')
-# OUT is a proxy to inspect/log traffic heading to internet
-# requests with our handling go to IN, tossed from default OUT path via proxy-exception list, see <../config/proxy.domains>
+# run <daemons> once on boot or login
+# run <browse> for usage sessions
 
-# initialize session
+# HOW it works:
+# IN  requests arrive at the local daemon (reverse proxied to custom handler)
+# OUT requests go out to internet unchanged (basic inspection/logging only)
+# <proxyhosts> turns <proxy.domains> into OS proxy skiplist
+# routing rules send proxy-bypassing traffic to IN (where code is free to send OUT but you get a chance to rewrite anything first)
+# so you may also discover traffic you didn't know about. mainly mobile-apps devious or lazy in ignoring OS proxy settings
+
+#NOTES
+# - legacy non-sandboxing OS users should DIY uid-separation by making a user, say 'web' or 'proxy', to run this
+#   the OS needs to be able to differentiate traffic from the proxy vs traffic to be directed into the proxy
+#   actual name and UID doesn't matter, it's figured out on the fly with 'id -u' below. systemd can mint one on the fly
+# - this is minimally paranoid setup, requests go OUT by default. if you want to maximize, flip it so requests to IN by default:
+#   daemon or reverse-proxy on port 8080, and block all outgoing but but 80/443 from proxy UID
+
+#ENVIRONMENT
+# set DATAPEER to user@host if using multiple devices. typically use a basic star topology here but get NNTP-ish if you want
+# no_proxy/NO_PROXY is set automatically by <browse> run <proxyhosts> to see current value or for pasting into OS/Browser config on OSes which make you use a GUI to set environment variables
+# http_proxy/https_proxy is OS outgoing proxy preference not assumed to be ours so change it to whatever you want. mitmproxy on default gateway, squid or varnish for caching. it could of course point to us though, such as in PARANOID MODE
+
+# initialize attachable console
 tmux new-session -s web -d -c ~/web
 
-# configure routing. default HTTP/HTTPS ports to IN proxy
+# route traffic on default HTTP/HTTPS ports to IN proxy
 proxy_uid=$(id -u)
 routeconfig=$(realpath ~/src/pw/sh/routes)
 su -c "sh $routeconfig $proxy_uid"
