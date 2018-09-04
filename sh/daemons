@@ -2,12 +2,11 @@
 # run <daemons> once on boot or login
 # run <browse> for usage sessions
 
-# HOW it works:
-# IN  requests arrive at the local daemon (reverse proxied to custom handler)
-# OUT requests go out to internet unchanged (basic inspection/logging only)
+#BASICS
+# rewrite the web at request-time to make it suck less
+# most requests go out to internet unchanged (basic inspection/logging only)
 # <proxyhosts> turns <proxy.domains> into OS proxy skiplist
-# routing rules send proxy-bypassing traffic to IN (where code is free to send OUT but you get a chance to rewrite anything first)
-# so you may also discover traffic you didn't know about. mainly mobile-apps devious or lazy in ignoring OS proxy settings
+# routing rules send un-proxied traffic to local daemon
 
 #NOTES
 # - legacy non-sandboxing OS users should DIY uid-separation by making a user, say 'web' or 'proxy', to run this
@@ -29,13 +28,13 @@ proxy_uid=$(id -u)
 routeconfig=$(realpath ~/src/pw/sh/routes)
 su -c "sh $routeconfig $proxy_uid"
 
-# start daemon
+# daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 -o localhost .conf/rack.ru' C-m
 
-# HTTP (IN)
+# add HTTPS support to local daemon
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# HTTP (OUT)
+# outgoing proxy
 tmux new-window -t web:2 -d mitmdump
 
 # database synchronization
