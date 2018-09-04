@@ -4,7 +4,7 @@
 
 #BASICS
 # rewrite the web at request-time to make it suck less
-# most requests go out to internet unchanged (basic inspection/logging only)
+# main proxy is for basic inspection/logging only
 # <proxyhosts> turns <proxy.domains> into OS proxy skiplist
 # routing rules send un-proxied traffic to local daemon
 
@@ -12,8 +12,7 @@
 # - legacy non-sandboxing OS users should DIY uid-separation by making a user, say 'web' or 'proxy', to run this
 #   the OS needs to be able to differentiate traffic from the proxy vs traffic to be directed into the proxy
 #   actual name and UID doesn't matter, it's figured out on the fly with 'id -u' below. systemd can mint one on the fly
-# - this is minimally paranoid setup, requests go OUT by default. if you want to maximize, flip it so requests to IN by default:
-#   daemon or reverse-proxy on port 8080, and block all outgoing but but 80/443 from proxy UID
+# - requests allowed by default. put a reverse-proxy to the local daemon on default proxy port (8080) for complete coverage
 
 #ENVIRONMENT
 # set DATAPEER to user@host if using multiple devices. typically use a basic star topology here but get NNTP-ish if you want
