@@ -322,7 +322,11 @@ http://www.tangleblog.com/comments/feed/
 http://www.redflamezmedia.com/feed/
 http://boston.cbslocal.com/feed/
 http://www.bostonherald.com/taxonomy/term/4/feed
-https://worcestermag.com/feed
+http://www.worcestermag.com/section/?template=tout-video-rss&mime=xml
+http://www.worcestermag.com/section/?template=rss_photos&mime=xml
+http://www.worcestermag.com/opinion?template=rss&mime=xml
+http://www.worcestermag.com/culture?template=rss&mime=xml
+http://www.worcestermag.com/news?template=rss&mime=xml
 http://southbostononline.com/feed/
 https://willbrownsberger.com/feed/
 http://bostonrealestatetimes.com/feed/
