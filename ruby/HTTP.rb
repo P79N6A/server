@@ -155,14 +155,11 @@ class WebResource
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
     end
 
-    # environment -> ?querystring
+    # environment -> query String
     def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
-    # environment | URI -> ?querystring -> Hash
-    def q fromEnv = true
-      fromEnv ? @r['q'] : HTTP.parseQs(query)
-    end
-    # ?querystring -> Hash
-    def self.parseQs qs
+
+    # query String -> query Hash
+    def HTTP.parseQs qs
       if qs
         h = {}
         qs.split(/&/).map{|e|
@@ -173,8 +170,14 @@ class WebResource
         {}
       end
     end
-    # Hash -> ?querystring
+
+    # query Hash -> query String
     def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
+
+    # environment or URI -> query Hash
+    def q fromEnv = true
+      fromEnv ? @r['q'] : HTTP.parseQs(query)
+    end
 
   end
   include HTTP
