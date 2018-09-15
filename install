@@ -1,18 +1,19 @@
 #!/bin/sh
 
-# package dependencies
-#Termux
+# system package dependencies. detect Termux and Debian via extant package-tools in $PATH. TODO Gentoo etc.
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
-#Debian. termux has apt-get so check for a util it didn't include
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
+#which emerge &&
 
-# Ruby dependencies
+# Ruby library dependencies
 gem install bundler
 cd ruby
 bundle install
-ruby install # live unpackaged symlink of source. still no releases after 12 years..
+ruby install # link source-dir into Ruby library-dir
+#TODO use env-vars and remove this step since some distros have weird frankenperms thing where user gems try to install ito system dirs and ask for root and this won't be user-writeable. works as root and on Termux and user-sandboxed ruby-library configged distros, increasingly common, as is
 
-# Python dependencies
+# Python library dependencies
+pip3 install --upgrade pip
 pip3 install --upgrade mitmproxy pygments
 
 # certificate
