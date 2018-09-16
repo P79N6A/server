@@ -1,0 +1,6 @@
+#!/system/bin/sh
+
+# route HTTP traffic to proxy
+
+iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000
+ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000
