@@ -10,7 +10,7 @@ gem install bundler
 cd ruby
 bundle install
 ruby install # link source-dir into Ruby library-dir
-#TODO use env-vars and remove this step since some distros have weird frankenperms thing where user gems try to install ito system dirs and ask for root and this won't be user-writeable. works as root and on Termux and user-sandboxed ruby-library configged distros, increasingly common, as is
+#TODO use env-vars for 0install as some distros have user gems try to install into system dirs and ask for root and this won't be user-writeable. (works on Termux and user-sandboxed ruby-library configged distros, currently. set GEM_HOME and RUBY_PATH celsewhere)
 
 # Python library dependencies
 pip3 install --upgrade pip
