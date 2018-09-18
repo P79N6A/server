@@ -13,8 +13,8 @@ tmux new-session -s web -d -c ~/web
 
 # route HTTP/HTTPS traffic from config-oblivious apps to proxy
 proxy_uid=$(id -u)
-routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
-routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
+routeHTTP=$(realpath ~/src/pw/sh/routeHTTP) # remove s from URI scheme for proxy handling
+#routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
 su -c "sh $routeHTTP $proxy_uid"
 su -c "sh $routeHTTPS $proxy_uid"
 

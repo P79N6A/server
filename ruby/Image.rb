@@ -36,8 +36,9 @@ class WebResource
       [302,{'Location' => loc},[]]}
 
     CachedImage = -> re {
-      hash = (re.host+re.path).sha2
+      hash = (re.host + re.path + re.qs).sha2
       file = R['/.cache/'+hash[0..2]+'/'+hash[3..-1] + '.' + re.ext]
+
     }
 
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
