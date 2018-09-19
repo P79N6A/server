@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# system package dependencies. detect Termux and Debian via extant package-tools in $PATH. TODO Gentoo etc.
+# system package dependencies. detect Termux and Debian via extant package-tools in $PATH
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
 #which emerge &&
@@ -9,8 +9,8 @@ which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev gre
 gem install bundler
 cd ruby
 bundle install
-ruby install # link source-dir into Ruby library-dir
-#TODO use env-vars for 0install as some distros have user gems try to install into system dirs and ask for root and this won't be user-writeable. (works on Termux and user-sandboxed ruby-library configged distros, currently. set GEM_HOME and RUBY_PATH celsewhere)
+ruby install # link source-dir into Ruby libdir
+#TODO use env-vars instead of filesystem link to add to libdir
 
 # Python library dependencies
 pip3 install --upgrade pip

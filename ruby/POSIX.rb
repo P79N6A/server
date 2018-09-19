@@ -46,9 +46,14 @@ class WebResource
 
     def symlink?; node.symlink? end
 
-    def children; node.children.delete_if{|f|
+    def children
+      node.children.delete_if{|f|
         f.basename.to_s.index('.')==0
-      }.map &:R end
+      }.map &:R
+    rescue Errno::EACCES
+      puts "access error for #{path}"
+      []
+    end
 
     # dirname (resource reference)
     def dir; dirname.R if path end

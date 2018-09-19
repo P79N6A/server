@@ -10,7 +10,7 @@
 tmux new-session -s web -d -c ~/web
 
 # start local daemon
-tmux send-keys -t web:0 'unicorn -N -p 8000 -o localhost .conf/rack.ru' C-m
+tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
 # selectively route HTTP/HTTPS traffic to proxy
 proxy_uid=$(id -u)
