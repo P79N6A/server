@@ -1,10 +1,7 @@
 #!/bin/sh
 # DAEMONS run on boot or login to enable request-time web rewriting
-#NOTES
-# - non-sandboxing OS users (on Android+Termux user-agent and proxy are already separate UID) should DIY uid-separation by making a user, say 'web' or 'proxy' (name/UID doesn't matter, it's bound on the fly),
-#  so OS can differentiate traffic from the proxy vs traffic to be captured for proxy handling.
-# - set DATAPEER to user@host for watch+rsync db sync in star or mesh topology, or comment out and setup synthing/Ceph/AFS on your own 
-# - swap 8080 and 8888 proxy ports for hostlist as opt-out instead of opt-in
+# - non-sandboxed users (on Android/Termux/snap browser and proxy are already separate UIDs) must create a user for this script and its daemons (so outgoing HTTP/HTTPS can be allowed for its UID)
+# - set DATAPEER to user@host for basic watch+rsync db peering, or comment out and setup synthing/Ceph/AFS on your own
 
 # initialize controlling console
 tmux new-session -s web -d -c ~/web
@@ -12,19 +9,21 @@ tmux new-session -s web -d -c ~/web
 # start local daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
-# selectively route HTTP/HTTPS traffic to proxy
+# selectively route HTTP+HTTPS traffic to local daemon
+# 0 apps oblivious to system proxy using unproxied HTTP port.  (80 -> 8000 mapping)
+# 1 apps oblivious to system proxy using unproxied HTTPS port. (443 -> 8888 (decryption) -> 8000 mapping)
+# 2 hosts matched by "no_proxy" entry. run <proxyhosts> to format list for paste to OS/browser UI or have <browse> set it up via env-vars
+#   no_proxy bypasses OUT (default proxy) causing packets to be sent by rule 1 to IN proxy
 proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
 su -c "sh $routeHTTP $proxy_uid"
 su -c "sh $routeHTTPS $proxy_uid"
 
-# incoming reverse-proxy (8888)
-# apps oblivious to system proxy have their traffic sent here via routing rules when using default non-proxy ports
-# hosts also selectable for proxying via OS or browser configuration, using HTTP (port 80 goes to proxy) or env-var facilitated hostmasks, see <proxyhosts> and <browse> script additional tools
+# reverse proxy (8888) IN traffic to local daemon
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# outgoing proxy (8080)
+# forward proxy (8080) OUT traffic to net
 tmux new-window -t web:2 -d mitmdump
 
 # database synchronization
