@@ -1,7 +1,6 @@
 #!/bin/sh
 # DAEMONS run on boot or login to enable request-time web rewriting
-# - non-sandboxed users (Android/Termux/snap already sandbox on app-UID) must add a user for the proxy so to-proxy/to-net HTTP/HTTPS flows can be differentiated by the OS
-# - set DATAPEER to user@host for basic watch+rsync db peering, or comment out and setup synthing/Ceph/AFS on your own
+# - non-sandboxed users (Android/Termux/snap already sandbox on app-UID) must add a user for the proxy so to-proxy/to-net HTTP/HTTPS flows on the same port can be differentiated
 
 # initialize controlling console
 tmux new-session -s web -d -c ~/web
@@ -28,6 +27,7 @@ tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --
 tmux new-window -t web:2 -d mitmdump
 
 # database synchronization
+# - set DATAPEER to user@host for basic watch+rsync db peering, or comment out and setup synthing/Ceph/AFS/etc
 tmux new-window -t web:3 -d
 tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 
