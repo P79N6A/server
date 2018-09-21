@@ -1,15 +1,13 @@
 #!/bin/sh
-
-# system package dependencies. detect Termux and Debian via extant package-tools in $PATH
+# system package dependencies
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
-#which emerge &&
 
 # Ruby library dependencies
 gem install bundler
 cd ruby
 bundle install
-ruby install # link source-dir into Ruby libdir
+ruby install #link source-dir into Ruby libdir
 #TODO use env-vars instead of filesystem link to add to libdir
 
 # Python library dependencies
