@@ -1,6 +1,6 @@
 #!/bin/sh
-# DAEMONS run on boot or login to enable request-time web rewriting
-# - non-sandboxed users (Android/Termux/snap already sandbox on app-UID) must add a user for the proxy so to-proxy/to-net HTTP/HTTPS flows on the same port can be differentiated
+# DAEMONS run on boot or login to enable request-time rewriting
+# - non-sandboxed users (on Android/Termux/snap there's nothing to do) must add a proxy user for this so HTTP/HTTPS flows can be properly routed
 
 # initialize controlling console
 tmux new-session -s web -d -c ~/web
@@ -12,22 +12,20 @@ tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 # 0 apps using HTTP port (80 -> 8000 mapping)
 # 1 apps using HTTPS port (443 -> 8888 (decryption) -> 8000 mapping)
 # 2 hosts matched by "no_proxy" entry. run <proxyhosts> to format list for paste to OS/browser UI or have <browse> set it up via env-vars
-#   no_proxy bypasses OUT (forward proxy) causing packets to be sent by rule 1 to IN proxy
 proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
 su -c "sh $routeHTTP $proxy_uid"
-su -c "sh $routeHTTPS $proxy_uid"
-# Paranoia notes: apps could still use nonstandard ports to reach the net so you'll need more aggressive rules
+#su -c "sh $routeHTTPS $proxy_uid"
 
-# reverse proxy (8888) IN traffic to local daemon
+# "reverse" proxy (8888) IN to daemon
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# forward proxy (8080) OUT traffic to net
+# "forward" proxy (8080) OUT to net
 tmux new-window -t web:2 -d mitmdump
 
-# database synchronization
-# - set DATAPEER to user@host for basic watch+rsync db peering, or comment out and setup synthing/Ceph/AFS/etc
+# database synch
+# - set DATAPEER to user@host for watch+rsync, or comment out and setup synthing/Ceph/AFS/etc
 tmux new-window -t web:3 -d
 tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 
