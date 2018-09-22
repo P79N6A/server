@@ -22,7 +22,7 @@ class WebResource
                  else
                    ' '
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path + ' ' + env['REMOTE_ADDR']
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path #+ ' ' + env['REMOTE_ADDR']
       R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},

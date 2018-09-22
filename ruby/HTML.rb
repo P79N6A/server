@@ -68,7 +68,7 @@ class WebResource
                              link[:prev, '&#9664;'],
                              link[:next, '&#9654;'],
                              if graph.empty?
-                               [{_: :h1, c: 404}, HTML.kv(HTML.urifyHash(@r),@r)]
+                               [{_: :h1, c: {_: :a, id: :link, href: 'https://'+host+path, c: 404}}, HTML.kv(HTML.urifyHash(@r),@r)]
                              else
                                if q.has_key? 't'
                                  # Graph -> Markup
