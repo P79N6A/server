@@ -16,7 +16,7 @@ proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
 su -c "sh $routeHTTP $proxy_uid"
-#su -c "sh $routeHTTPS $proxy_uid"
+su -c "sh $routeHTTPS $proxy_uid"
 
 # "reverse" proxy (8888) IN to daemon
 tmux new-window -t web:1 -d mitmdump -p 8888 -m reverse:http://localhost:8000 --set keep_host_header=true
