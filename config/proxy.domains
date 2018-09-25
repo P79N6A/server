@@ -302,7 +302,6 @@
 *.iglobalstores.com
 *.iheart.com
 *.imgix.net
-*.imgur.com
 *.imrworldwide.com
 *.indexww.com
 *.infowars.com
@@ -630,6 +629,7 @@
 *.turner.com
 *.tv
 *.tvpassport.com
+*.twitter.com
 *.tynt.com
 *.typekit.com
 *.typekit.net
@@ -679,8 +679,6 @@
 *.wp.com
 *.wpengine.com
 *.wsi.com
-*.wsj.com
-*.wsj.net
 *.wsod.com
 *.yahoo.com
 *.yandex.ru
