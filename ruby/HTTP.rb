@@ -15,7 +15,7 @@ class WebResource
 
       # bind pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-      #  evaluate path expression
+      # evaluate path-expression, preserving trailing-slash
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
