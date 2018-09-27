@@ -1,20 +1,25 @@
 # coding: utf-8
 class WebResource
   module HTTP
-#    Methods = %w{HEAD GET OPTIONS POST PUT}
     Methods = %w{HEAD GET OPTIONS}
     include URIs
 
     def self.call env
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
+      # parse query
       env['q'] = parseQs env['QUERY_STRING']
-      host = env['q']['host'] || env['HTTP_HOST'] || 'localhost'
 
+      # bind hostname from query or header field
+      host = env['q']['h'] || env['q']['host'] || env['HTTP_HOST'] || 'localhost'
+
+      # bind pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
+      #  evaluate path expression
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
+      # log request
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -22,7 +27,9 @@ class WebResource
                  else
                    ' '
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path #+ ' ' + env['REMOTE_ADDR']
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
+
+      # dispatch request
       R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
@@ -41,20 +48,22 @@ class WebResource
 
     def HEAD
      self.GET.do{| s, h, b|
-                 [ s, h, []] } end
-    def OPTIONS; [200,{},[]]   end
-    def POST;    [202,{},[]]   end
-    def PUT;     [202,{},[]]   end
+                 [ s, h, []]} end
+    def OPTIONS; [200,{},[]]  end
+    def POST;    [202,{},[]]  end
+    def PUT;     [202,{},[]]  end
 
     def GET
+      # response headers
       @r[:Response] = {}
       @r[:links] = {}
-      return fileResponse if node.file?                    # static file
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # time-dir
-      return Host[host][self] if Host[host]                # hostname lambda
-      hosts = host.split('.')[1..-1].unshift('*').join '.' # wildcard-subdomain lambda
-      return Host[hosts][self] if Host[hosts]
-      filesResponse                                        # static files
+      # response handler, first match finishes
+      return fileResponse if node.file?                    # static file handler
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # timeseg redirect
+      return Host[host][self] if Host[host]                # host handler
+      hosts = host.split('.')[1..-1].unshift('*').join '.'
+      return Host[hosts][self] if Host[hosts]              # subdomain-wildcard handler
+      filesResponse                                        # static graph-data handler
     end
 
     def fileResponse
@@ -110,7 +119,7 @@ class WebResource
         # dispatch to Rack for file-reference handling
         if body.class == WebResource
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]}
+            [s,h.update(env[:Response]),b]} # attach headers to response
         else
           [(env[:Status]||200), env[:Response], [body]]
         end
