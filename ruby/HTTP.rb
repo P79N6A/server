@@ -11,7 +11,7 @@ class WebResource
       env['q'] = parseQs env['QUERY_STRING']
 
       # bind hostname from query or header field
-      host = env['q']['h'] || env['q']['host'] || env['HTTP_HOST'] || 'localhost'
+      host = env['q']['h'] || env['q']['host'] || env['q']['site'] || env['HTTP_HOST'] || 'localhost'
 
       # bind pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
@@ -64,48 +64,6 @@ class WebResource
       hosts = host.split('.')[1..-1].unshift('*').join '.'
       return Host[hosts][self] if Host[hosts]              # subdomain-wildcard handler
       filesResponse                                        # static graph-data handler
-    end
-
-    def fileResponse
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
-                            'ETag' => [m,size].join.sha2,
-                            'Access-Control-Allow-Origin' => '*'
-                           })
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
-      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
-        filePreview
-      else
-        entity @r
-      end
-    end
-
-    def filesResponse set=nil
-      if !set || set.empty?
-        set = selectNodes
-        paginate
-      end
-      return notfound if !set || set.empty?
-      format = selectMIME
-      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
-                            'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
-                                        R['.conf/site.css'], # CSS, or doc changes
-                                        *set].sort.map{|r|[r,r.m]}, format].join.sha2})
-      entity @r, ->{
-        if set.size == 1 && set[0].mime == format
-          set[0] # no transcode, file as response body
-        else # merge and transcode
-          if format == 'text/html'
-            ::Kernel.load HTML::SourceCode if ENV['DEV']
-            htmlDocument load set
-          elsif format == 'application/atom+xml'
-            renderFeed load set
-          else # RDF
-            g = RDF::Graph.new
-            set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
-            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
-          end
-        end}
     end
 
     def entity env, body = nil

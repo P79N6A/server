@@ -180,19 +180,6 @@ class WebResource
       doc
     end
 
-    # file -> preview file
-    def filePreview
-      p = join('.' + basename + '.jpg').R
-      if !p.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
-        else
-          `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
-        end
-      end
-      p.e && p.entity(@r) || notfound
-    end
-
     # env -> MIMEs indexed on q-val
     def accept k = 'HTTP_ACCEPT'
       index = {}
