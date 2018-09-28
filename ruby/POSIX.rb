@@ -176,8 +176,8 @@ class WebResource
                                         *set].sort.map{|r|[r,r.m]}, format].join.sha2})
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # no transcode, file as response body
-        else # merge and transcode
+          set[0] # no transcode - file as response body
+        else # merge and/or transcode
           if format == 'text/html'
             ::Kernel.load HTML::SourceCode if ENV['DEV']
             htmlDocument load set
