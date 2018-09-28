@@ -137,6 +137,18 @@ class WebResource
   # HTTP support for files
   module HTTP
 
+    def filePreview
+      p = join('.' + basename + '.jpg').R
+      if !p.e
+        if mime.match(/^video/)
+          `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
+        else
+          `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
+        end
+      end
+      p.e && p.entity(@r) || notfound
+    end
+
     def fileResponse
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
                             'ETag' => [m,size].join.sha2,
@@ -148,18 +160,6 @@ class WebResource
       else
         entity @r
       end
-    end
-
-    def filePreview
-      p = join('.' + basename + '.jpg').R
-      if !p.e
-        if mime.match(/^video/)
-          `ffmpegthumbnailer -s 256 -i #{sh} -o #{p.sh}`
-        else
-          `gm convert #{sh} -thumbnail "256x256" #{p.sh}`
-        end
-      end
-      p.e && p.entity(@r) || notfound
     end
 
     def filesResponse set=nil
