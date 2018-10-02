@@ -1,20 +1,19 @@
 #!/bin/sh
-# system package dependencies
+# system packages
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
-
-# Ruby library dependencies
 gem install bundler
+
+# Ruby
 cd ruby
 bundle install
-ruby install #link source-dir into Ruby libdir
-#TODO use env-vars instead of filesystem link to add to libdir
+ruby install
 
-# Python library dependencies
+# Python
 pip3 install --upgrade pip
 pip3 install --upgrade mitmproxy pygments
 
-# certificate
+# CA cert
 cert=$(realpath ~/.mitmproxy/mitmproxy-ca-cert.pem)
 hash=$(openssl x509 -inform PEM -subject_hash_old -in $cert -noout)
 su -c "cp $cert /system/etc/security/cacerts/$hash.0"
