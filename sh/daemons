@@ -1,6 +1,4 @@
 #!/bin/sh
-# DAEMONS run on boot or login to enable request-time rewriting
-
 # session
 tmux new-session -s web -d -c ~/web
 
@@ -13,10 +11,9 @@ tmux new-window -t web:1 -d mitmdump
 # reverse proxy (8081)
 tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# TCP routing
-# 0 apps using HTTP port (80 (original dest) -> 8000 (daemon))
-# 1 apps using HTTPS port (443 (original dest) -> 8081 (decrypt) -> 8000 (daemon))
-# 2 hosts matched in <proxy.domains>. run <proxyhosts> to output OS/browser config or have <browse> set env-vars for you
+# TCP routes
+#  outgoing HTTP port   (80 (original dest)          ->          8000 (daemon))
+#  outgoing HTTPS port (443 (original dest) -> 8081 (decrypt) -> 8000 (daemon))
 proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
