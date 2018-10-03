@@ -1,7 +1,8 @@
 #!/bin/sh
 # system packages
-which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
+which apk && apk add alpine-sdk ruby python py3-pip python3-dev py3-cffi openssl-dev graphicsmagick rsync
+which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 gem install bundler
 
 # Ruby
