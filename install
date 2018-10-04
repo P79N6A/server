@@ -1,20 +1,17 @@
 #!/bin/sh
-# system packages
-which apk && apk add alpine-sdk graphicsmagick ruby ruby-dev python py3-pip python3-dev py3-cffi openssl-dev rsync
+# system packages: Alpine,Debian,Termux
+which apk && apk add alpine-sdk graphicsmagick ruby ruby-dev ruby-rdoc python python3-dev py3-cffi py3-pip openssl-dev rsync libxslt-dev tmux
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux make rsync libffi-dev python-dev python3-pip
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 gem install bundler
-
 # Ruby libraries
 cd ruby
 ruby install
 bundle install
-
 # Python libraries
-pip3 install --upgrade pip
 pip3 install --upgrade mitmproxy pygments
-
 # CA cert
 cert=$(realpath ~/.mitmproxy/mitmproxy-ca-cert.pem)
 hash=$(openssl x509 -inform PEM -subject_hash_old -in $cert -noout)
 su -c "cp $cert /system/etc/security/cacerts/$hash.0"
+
