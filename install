@@ -5,12 +5,12 @@ which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev gre
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 gem install bundler
 
-# Ruby
+# Ruby libraries
 cd ruby
-bundle install
 ruby install
+bundle install
 
-# Python
+# Python libraries
 pip3 install --upgrade pip
 pip3 install --upgrade mitmproxy pygments
 
