@@ -481,6 +481,8 @@
 *.realpage.com
 *.realvu.com
 *.realvu.net
+*.reddit.com
+reddit.com
 *.redlink.com
 *.relaymedia.com
 *.report-uri.com
@@ -597,6 +599,7 @@
 *.tv
 *.tvpassport.com
 *.twitter.com
+twitter.com
 *.tynt.com
 *.typekit.com
 *.typekit.net
