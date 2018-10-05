@@ -66,7 +66,7 @@ class WebResource
       filesResponse                                        # static-graph-data files (RDFized transparently on-demand) handler
     end
 
-    def entity env, lambday = nil
+    def entity env, lambda = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
         # client has entity, tell it
