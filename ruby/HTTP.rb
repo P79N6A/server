@@ -58,27 +58,27 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       # response handler, first match finishes
-      return fileResponse if node.file?                    # static file handler
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # timeseg redirect
+      return fileResponse if node.file?                    # static file handler. before host-handler so customized hosts can get global static assets like CSS & JS delivered w/o having to remember to add back the file handler
       return Host[host][self] if Host[host]                # host handler
-      hosts = host.split('.')[1..-1].unshift('*').join '.'
-      return Host[hosts][self] if Host[hosts]              # subdomain-wildcard handler
-      filesResponse                                        # static graph-data handler
+      hosts = host.split('.')[1..-1].unshift('*').join '.' # generate wildcard-subdomains name
+      return Host[hosts][self] if Host[hosts]              # wildcard handler
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-periodic slices. we used to support MEMENTO but URI construction is easier than header-fiddling and we weren't using it. could add here if you need though
+      filesResponse                                        # static-graph-data files (RDFized transparently on-demand) handler
     end
 
-    def entity env, body = nil
+    def entity env, lambday = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
         # client has entity, tell it
         [304, {}, []]
       else # produce entity
-        # entity-producing lambda or file-reference
-        body = body ? body.call : self
-        # dispatch to Rack for file-reference handling
+        # call entity-producer lambda
+        body = lambda ? lambda.call : self
+        # dispatch file-references to Rack file-handler
         if body.class == WebResource
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]} # attach headers to response
-        else
+            [s,h.update(env[:Response]),b]} # attach headers to response and return
+        else # return static entity
           [(env[:Status]||200), env[:Response], [body]]
         end
       end
