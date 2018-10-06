@@ -38,6 +38,22 @@ class WebResource
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
     end
 
+    def chronoDir ps
+      time = Time.now
+      loc = time.strftime(case ps[0][0].downcase
+                          when 'y'
+                            '%Y'
+                          when 'm'
+                            '%Y/%m'
+                          when 'd'
+                            '%Y/%m/%d'
+                          when 'h'
+                            '%Y/%m/%d/%H'
+                          else
+                          end)
+      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
+    end
+
   end
   module HTML
 

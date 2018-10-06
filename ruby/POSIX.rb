@@ -107,6 +107,32 @@ class WebResource
     # SHA2 hashed URI
     def sha2; to_s.sha2 end
 
+    # WebResource -> file(s) mapping
+    def selectNodes
+      (if directory?
+       if q.has_key?('f') && path!='/' # FIND
+         found = find q['f']
+         found
+       elsif q.has_key?('q') && path!='/' # GREP
+         grep q['q']
+       else # LS
+         if uri[-1] == '/'
+           index = (self+'index.html').glob
+           if !index.empty? && qs.empty? # static index
+             index
+           else
+             [self, children]
+           end
+         else # outside container
+           @r[:links][:down] = path + '/' + qs
+           self
+         end
+       end
+      else # GLOB, parametric or default of baseURI+ext(s)
+        [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
+       end).justArray.flatten.compact.uniq.select &:exist?
+    end
+
   end
 
   include POSIX

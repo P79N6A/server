@@ -9,32 +9,6 @@ class WebResource
     # GLOB(7)
     def glob; (Pathname.glob localPath).map &:R end
 
-    # WebResource -> file(s)
-    def selectNodes
-      (if directory?
-       if q.has_key?('f') && path!='/' # FIND
-         found = find q['f']
-         found
-       elsif q.has_key?('q') && path!='/' # GREP
-         grep q['q']
-       else # LS
-         if uri[-1] == '/'
-           index = (self+'index.html').glob
-           if !index.empty? && qs.empty? # static index
-             index
-           else
-             [self, children]
-           end
-         else # outside container
-           @r[:links][:down] = path + '/' + qs
-           self
-         end
-       end
-      else # GLOB, parametric or default of baseURI+ext(s)
-        [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
-       end).justArray.flatten.compact.uniq.select &:exist?
-    end
-
     # grepPattern -> file(s)
     def grep q
       args = POSIX.splitArgs q
@@ -56,22 +30,6 @@ class WebResource
 
   end
   module HTTP
-
-    def chronoDir ps
-      time = Time.now
-      loc = time.strftime(case ps[0][0].downcase
-                          when 'y'
-                            '%Y'
-                          when 'm'
-                            '%Y/%m'
-                          when 'd'
-                            '%Y/%m/%d'
-                          when 'h'
-                            '%Y/%m/%d/%H'
-                          else
-                          end)
-      [303,@r[:Response].update({'Location' => '/' + loc + '/' + ps[1..-1].join('/') + qs}),[]]
-    end
 
     # look for app in FDroid store. if not there it's probably closed-source
     Host['play.google.com'] = -> re {
