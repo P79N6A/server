@@ -213,7 +213,6 @@ class WebResource
 
     Group['flat'] = -> graph { graph }
 
-    # group years by decade
     Group['decades'] = -> graph {
       decades = {}
       graph.values.map{|resource|

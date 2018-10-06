@@ -185,15 +185,21 @@ class WebResource
 
       def normalizeDates *f
         send(*f){|s,p,o|
-          yield *({'CreationDate' => true,
-                   'Date' => true,
-                   RSS+'pubDate' => true,
-                   Date => true,
-                   DCe+'date' => true,
-                   Atom+'published' => true,
-                   Atom+'updated' => true
-                  }[p] ?
-                    [s,Date,Time.parse(o).utc.iso8601] : [s,p,o])}
+          dateType = {'CreationDate' => true,
+                      'Date' => true,
+                      RSS+'pubDate' => true,
+                      Date => true,
+                      DCe+'date' => true,
+                      Atom+'published' => true,
+                      Atom+'updated' => true}[p]
+          if dateType
+            if !o.empty?
+              yield s, Date, Time.parse(o).utc.iso8601
+            end
+          else
+            yield s,p,o
+          end
+        }
       end
 
       def rawTriples
@@ -205,7 +211,7 @@ class WebResource
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
         isURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
-        # element data
+        # elements
         isCDATA = /^\s*<\!\[CDATA/m
         reCDATA = /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
