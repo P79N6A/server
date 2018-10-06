@@ -55,13 +55,13 @@ class WebResource
       []
     end
 
-    # dirname (resource reference)
+    # dirname (as reference)
     def dir; dirname.R if path end
 
-    # dirname (string)
+    # dirname (in string)
     def dirname; File.dirname path if path end
 
-    # storage usage count
+    # storage usage
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
 
     # create container

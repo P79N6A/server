@@ -52,13 +52,13 @@ class WebResource
   include JSON
 
   module HTTP
-    # load JSON and RDF to URI-indexed Hashtable. HTML and Feed renderer take this as input
+    # load JSON and RDF to URI-indexed Hashtable. HTML and Feed renderers take this as input
     def load set # file-set argument
       g = {}                 # JSON tree
       graph = RDF::Graph.new # RDF graph
       rdf,json = set.partition &:isRDF
 
-      # load RDF data
+      # load RDF
       rdf.map{|n|
         graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
@@ -68,7 +68,7 @@ class WebResource
         g[s][p] ||= []
         g[s][p].push o unless g[s][p].member? o} # insert
 
-      # load JSON data
+      # load JSON
       json.map{|n|
         n.transcode.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
@@ -79,7 +79,7 @@ class WebResource
                 g[s][p] ||= []
                 g[s][p].push o unless g[s][p].member? o} unless p == 'uri' }}}} # insert
 
-      g # loaded graph reference returned to caller
+      g # graph reference returned to caller
     end
   end
 end

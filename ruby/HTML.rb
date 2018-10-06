@@ -209,15 +209,6 @@ class WebResource
 
     Group['flat'] = -> graph { graph }
 
-    Group['decades'] = -> graph {
-      decades = {}
-      graph.values.map{|resource|
-        name = resource.R.parts[0] || ''
-        decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : '/'
-        decades[decade] ||= {name: decade, Contains => {}}
-        decades[decade][Contains][resource.uri] = resource}
-      decades}
-
     ## Utility functions
 
     def self.colorize k, bg = true

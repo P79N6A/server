@@ -1,5 +1,6 @@
 class WebResource
   module HTTP
+
     def dateMeta
       dp = [] # date parts
       dp.push parts.shift.to_i while parts[0] && parts[0].match(/^[0-9]+$/)
@@ -36,10 +37,22 @@ class WebResource
       @r[:links][:next] = n + '/' + parts.join('/') + sl + qs + '#next' if n && R[n].e
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
     end
+
   end
   module HTML
+
     Markup[Date] = -> date,env=nil {
       {_: :a, class: :date,
        href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
+
+    Group['decades'] = -> graph {
+      decades = {}
+      graph.values.map{|resource|
+        name = resource.R.parts[0] || ''
+        decade = (name.match /^\d{4}$/) ? name[0..2]+'0s' : '/'
+        decades[decade] ||= {name: decade, Contains => {}}
+        decades[decade][Contains][resource.uri] = resource}
+      decades}
+
   end
 end
