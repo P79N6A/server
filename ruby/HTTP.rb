@@ -8,17 +8,14 @@ class WebResource
       method = env['REQUEST_METHOD']
       return [405,{},[]] unless Methods.member? method
       # parse query
-      env['q'] = parseQs env['QUERY_STRING']
-
+      env['query'] = query = parseQs env['QUERY_STRING']
       # bind hostname from query or header field
-      host = env['q']['h'] || env['q']['host'] || env['q']['site'] || env['HTTP_HOST'] || 'localhost'
-
+      host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
       # bind pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       # evaluate path-expression, preserving trailing-slash
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-
       # log request
       referer = env['HTTP_REFERER']
       referrer = if referer
@@ -28,7 +25,6 @@ class WebResource
                    ' '
                  end
       puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
-
       # dispatch request
       R['//' + host + path].environment(env).send method
     rescue Exception => x
@@ -58,12 +54,12 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       # response handler, first match finishes
-      return fileResponse if node.file?                    # static file handler. before host-handler so customized hosts can get global static assets like CSS & JS delivered w/o having to remember to add back the file handler
-      return Host[host][self] if Host[host]                # host handler
-      hosts = host.split('.')[1..-1].unshift('*').join '.' # generate wildcard-subdomains name
-      return Host[hosts][self] if Host[hosts]              # wildcard handler
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-periodic slices. we used to support MEMENTO but URI construction is easier than header-fiddling and we weren't using it. could add here if you need though
-      filesResponse                                        # static-graph-data files (RDFized transparently on-demand) handler
+      return fileResponse if node.file?                    # static file
+      return Host[host][self] if Host[host]                # host mapping
+      hosts = host.split('.')[1..-1].unshift('*').join '.' # wildcardize subdomains
+      return Host[hosts][self] if Host[hosts]              # wildcard mappign
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-period
+      filesResponse                                        # static files
     end
 
     def entity env, lambda = nil
@@ -122,8 +118,16 @@ class WebResource
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
     end
 
-    # environment -> query String
-    def qs; @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || '' end
+    # query String
+    def qs
+      @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || ''
+    end
+
+    # query Hash
+    def q
+      # use memoized parse if available
+      @r && @r['query'] || (HTTP.parseQs query)
+    end
 
     # query String -> query Hash
     def HTTP.parseQs qs
@@ -139,11 +143,10 @@ class WebResource
     end
 
     # query Hash -> query String
-    def HTTP.qs h; '?'+h.map{|k,v|k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')}.intersperse("&").join('') end
-
-    # environment or URI -> query Hash
-    def q fromEnv = true
-      fromEnv ? @r['q'] : HTTP.parseQs(query)
+    def HTTP.qs h
+      '?' + h.map{|k,v|
+        k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
+      }.intersperse("&").join('')
     end
 
   end

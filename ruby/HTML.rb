@@ -142,7 +142,6 @@ class WebResource
        {_: :table,
         c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
           type = k && k.R || '#untyped'.R
-          hide = k == Content && env['q'] && env['q'].has_key?('h')
           [{_: :tr, name: type.fragment || type.basename,
             c: ["\n ",
                 {_: :td, class: 'k', c: Markup[Type][type]},"\n ",
@@ -154,7 +153,7 @@ class WebResource
                     HTML.value k, v, env }.intersperse(' ')
                  end
                 }]},
-           "\n"] unless hide}}, "\n"]
+           "\n"]}}, "\n"]
     end
 
     # (k,v) tuple -> Markup
@@ -166,23 +165,23 @@ class WebResource
         v
       elsif Abstract == k
         v
-      elsif Markup[k] # typed arc (vary arc to override default resource markup)
+      elsif Markup[k] # typed predicate
         Markup[k][v,env]
-      elsif v.class == Hash # node w/ inlined data
+      elsif v.class == Hash
         resource = v.R
         types = resource.types
-        # typed node
+        # typed object
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member?(BlogPost) || types.member?(Email)
           Markup[BlogPost][v,env]
         elsif types.member? Container
           Markup[Container][v,env]
-        else # generic node
+        else
           kv v, env
         end
       elsif v.class == WebResource
-        v # node reference
+        v
       else
         CGI.escapeHTML v.to_s
       end
@@ -196,7 +195,7 @@ class WebResource
              c: ks.map{|k|
                {_: :td, c: Markup[Type][k.R]}}} if head),
            resources.sort_by{|r|
-             (case env['q']['sort']
+             (case env['query']['sort']
               when 'date'
                 r[Date].justArray[0]
               else

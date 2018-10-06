@@ -5,7 +5,6 @@ class WebResource
   end
   module HTML
     Markup[InstantMessage] = -> msg, env {
-      abbr = env['q'].has_key? 'h'
       [{class: :msg,
         c: [([msg[Date].map{|d|
                 Markup[Date][d,env]},
@@ -15,8 +14,8 @@ class WebResource
               msg[Abstract], msg[Content]] unless abbr),
             msg[Image].map{|i| Markup[Image][i,env]},
             msg[Video].map{|v| Markup[Video][v,env]},
-            msg[Link].map{|l| Markup[Link][l,env]},
-          ]},("<br>\n" unless abbr)]}
+            msg[Link].map{|l| Markup[Link][l,env]}]},
+       "<br>\n"]}
 
     Markup[SIOC+'ChatLog'] = Markup[Container]
 
@@ -27,7 +26,7 @@ class WebResource
       if re.path == '/'
         # show follow list
         graph = {}
-        # shuffle account-names and assign to groups of 16
+        # shuffle names to groups of 16
         open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
           # account-group URL
           r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
