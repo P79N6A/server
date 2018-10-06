@@ -55,10 +55,10 @@ class WebResource
       []
     end
 
-    # dirname (as reference)
+    # dirname as reference
     def dir; dirname.R if path end
 
-    # dirname (in string)
+    # dirname in string
     def dirname; File.dirname path if path end
 
     # storage usage
@@ -95,13 +95,13 @@ class WebResource
                  end
     end
 
-    # basename of path component
+    # basename of path
     def basename; File.basename (path||'') end
 
-    # strip native doc-format suffixes
+    # strip native format suffixes
     def stripDoc; R[uri.sub /\.(bu|e|html|json|log|md|msg|opml|ttl|txt|u)$/,''] end
 
-    # name suffix
+    # suffix
     def ext; (File.extname uri)[1..-1] || '' end
 
     # SHA2 hashed URI
@@ -134,7 +134,6 @@ class WebResource
         yield s, Date, mt.iso8601}
     end
   end
-  # HTTP support for files
   module HTTP
 
     def filePreview

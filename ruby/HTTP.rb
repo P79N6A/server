@@ -50,7 +50,7 @@ class WebResource
     def PUT;     [202,{},[]]  end
 
     def GET
-      # response headers
+      # init response headers
       @r[:Response] = {}
       @r[:links] = {}
       # response handler, first match finishes
