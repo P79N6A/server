@@ -108,10 +108,6 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    Markup[Date] = -> date,env=nil {
-      {_: :a, class: :date,
-       href: '/' + date[0..13].gsub(/[-T:]/,'/'), c: date}}
-
     Markup[Creator] = -> c, env, urls=nil {
       if c.respond_to? :uri
         u = c.R
