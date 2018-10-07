@@ -3,6 +3,7 @@ class Pathname
 end
 class WebResource
   module POSIX
+    GlobChars = /[\*\{\[]/
 
     def self.splitArgs args
       args.shellsplit
@@ -128,8 +129,14 @@ class WebResource
            self
          end
        end
-      else # parametric or default glob (base.ext)
-        [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
+      else # GLOB
+        if match GlobChars
+          files = glob
+        else
+          files = (self + '.*').glob                # base+ext match
+          files = (self + '*').glob if files.empty? # substring match
+        end
+        [self, files]
        end).justArray.flatten.compact.uniq.select &:exist?
     end
 
