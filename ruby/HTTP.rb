@@ -57,7 +57,7 @@ class WebResource
       return fileResponse if node.file?                    # static file
       return Host[host][self] if Host[host]                # host mapping
       hosts = host.split('.')[1..-1].unshift('*').join '.' # wildcardize subdomains
-      return Host[hosts][self] if Host[hosts]              # wildcard mappign
+      return Host[hosts][self] if Host[hosts]              # wildcard mapping
       return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-period
       filesResponse                                        # static files
     end
@@ -65,7 +65,7 @@ class WebResource
     def entity env, lambda = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
-        # client has entity, tell it
+        # client has entity
         [304, {}, []]
       else # produce entity
         # call entity-producer lambda

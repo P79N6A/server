@@ -6,15 +6,18 @@ class WebResource
   module HTML
     Markup[InstantMessage] = -> msg, env {
       [{class: :msg,
-        c: [([msg[Date].map{|d|
-                Markup[Date][d,env]},
-              {class: :creator,
-               c: msg[Creator].map{|c|
-                 Markup[Creator][c,env,msg.uri]}}, ' ',
-              msg[Abstract], msg[Content]] unless abbr),
-            msg[Image].map{|i| Markup[Image][i,env]},
-            msg[Video].map{|v| Markup[Video][v,env]},
-            msg[Link].map{|l| Markup[Link][l,env]}]},
+        c: [msg[Date].map{|d|
+              Markup[Date][d,env]}, ' ',
+            msg[Creator].map{|c|
+               Markup[Creator][c,env,msg.uri]}, ' ',
+            msg[Abstract], ' ',
+            msg[Content],
+            msg[Image].map{|i|
+              Markup[Image][i,env]},
+            msg[Video].map{|v|
+              Markup[Video][v,env]},
+            msg[Link].map{|l|
+              Markup[Link][l,env]}]},
        "<br>\n"]}
 
     Markup[SIOC+'ChatLog'] = Markup[Container]

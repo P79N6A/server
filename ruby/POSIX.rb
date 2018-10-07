@@ -128,7 +128,7 @@ class WebResource
            self
          end
        end
-      else # GLOB, parametric or default of baseURI+ext(s)
+      else # parametric or default glob (base.ext)
         [self, ((match /[\*\{\[]/) ? self : (self + '.*')).glob ]
        end).justArray.flatten.compact.uniq.select &:exist?
     end

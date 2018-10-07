@@ -35,6 +35,7 @@ class WebResource
     Host['play.google.com'] = -> re {
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
+    # TODO redirect to federated/mesh search-nets
     Host['google.com'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
@@ -51,6 +52,7 @@ class WebResource
         [404,{},[]]
       end}
 
+    # redirect to open alternative
     Host['maps.google.com'] = -> re {
       loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
               lat = ll[1]
