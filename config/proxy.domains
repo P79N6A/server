@@ -1,4 +1,5 @@
 *.1emn.com
+*.247realmedia.com
 *.2mdn.net
 *.2o7.net
 *.3gl.net
@@ -89,6 +90,7 @@
 *.bluecava.com
 *.blueconic.net
 *.bluekai.com
+*.bnqt.com
 *.boltdns.net
 *.boomtrain.com
 *.bootstrapcdn.com
@@ -140,6 +142,7 @@
 *.contentinsights.com
 *.contextweb.com
 *.conviva.com
+*.cookiebot.com
 *.cookielaw.org
 *.coremetrics.com
 *.corus.ca
@@ -158,6 +161,7 @@
 *.cxense.com
 *.da-ads.com
 *.db-ip.com
+*.dc-storm.com
 *.deepintent.com
 *.deezer.com
 *.delivery
@@ -208,6 +212,7 @@
 *.fccinteractive.com
 *.feedbackify.com
 *.finanzen.net
+*.firebaseio.com
 *.firefox.com
 *.flashtalking.com
 *.flipboard.com
@@ -216,6 +221,7 @@
 *.fonts.net
 *.fontsquirrel.com
 *.footprint.net
+*.foresee.com
 *.fqtag.com
 *.franklyinc.com
 *.freelancer.com
@@ -306,6 +312,7 @@
 *.izooto.com
 *.janrain.com
 *.jquery.com
+*.jrs5.com
 *.jscache.com
 *.jsdelivr.net
 *.justuno.com
@@ -358,6 +365,7 @@
 *.media
 *.media-amazon.com
 *.media.net
+*.mediaforge.com
 *.mediavoice.com
 *.mediawallahscript.com
 *.mequoda.com
@@ -412,6 +420,7 @@
 *.nr-data.net
 *.ns1p.net
 *.nuggad.net
+*.nxtck.com
 *.oath.com
 *.oculu.com
 *.olark.com
@@ -424,6 +433,7 @@
 *.onscroll.com
 *.ooyala.com
 *.openx.net
+*.opta.net
 *.optimizely.com
 *.optmnstr.com
 *.optmstr.com
@@ -462,9 +472,11 @@
 *.privacy-center.org
 *.pro-market.net
 *.profitrumour.com
+*.publir.com
 *.pubmatic.com
 *.pubsqrd.com
 *.pulpix.com
+*.purechat.com
 *.pushwoosh.com
 *.qlitics.com
 *.qualtrics.com
@@ -481,11 +493,11 @@
 *.realvu.com
 *.realvu.net
 *.reddit.com
-reddit.com
 *.redlink.com
 *.relaymedia.com
 *.report-uri.com
 *.researchnow.com
+*.responsivevoice.org
 *.revcontent.com
 *.revstripe.com
 *.rezync.com
@@ -494,11 +506,13 @@ reddit.com
 *.richrelevance.com
 *.rightnowtech.com
 *.rlcdn.com
+*.rmtag.com
 *.rpxnow.com
 *.rs-stripe.com
 *.rtb123.com
 *.rubiconproject.com
 *.run-syndicate.com
+*.rxthdr.com
 *.s-onetag.com
 *.s3xified.com
 *.sail-horizon.com
@@ -599,7 +613,6 @@ reddit.com
 *.tv
 *.tvpassport.com
 *.twitter.com
-twitter.com
 *.tynt.com
 *.typekit.com
 *.typekit.net
@@ -645,6 +658,7 @@ twitter.com
 *.worldnow.com
 *.wsi.com
 *.wsod.com
+*.xg4ken.com
 *.yahoo.com
 *.yandex.ru
 *.yellowpages.com
@@ -700,6 +714,7 @@ issuu.com
 justicejudo.com
 kinja.com
 l
+l.instagram.com
 loadercdn.com
 localhost
 lockerdome.com
@@ -711,18 +726,24 @@ nxtck.com
 nyer.cm
 nyti.ms
 onesignal.com
+orbitfour47.com
 ow.ly
+pixel.*
+platform.*
 po.st
 polldaddy.com
 profitrumour.com
 putjs.com
+reddit.com
 retargetcore.com
 ritogaga.com
 rpxnow.com
 sc-static.net
+scripts.*
 scrubswim.com
 shop.pe
 siteimproveanalytics.com
+smetrics.*
 snag.gy
 sumo.com
 t.umblr.com
@@ -733,10 +754,10 @@ trib.al
 trkn.us
 tru.am
 tunein.com
+twitter.com
 udmserve.net
 unpkg.com
 va.sndcdn.com
 vk.com
 w.bos.gl
 youtu.be
-l.instagram.com
