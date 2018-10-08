@@ -132,7 +132,7 @@ class WebResource
       else # GLOB
         if match GlobChars
           files = glob
-        else
+        else # default globs
           files = (self + '.*').glob                # base+ext match
           files = (self + '*').glob if files.empty? # substring match
         end
