@@ -105,7 +105,6 @@
 *.bzgint.com
 *.casalemedia.com
 *.ccgateway.net
-*.cdnjquery.com
 *.cedexis-test.com
 *.cedexis.com
 *.cfigroup.com
@@ -185,8 +184,6 @@
 *.drift.com
 *.driftt.com
 *.dynamicyield.com
-*.ebayrtm.com
-*.ebaystatic.com
 *.eccmp.com
 *.edgekey.net
 *.effectivemeasure.net
@@ -197,7 +194,6 @@
 *.ensighten.com
 *.eproof.com
 *.equitystory.com
-*.espncdn.com
 *.eum-appdynamics.com
 *.everesttech.net
 *.evidon.com
@@ -231,6 +227,7 @@
 *.gannettdigital.com
 *.gatehousemedia.com
 *.gcion.com
+*.getclicky.com
 *.getdrip.com
 *.getsentry.com
 *.gfx.ms
@@ -276,7 +273,6 @@
 *.htvapps.com
 *.hubspot.com
 *.hubspot.net
-*.huffingtonpost.com
 *.i10c.net
 *.ic-live.com
 *.idealmedia.com
@@ -287,7 +283,6 @@
 *.imgix.net
 *.imrworldwide.com
 *.indexww.com
-*.infowars.com
 *.innity.net
 *.innovid.com
 *.inquisitr.com
@@ -636,8 +631,6 @@
 *.visto1.net
 *.visualstudio.com
 *.visualwebsiteoptimizer.com
-*.vox-cdn.com
-*.vox.com
 *.voxmedia.com
 *.vuukle.com
 *.w.org
@@ -653,8 +646,6 @@
 *.wishabi.net
 *.wistia.com
 *.wistia.net
-*.wix.com
-*.wixapps.net
 *.worldnow.com
 *.wsi.com
 *.wsod.com
@@ -753,7 +744,6 @@ trackcmp.net
 trib.al
 trkn.us
 tru.am
-tunein.com
 twitter.com
 udmserve.net
 unpkg.com
