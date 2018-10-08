@@ -229,7 +229,7 @@ class WebResource
         reRel = /rel=['"]?([^'">\s]+)/
         reXMLns = /xmlns:?([a-z0-9]+)?=["']?([^'">\s]+)/
 
-        # XML name-space
+        # build XML-namespace lookup table
         x = {}
         head = @doc.match(reHead)
         head && head[2] && head[2].scan(reXMLns){|m|
@@ -242,7 +242,7 @@ class WebResource
         @doc.scan(reItem){|m|
           attrs = m[2]
           inner = m[3]
-          # identifier search. prefer RDF with lots of fallbacks
+          # identifier search. prefer explicit RDF-identifier with lots of fallbacks
           u = (attrs.do{|a|a.match(reRDF)} ||
                inner.match(reLink) ||
                inner.match(reLinkCData) ||
@@ -251,13 +251,17 @@ class WebResource
                inner.match(reId)).do{|s|s[1]}
 
           if u # identifier found
+            # resolve URI
             u = @base.join(u).to_s unless u.match /^http/
             resource = u.R
+
+            # typetags
             yield u, Type, R[BlogPost]
             blogs = [resource.join('/')]
             blogs.push @base.join('/') if @host && @host != resource.host # re-blog
             blogs.map{|blog|yield u, R::To, blog}
 
+            # media links
             inner.scan(reMedia){|e|
               e[1].match(reSrc).do{|url|
                 rel = e[1].match reRel
@@ -275,6 +279,7 @@ class WebResource
                     end
                 yield u,p,o unless resource == o}}
 
+            # process XML elements
             inner.gsub(reGroup,'').scan(reElement){|e|
               p = (x[e[0] && e[0].chop]||R::RSS) + e[1] # attribute URI
               if [Atom+'id', RSS+'link', RSS+'guid', Atom+'link'].member? p
