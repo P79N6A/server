@@ -154,32 +154,38 @@ class WebResource
       def normalizePredicates *f
         send(*f){|s,p,o|
           yield s,
-                {Atom+'content' => Content,
-                 Atom+'displaycategories' => Label,
-                 Atom+'enclosure' => SIOC+'attachment',
-                 Atom+'link' => DC+'link',
-                 Atom+'summary' => Abstract,
-                 Atom+'title' => Title,
-                 DCe+'subject' => Title,
-                 DCe+'type' => Type,
-                 Media+'title' => Title,
-                 Media+'description' => Abstract,
-                 Media+'community' => Content,
+                {DCe+'type' => Type,
+
                  Podcast+'author' => Creator,
-                 Podcast+'episodeType' => Label,
-                 Podcast+'keywords' => Label,
-                 Podcast+'title' => Title,
+
+                 Atom+'title'       => Title,
+                 DCe+'subject'      => Title,
+                 Media+'title'      => Title,
+                 Podcast+'title'    => Title,
                  Podcast+'subtitle' => Title,
-                 YouTube+'videoId' => Label,
-                 YouTube+'channelId' => SIOC+'user_agent',
-                 RSS+'category' => Label,
-                 RSS+'comments' => Comments,
-                 RSS+'description' => Content,
-                 RSS+'encoded' => Content,
+                 RSS+'title'        => Title,
+
+                 Media+'description' => Abstract,
+                 Atom+'summary'      => Abstract,
+
+                 Atom+'content'                => Content,
+                 RSS+'description'             => Content,
+                 RSS+'encoded'                 => Content,
                  RSS+'modules/content/encoded' => Content,
+
+                 RSS+'category'           => Label,
+                 Podcast+'episodeType'    => Label,
+                 Podcast+'keywords'       => Label,
+                 YouTube+'videoId'        => Label,
+                 Atom+'displaycategories' => Label,
+
+                 RSS+'comments'               => Comments,
                  RSS+'modules/slash/comments' => SIOC+'num_replies',
-                 RSS+'source' => DC+'source',
-                 RSS+'title' => Title,
+                 Atom+'enclosure'             => SIOC+'attachment',
+                 YouTube+'channelId'          => SIOC+'user_agent',
+                 RSS+'source'                 => DC+'source',
+                 Atom+'link'                  => DC+'link',
+
                 }[p]||p, o }
       end
 
@@ -203,7 +209,7 @@ class WebResource
       end
 
       def rawTriples
-        # identifiers
+        # resource identifiers
         reRDF = /about=["']?([^'">\s]+)/              # RDF @about
         reLink = /<link>([^<]+)/                      # <link> element
         reLinkCData = /<link><\!\[CDATA\[([^\]]+)/    # <link> CDATA block
@@ -211,7 +217,7 @@ class WebResource
         reLinkRel = /<link[^>]+href=["']?([^'">\s]+)/ # <link> @href
         reId = /<(?:gu)?id[^>]*>([^<]+)/              # <id> element
         isURL = /\A(\/|http)[\S]+\Z/                  # HTTP URI
-        # elements
+        # element data
         isCDATA = /^\s*<\!\[CDATA/m
         reCDATA = /^\s*<\!\[CDATA\[(.*?)\]\]>\s*$/m
         reElement = %r{<([a-z0-9]+:)?([a-z]+)([\s][^>]*)?>(.*?)</\1?\2>}mi
