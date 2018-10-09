@@ -12,8 +12,9 @@ tmux new-window -t web:1 -d mitmdump
 tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
 # TCP routes
-#  outgoing HTTP port   (80 (original dest)          ->          8000 (daemon))
-#  outgoing HTTPS port (443 (original dest) -> 8081 (decrypt) -> 8000 (daemon))
+# direction proto port                         path
+# outgoing  HTTP    80 (original dest)          ->          8000 (daemon)
+# outgoing  HTTPS  443 (original dest) -> 8081 (decrypt) -> 8000 (daemon)
 proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
