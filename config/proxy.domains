@@ -47,7 +47,6 @@
 *.alexametrics.com
 *.alooma.com
 *.amazon-adsystem.com
-*.amazonaws.com
 *.amgload.net
 *.ampproject.org
 *.and.co.uk
@@ -121,7 +120,6 @@
 *.cloud
 *.cloudflare.com
 *.cloudfront.net
-*.cloudinary.com
 *.club
 *.cnevids.com
 *.co
