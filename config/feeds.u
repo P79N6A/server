@@ -365,7 +365,6 @@ http://tuftsobserver.org/feed/
 https://www.umb.edu/rss/news/6
 http://ncaaa.org/feed/
 http://www.bcaonline.org/calendar/calendar-of-events/eventlist.feed?type=rss
-http://middlesexda.com/news.rss
 http://funkyfreshradio.com/feed/
 http://www.freshtruck.org/feed/
 http://columbiasavinhillcivic.org/feed/
@@ -425,7 +424,6 @@ https://ruben.verborgh.org/blog/latest.xml
 https://swling.com/blog/feed/
 https://0x00sec.org/latest.rss
 https://swling.com/blog/comments/feed/
-http://qrznow.com/feed/
 http://radioaficion.com/news/feed/
 http://qrpblog.com/feed/
 http://blackstonian.org/feed/
@@ -499,3 +497,5 @@ http://harvardpolitics.com/feed/
 https://mblc.state.ma.us/mblc_blog/feed/
 https://realghettostoriez.com/feed/
 http://www.bcaonline.org/calendar/eventlist.feed?type=atom
+http://www.middlesexda.com/node/108/news/feed
+
