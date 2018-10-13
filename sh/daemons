@@ -6,10 +6,19 @@ tmux new-session -s web -d -c ~/web
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
 # forward proxy (8080)
-tmux new-window -t web:1 -d mitmdump
+# squid
+tmux new-window -t web:1 -d
+tmux send-keys -t web:1 "squid -f ~/src/pw/config/squid.conf" C-m
+tmux send-keys -t web:1 "tail -f $PREFIX/var/logs/access.log" C-m
+# mitmdump
+#tmux new-window -t web:1 -d mitmdump
 
 # reverse proxy (8081)
-tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
+# mitmdump on alpine (bionic python openssl-engine compilation SNAFU workaround)
+tmux new-window -t web:2 -d
+tmux send-keys -t web:2 "su -c 'chroot /data/mnt/alpine /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
+# mitmdump
+#tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
 # TCP routes
 # direction proto port                         path
