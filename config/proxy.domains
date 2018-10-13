@@ -81,7 +81,6 @@
 *.bfmio.com
 *.bidgear.com
 *.bidswitch.net
-*.bing.com
 *.bing.net
 *.bizible.com
 *.bkrtx.com
@@ -691,6 +690,7 @@ geoip.*
 getrockerbox.com
 globalnews.ca
 goo.gl
+google.com
 google-analytics.com
 healte.de
 ift.tt

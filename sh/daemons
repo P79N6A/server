@@ -24,7 +24,7 @@ tmux send-keys -t web:2 "su -c 'chroot /data/mnt/alpine /bin/su -c \"mitmdump -p
 # transparently redirect un-proxied traffic to proxy:
 # browser -> original HTTP dest (80) -> daemon (8000)
 # browser -> original HTTPS dest (443) -> reverse HTTPS proxy (8081) -> daemon (8000)
-# exempt proxy user from proxy-redirection to prevent loop and allow outbound net access
+# exempt proxy user from proxy-redirection to prevent loop and allow outbound net access:
 # browser -> forward HTTP/HTTPS proxy (8080) -> internet (443)
 # UDP currently blocked TODO wire up QUIC handling. see https://github.com/bbc/nghq etc
 proxy_uid=$(id -u)
