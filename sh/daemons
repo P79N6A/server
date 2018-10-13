@@ -14,24 +14,24 @@ tmux send-keys -t web:1 "tail -f $PREFIX/var/logs/access.log" C-m
 #tmux new-window -t web:1 -d mitmdump
 
 ## reverse proxy (8081)
-# mitmdump (musl+alpine)
+# mitmdump (musl+Alpine)
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot /data/mnt/alpine /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
-# mitmdump (bionic+termux)
+# mitmdump (Bionic+Termux)
 #tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
 ## TCP routing
-# transparently redirect un-proxied traffic to proxy:
-# browser -> original HTTP dest (80) -> daemon (8000)
-# browser -> original HTTPS dest (443) -> reverse HTTPS proxy (8081) -> daemon (8000)
-# exempt proxy user from proxy-redirection to prevent loop and allow outbound net access:
-# browser -> forward HTTP/HTTPS proxy (8080) -> internet (443)
-# UDP currently blocked TODO wire up QUIC handling. see https://github.com/bbc/nghq etc
-proxy_uid=$(id -u)
+# direct packets to high-port proxy:
+# client -> original HTTP dest (80) -> local daemon (8000)
+# client -> original HTTPS dest (443) -> reverse HTTPS proxy (8081) -> local daemon (8000)
+# exempt web uid from redirection to prevent loop and allow outbound net access:
+# client -> forward HTTPS proxy (8080) -> remote daemon (443)
+# UDP currently blocked TODO wire up QUIC handling. https://github.com/bbc/nghq
+web_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
-su -c "sh $routeHTTP $proxy_uid"
-su -c "sh $routeHTTPS $proxy_uid"
+su -c "sh $routeHTTP $web_uid"
+su -c "sh $routeHTTPS $web_uid"
 
 ## database
 tmux new-window -t web:3 -d
