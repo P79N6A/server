@@ -1,11 +1,11 @@
 #!/bin/sh
-# session
+## session
 tmux new-session -s web -d -c ~/web
 
-# daemon
+## daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
-# forward proxy (8080)
+## forward proxy (8080)
 # squid
 tmux new-window -t web:1 -d
 tmux send-keys -t web:1 "squid -f ~/src/pw/config/squid.conf" C-m
@@ -13,26 +13,29 @@ tmux send-keys -t web:1 "tail -f $PREFIX/var/logs/access.log" C-m
 # mitmdump
 #tmux new-window -t web:1 -d mitmdump
 
-# reverse proxy (8081)
-# mitmdump on alpine (bionic python openssl-engine compilation SNAFU workaround)
+## reverse proxy (8081)
+# mitmdump (musl+alpine)
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot /data/mnt/alpine /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
-# mitmdump
+# mitmdump (bionic+termux)
 #tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-# TCP routes
-# direction proto port                         path
-# outgoing  HTTP    80 (original dest)          ->          8000 (daemon)
-# outgoing  HTTPS  443 (original dest) -> 8081 (decrypt) -> 8000 (daemon)
+## TCP routing
+# transparently redirect un-proxied traffic to proxy:
+# browser -> original HTTP dest (80) -> daemon (8000)
+# browser -> original HTTPS dest (443) -> reverse HTTPS proxy (8081) -> daemon (8000)
+# exempt proxy user from proxy-redirection to prevent loop and allow outbound net access
+# browser -> forward HTTP/HTTPS proxy (8080) -> internet (443)
+# UDP currently blocked TODO wire up QUIC handling. see https://github.com/bbc/nghq etc
 proxy_uid=$(id -u)
 routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
 routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
 su -c "sh $routeHTTP $proxy_uid"
 su -c "sh $routeHTTPS $proxy_uid"
 
-# database
+## database
 tmux new-window -t web:3 -d
 tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 
-# user input
+## user control
 tmux attach-session -t web
