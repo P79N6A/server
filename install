@@ -1,26 +1,24 @@
 #!/bin/sh
-## system packages
+
+## pkgs
 # Alpine
 which apk && apk add alpine-sdk graphicsmagick ruby ruby-dev ruby-rdoc python python3-dev py3-cffi py3-pip openssl-dev rsync libxslt-dev tmux squid
 # Debian
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux squid make rsync libffi-dev python-dev python3-pip
 # Termux
-which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev && mkdir $PREFIX/var/logs
+which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 
-## Ruby libraries
+## Ruby libs
 cd ruby
 ruby install
 gem install bundler
 bundle install
 
-## Python libraries
+## Python libs
 pip3 install --upgrade mitmproxy pygments
 
-## Certificate Authority
-# create cert
-openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout myCA.pem  -out ~/src/pw/config/CA.pem
-# link cert to system store
+## certificate
 cert=$(realpath ~/src/pw/config/CA.pem)
-#cert=$(realpath ~/.mitmproxy/mitmproxy-ca-cert.pem)
+openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout myCA.pem -out $cert
 hash=$(openssl x509 -inform PEM -subject_hash_old -in $cert -noout)
 su -c "cp $cert /system/etc/security/cacerts/$hash.0"
