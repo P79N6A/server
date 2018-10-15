@@ -9,24 +9,24 @@ tmux new-session -s web -d -c ~/web
 ## daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
-## forward proxy (8080)
+## forward proxy
 squid -f $app_path/config/squid.conf
 tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e 's|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*|\1$esc[32;1m\2 $esc[30;7m\3 $esc[36;1m\4$esc[0m\5\6\7|'"
 
-## reverse proxy (8081)
+## reverse proxy
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $userspace /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
 
 ## TCP routes
-#  direct packets to high-port proxy
-# client -> original HTTP dest (80) -> local daemon (8000)
-# client -> original HTTPS dest (443) -> reverse proxy (8081) -> local daemon (8000)
-#  exempt proxy from above ruleset and allow outbound traffic
-# client -> forward proxy (8080) -> remote daemon (443)
+# explicit proxy
+# agent -> forward proxy (3128)      -> remote daemon (443)
+# transparent proxy
+# agent -> original HTTP  dest (80)  -> local daemon  (8000)
+# agent -> original HTTPS dest (443) -> reverse proxy (8081) -> local daemon (8000)
 web_uid=$(id -u)
 su -c "sh $app_path/sh/routeHTTP $web_uid"
 su -c "sh $app_path/sh/routeHTTPS $web_uid"
-# UDP routing blocked TODO wire up QUIC handling https://github.com/bbc/nghq
+# UDP unimplemented TODO wire up QUIC https://github.com/bbc/nghq
 
 ## database
 tmux new-window -t web:3 -d
