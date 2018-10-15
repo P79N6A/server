@@ -1,0 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/env ruby
+require 'ww'
+hosts = {}
+open('access.log').each_line{|l|
+  tab = l.split ' '
+  u = tab[6].R
+  hosts[u.host] ||= 0
+  hosts[u.host] += 1
+}
+
+hosts.sort_by{|k,v|v.to_i}.reverse.map{|k,v|
+  puts "#{v} #{k}" 
+}
