@@ -1,4 +1,8 @@
 #!/bin/sh
+app_path=$(realpath ~/src/pw)
+userspace=/data/mnt/alpine
+esc=$(printf '\033')
+
 ## session
 tmux new-session -s web -d -c ~/web
 
@@ -7,31 +11,26 @@ tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
 ## forward proxy (8080)
 # squid
-tmux new-window -t web:1 -d
-tmux send-keys -t web:1 "squid -f ~/src/pw/config/squid.conf" C-m
-tmux send-keys -t web:1 "tail -f $PREFIX/var/logs/access.log" C-m
-# mitmdump
-#tmux new-window -t web:1 -d mitmdump
+squid -f $app_path/config/squid.conf
+tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e \"s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)\(.*\)|\1\\$esc[32;1m\2 \\$esc[30;7m\3 \\$esc[36;1m\4\\$esc[0m\5|\""
 
 ## reverse proxy (8081)
-# mitmdump (musl+Alpine)
+# mitmproxy (musl+Alpine)
 tmux new-window -t web:2 -d
-tmux send-keys -t web:2 "su -c 'chroot /data/mnt/alpine /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
-# mitmdump (Bionic+Termux)
+tmux send-keys -t web:2 "su -c 'chroot $userspace /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
+# mitmproxy (Bionic+Termux)
 #tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
 ## TCP routing
 # direct packets to high-port proxy:
 # client -> original HTTP dest (80) -> local daemon (8000)
 # client -> original HTTPS dest (443) -> reverse HTTPS proxy (8081) -> local daemon (8000)
-# exempt web uid from redirection to prevent loop and allow outbound net access:
+# exempt proxy from above rules to prevent loop and allow outbound net access:
 # client -> forward HTTPS proxy (8080) -> remote daemon (443)
 # UDP currently blocked TODO wire up QUIC handling. https://github.com/bbc/nghq
 web_uid=$(id -u)
-routeHTTP=$(realpath ~/src/pw/sh/routeHTTP)
-routeHTTPS=$(realpath ~/src/pw/sh/routeHTTPS)
-su -c "sh $routeHTTP $web_uid"
-su -c "sh $routeHTTPS $web_uid"
+su -c "sh $app_path/sh/routeHTTP $web_uid"
+su -c "sh $app_path/sh/routeHTTPS $web_uid"
 
 ## database
 tmux new-window -t web:3 -d

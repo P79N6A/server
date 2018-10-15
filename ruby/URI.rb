@@ -65,10 +65,10 @@ class WebResource < RDF::URI
   include URIs
 
   module HTTP
-    # host-mapped handler lambdas
+    # host to lambda mapping
     Host = {}
 
-    # original URL on file at third-party - network lookup
+    # URL on file at third-party
     Short = -> re {
       scheme = 'http' + (InsecureShorteners.member?(re.host) ? '' : 's') + '://'
       source = scheme + re.host + re.path
@@ -98,7 +98,7 @@ class WebResource < RDF::URI
     %w{t.co bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 
-    # URI wrapped in URI - no network lookup needed
+    # URI wrapped in URI
     Unwrap = -> key {
       -> re {
         location = re.q[key.to_s.downcase]
