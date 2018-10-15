@@ -11,7 +11,7 @@ tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
 ## forward proxy (8080)
 squid -f $app_path/config/squid.conf
-tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e \"s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)\(.*\)|\1\\$esc[32;1m\2 \\$esc[30;7m\3 \\$esc[36;1m\4\\$esc[0m\5|\""
+tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e \"s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)\(.*\)|\1$esc[32;1m\2 $esc[30;7m\3 $esc[36;1m\4$esc[0m\5|\""
 
 ## reverse proxy (8081)
 tmux new-window -t web:2 -d
