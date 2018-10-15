@@ -11,18 +11,17 @@ tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 
 ## forward proxy (8080)
 squid -f $app_path/config/squid.conf
-tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e \"s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)\(.*\)|\1$esc[32;1m\2 $esc[30;7m\3 $esc[36;1m\4$esc[0m\5|\""
+tmux new-window -t web:1 -d "tail -f $PREFIX/var/logs/access.log | sed -e \"s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)\(.*\)|\1\\$esc[32;1m\2 \\$esc[30;7m\3 \\$esc[36;1m\4\\\$esc[0m\5|\""
 
 ## reverse proxy (8081)
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $userspace /bin/su -c \"mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
-#tmux new-window -t web:2 -d mitmdump -p 8081 -m reverse:http://localhost:8000 --set keep_host_header=true
 
-## TCP routing
+## TCP routes
 #  direct packets to high-port proxy
 # client -> original HTTP dest (80) -> local daemon (8000)
 # client -> original HTTPS dest (443) -> reverse proxy (8081) -> local daemon (8000)
-#  exempt proxy from above ruleset to allow outbound traffic
+#  exempt proxy from above ruleset and allow outbound traffic
 # client -> forward proxy (8080) -> remote daemon (443)
 web_uid=$(id -u)
 su -c "sh $app_path/sh/routeHTTP $web_uid"
