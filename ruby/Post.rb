@@ -4,7 +4,7 @@ class WebResource
     Markup[Title] = -> title,env=nil,url=nil {
       title = CGI.escapeHTML title.to_s
       [if url
-       {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
+       {_: :a, class: :title, c: title, href: url, id: 'post'+rand.to_s.sha2}
       else
         {_: :h3, c: title}
       end,'<br>']}
@@ -34,13 +34,13 @@ class WebResource
        c: [{_: :a, class: :newspaper, href: cache||canonical},
            titles.map{|title|
              Markup[Title][title,env,canonical]},
+           (Markup[Date][date] if date),
            {_: :table,
             c: {_: :tr,
                 c: [{_: :td, c: from.map{|f|Markup[Creator][f,env]}, class: :from},
                     {_: :td, c: '&rarr;'},
-                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},
-           ((HTML.kv post, env) unless post.empty?), # metadata in key-value table
-           (Markup[Date][date] if date)]}}
+                    {_: :td, c: to.map{|f|Markup[Creator][f,env]}, class: :to}]}},'<br>',
+           ((HTML.kv post, env) unless post.empty?)]}}
 
     # group by sender
     Group['from'] = -> graph { Group['from-to'][graph,Creator] }
