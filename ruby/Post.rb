@@ -1,6 +1,23 @@
 class WebResource
 
   module HTML
+    Markup[Title] = -> title,env=nil,url=nil {
+      title = CGI.escapeHTML title.to_s
+      [if url
+       {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
+      else
+        {_: :h3, c: title}
+      end,'<br>']}
+
+    Markup[Creator] = -> c, env, urls=nil {
+      if c.respond_to? :uri
+        u = c.R
+        name = u.fragment || u.basename.do{|b|b=='/' ? u.host : b} || u.host || 'user'
+        color = env[:colors][name] ||= (HTML.colorizeBG name)
+        {_: :a, class: :creator, style: color, href: urls.justArray[0] || c.uri, c: name}
+      else
+        CGI.escapeHTML (c||'')
+      end}
 
     Markup[BlogPost] = Markup[Email] = -> post , env {
       # hidden fields in default view

@@ -202,8 +202,4 @@ class WebResource
     end
   end
   include MIME
-  module HTML
-    Group = {}
-    Markup = {}
-  end
 end

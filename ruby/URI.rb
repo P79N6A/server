@@ -110,8 +110,30 @@ class WebResource < RDF::URI
 
   end
   module HTML
-    BlankLabel = %w{com comments r status reddit twitter www}
-    BoldLabel = %w{boston collapse providence}
+    include URIs
+
+    Group = {}
+    Markup = {}
+
+    def self.urifyHash hash
+      hash.keys.map{|k|
+        if hash[k].class == Hash
+          hash[k] = HTML.urifyHash hash[k]
+        elsif hash[k].class == String
+          hash[k] = HTML.urifyString hash[k]
+        end}
+      hash
+    end
+
+    def self.urifyString str
+      str.match(/^(http|\/)\S+$/) ? str.R : str
+    end
+
+    Markup[Link] = -> ref, env=nil {
+      u = ref.to_s
+      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
+        href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
+
   end
   module Webize
 

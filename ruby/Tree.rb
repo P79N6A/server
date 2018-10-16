@@ -5,16 +5,14 @@ class WebResource
       container.delete Type
       name = container.delete :name
       title = container.delete Title
-      # contents can be represented in singleton Object, Array or URI-keyed Hash
-      contents = container.delete(Contains).do{|cs|
-        cs.class == Hash ? cs.values : cs}.justArray
-      blank = BlankLabel.member? name
-      bold = BoldLabel.member? name
-      {class: 'container' + (bold ? ' highlighted' : ''),
-       c: [(title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : {_: :span, class: bold ? :bold : :label, c: CGI.escapeHTML(name||'')} unless blank),
+      # content represented as singleton Object, Array or URI-keyed Hash
+      contents = container.delete(Contains).do{|cs|cs.class == Hash ? cs.values : cs}.justArray
+      {class: :container,
+       c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : {_: :span, class: :label, c: CGI.escapeHTML(name||'')},
            contents.map{|c|HTML.value(nil,c,env)},
            (HTML.kv(container, env) unless container.empty?)]}}
 
+    Group['flat'] = -> graph { graph }
     # URI controls tree structure
     Group['tree'] = -> graph {
       tree = {}
@@ -40,6 +38,21 @@ class WebResource
           cursor[Contains][r.fragment] = resource
         end
       }; tree }
+
+    # {k => v} table -> Markup
+    def self.kv hash, env
+      hash.delete :name
+      ["\n",
+       {_: :table,
+        c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
+          type = k && k.R || '#untyped'.R
+          [{_: :tr, name: type.fragment || type.basename,
+            c: ["\n ",
+                {_: :td, class: 'k', c: Markup[Type][type]},"\n ",
+                {_: :td, class: 'v',
+                 c: vs.justArray.map{|v| HTML.value k,v,env }.intersperse(' ')}]},
+           "\n"]}}, "\n"]
+    end
 
   end
 end

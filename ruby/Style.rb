@@ -58,6 +58,13 @@ class WebResource
       W3+'2000/01/rdf-schema#Resource' => :node,
     }
 
+    def self.colorize k, bg = true
+      return '' if !k || k.empty? || k.match(/^[0-9]+$/)
+      "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
+    end
+    def self.colorizeBG k; colorize k end
+    def self.colorizeFG k; colorize k, false end
+
   end
   module HTTP
 

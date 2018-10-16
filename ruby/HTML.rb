@@ -1,7 +1,6 @@
 # coding: utf-8
 class WebResource
   module HTML
-    include URIs
     SourceCode ||= Pathname.new(__FILE__).relative_path_from PWD
 
     # Markup -> HTML
@@ -87,19 +86,6 @@ class WebResource
                        ]}]
     end
 
-    Markup[Link] = -> ref, env=nil {
-      u = ref.to_s
-      [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
-        href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
-
-    Markup[Title] = -> title,env=nil,url=nil {
-      title = CGI.escapeHTML title.to_s
-      [if url
-       {_: :h3, c: {_: :a, c: title, href: url, id: 'post'+rand.to_s.sha2}}
-      else
-        {_: :h3, c: title}
-      end,'<br>']}
-
     Markup[Type] = -> t,env=nil {
       if t.respond_to? :uri
         t = t.R
@@ -107,50 +93,6 @@ class WebResource
       else
         CGI.escapeHTML t.to_s
       end}
-
-    Markup[Creator] = -> c, env, urls=nil {
-      if c.respond_to? :uri
-        u = c.R
-        name = u.fragment || u.basename.do{|b|b=='/' ? u.host : b} || u.host || 'user'
-        color = env[:colors][name] ||= (HTML.colorizeBG name)
-        {_: :a, class: :creator, style: color, href: urls.justArray[0] || c.uri, c: name}
-      else
-        CGI.escapeHTML (c||'')
-      end}
-
-    def self.urifyHash hash
-      hash.keys.map{|k|
-        if hash[k].class == Hash
-          hash[k] = HTML.urifyHash hash[k]
-        elsif hash[k].class == String
-          hash[k] = HTML.urifyString hash[k]
-        end}
-      hash
-    end
-    def self.urifyString str
-      str.match(/^(http|\/)\S+$/) ? str.R : str
-    end
-
-    # {k => v} table -> Markup
-    def self.kv hash, env
-      hash.delete :name
-      ["\n",
-       {_: :table,
-        c: hash.sort_by{|k,vs|k.to_s}.reverse.map{|k,vs|
-          type = k && k.R || '#untyped'.R
-          [{_: :tr, name: type.fragment || type.basename,
-            c: ["\n ",
-                {_: :td, class: 'k', c: Markup[Type][type]},"\n ",
-                {_: :td, class: 'v',
-                 c: if k == Contains && vs.values.size > 1
-                  tabular vs.values, env, false
-                else
-                  vs.justArray.map{|v|
-                    HTML.value k, v, env }.intersperse(' ')
-                 end
-                }]},
-           "\n"]}}, "\n"]
-    end
 
     # (k,v) tuple -> Markup
     def self.value k, v, env
@@ -205,39 +147,6 @@ class WebResource
                  c: keys.map{|key|
                    r[key].justArray.map{|v|
                      HTML.value key,v,env }.intersperse(' ')}}}}}]}
-    end
-
-    Group['flat'] = -> graph { graph }
-
-    ## Utility functions
-
-    def self.colorize k, bg = true
-      return '' if !k || k.empty? || BlankLabel.member?(k) || k.match(/^[0-9]+$/)
-      "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
-    end
-    def self.colorizeBG k; colorize k end
-    def self.colorizeFG k; colorize k, false end
-
-    # hypertext grep-results
-    def htmlGrep graph, q
-      wordIndex = {}
-      args = POSIX.splitArgs q
-      args.each_with_index{|arg,i| wordIndex[arg] = i }
-      pattern = /(#{args.join '|'})/i
-      # find matches
-      graph.map{|u,r|
-        keep = !(r.has_key?(Abstract)||r.has_key?(Content)) || r.to_s.match(pattern)
-        graph.delete u unless keep}
-      # highlight matches
-      graph.values.map{|r|
-        (r[Content]||r[Abstract]).justArray.map(&:lines).flatten.grep(pattern).do{|lines|
-          r[Abstract] = lines[0..5].map{|l|
-            l.gsub(/<[^>]+>/,'')[0..512].gsub(pattern){|g| # capture
-              HTML.render({_: :span, class: "w#{wordIndex[g.downcase]}", c: g}) # wrap
-            }} if lines.size > 0 }}
-      # CSS
-      graph['#abstracts'] = {Abstract => HTML.render({_: :style, c: wordIndex.values.map{|i|
-                                                        ".w#{i} {background-color: #{'#%06x' % (rand 16777216)}; color: white}\n"}})}
     end
 
     # dirty HTML -> cleaned, reformatted HTML
