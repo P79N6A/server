@@ -96,19 +96,15 @@ class WebResource
 
     # typed value -> Markup
     def self.value k, v, env
-      if 'uri' == k
-        u = v.R
-        {_: :a, href: u.uri, id: 'link'+rand.to_s.sha2, c: "#{u.host} #{u.path} #{u.fragment}"}
+      if Abstract == k
+        v # already HTML
       elsif Content == k
-        v
-      elsif Abstract == k
-        v
-      elsif Markup[k] # typed predicate
+        v # already HTML
+      elsif Markup[k] # predicate mapping
         Markup[k][v,env]
-      elsif v.class == Hash
+      elsif v.class == Hash # object mapping
         resource = v.R
         types = resource.types
-        # typed object
         if types.member? InstantMessage
           Markup[InstantMessage][resource,env]
         elsif types.member?(BlogPost) || types.member?(Email)
@@ -118,9 +114,11 @@ class WebResource
         else
           kv v, env
         end
+      elsif 'uri' == k
+        v.R # resource link
       elsif v.class == WebResource
-        v
-      else
+        v # resource link
+      else # no renderer found
         CGI.escapeHTML v.to_s
       end
     end

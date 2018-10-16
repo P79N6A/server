@@ -167,6 +167,20 @@ class WebResource
         yield s, Date, mt.iso8601}
     end
   end
+  module HTML
+    Markup[Container] = -> container , env {
+      uri = container.delete 'uri'
+      container.delete Type
+      name = container.delete :name
+      title = container.delete Title
+      contents = container.delete(Contains).do{|cs|
+        cs.class == Hash ? cs.values : cs}.justArray #represented as single Object, Array of Objects, or (URI keyed) Hash
+      uno = contents.size <= 1
+      {class: uno ? :c1 : :cN,
+       c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (uno ? '' : {_: :span, class: :label, c: CGI.escapeHTML(name||'')}),
+           contents.map{|c|HTML.value(nil,c,env)},
+           (HTML.kv(container, env) unless container.empty?)]}}
+  end
   module HTTP
 
     def filePreview

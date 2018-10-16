@@ -9,19 +9,19 @@
 body {font-family: sans-serif;margin: 0 2em 0 2em;background-color:#000;color: #fff}
 a    {text-decoration: none; font-weight: bold; background-color: white; color: black}
 a.title {font-size:1.2em}
-a.date {float: right; font-weight: normal; font-size:.8em; color:#888}
+a.date {float: right; font-weight: normal; font-size:.8em; background-color: #eee; color:#888}
 a.link {background-color: #bbb; color: #000}
-img, td, a {max-width: 100%; overflow: hidden}
-img.thumb, a {max-width: 28em}
-pre   {white-space: pre-wrap}
+.label {font-size: .8em; color: #ddd; display: block}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
-p {max-width: 78ex;margin:.1em; border-width: 0 0 .08em 0; border-style: dotted; border-color: #aaa}
+.cN {background-color: #444; color: #000; border-radius: .4em}
+.post {border-radius: .3em; background-color: #eee; color: #000; margin: .2em;max-width:80ex}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
-:target, :target * {background-color: #8f0 !important; color: #000 !important}
-.label {font-size: .8em; color: #ddd; display: block}
-td, .container {border-width: .08em .08em .08em 0; border-style: solid}
+td, .c1, .cN {border-width: 0 .08em .08em 0; border-style: dotted; border-color: #888}
 td {border-color: #ddd}
-.container {border-color: #444}
-.post {border-radius: .23em; background-color: #fff; color: #000; margin: .2em;max-width:80ex}
-.newspaper {font-size: 1.23em; font-weight: normal}
+img {max-width: 100%}
+img.thumb {max-width: 28em}
+pre   {white-space: pre-wrap}
+p {max-width: 78ex;margin:.1em; background-color: #fff; color: #000; border-width: 0 0 .08em 0; border-style: dotted; border-color: #aaa}
+:target, :target * {background-color: #8f0 !important; color: #000 !important}
+

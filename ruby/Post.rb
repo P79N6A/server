@@ -31,7 +31,7 @@ class WebResource
         to = post.delete(To).justArray
 
       {class: :post,
-       c: [{_: :a, class: :newspaper, href: cache||canonical},
+       c: [{_: :a, class: :title, href: cache||canonical},
            titles.map{|title|
              Markup[Title][title,env,canonical]},
            (Markup[Date][date] if date),
