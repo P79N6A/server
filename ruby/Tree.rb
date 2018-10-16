@@ -29,6 +29,20 @@ class WebResource
         end
       }; tree }
 
+    Markup[Container] = -> container , env {
+      uri = container.delete 'uri'
+      container.delete Type
+      name = container.delete :name
+      title = container.delete Title
+      contents = container.delete(Contains).do{|cs|
+        cs.class == Hash ? cs.values : cs}.justArray #represented as single Object, Array of Objects, or URI-indexed Hash
+      uno = contents.size <= 1
+      color = uno ? '#111' : ('#%06x' % (rand 16777216))
+      {class: :container, style: "color: #{color}; border-color: #{color}",
+       c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (uno ? '' : (name ? CGI.escapeHTML(name) : '')),
+           contents.map{|c|HTML.value(nil,c,env)},
+           (HTML.kv(container, env) unless container.empty?)]}}
+
     # {k => v} table -> Markup
     def self.kv hash, env
       hash.delete :name
