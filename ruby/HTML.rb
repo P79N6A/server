@@ -94,7 +94,7 @@ class WebResource
         CGI.escapeHTML t.to_s
       end}
 
-    # (k,v) tuple -> Markup
+    # typed value -> Markup
     def self.value k, v, env
       if 'uri' == k
         u = v.R
@@ -123,30 +123,6 @@ class WebResource
       else
         CGI.escapeHTML v.to_s
       end
-    end
-
-    # [resourceA,resourceB..] -> Markup
-    def self.tabular resources, env, head = true
-      ks = resources.map(&:keys).flatten.uniq
-      {_: :table, class: :table,
-       c: [({_: :tr,
-             c: ks.map{|k|
-               {_: :td, c: Markup[Type][k.R]}}} if head),
-           resources.sort_by{|r|
-             (case env['query']['sort']
-              when 'date'
-                r[Date].justArray[0]
-              else
-                r.R.basename
-              end) || ''
-           }.reverse.map{|r|
-             {_: :tr,
-              c: ks.map{|k|
-                keys = k==Title ? [Title,Image,Video] : [k]
-                {_: :td,
-                 c: keys.map{|key|
-                   r[key].justArray.map{|v|
-                     HTML.value key,v,env }.intersperse(' ')}}}}}]}
     end
 
     # dirty HTML -> cleaned, reformatted HTML
