@@ -259,7 +259,13 @@ class WebResource
             yield u, Type, R[BlogPost]
             blogs = [resource.join('/')]
             blogs.push @base.join('/') if @host && @host != resource.host # re-blog
-            blogs.map{|blog|yield u, R::To, blog}
+            blogs.map{|blog|
+              forum = if resource.host.match /reddit.com$/
+                        R['https://www.reddit.com/'+resource.parts[0..1].join('/')]
+                      else
+                        blog
+                      end
+              yield u, R::To, forum}
 
             # media links
             inner.scan(reMedia){|e|
