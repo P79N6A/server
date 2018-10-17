@@ -10,16 +10,13 @@ class WebResource
       (graph.class==Array ? graph : graph.values).map{|resource|
         cursor = tree
         r = resource.R
-        # walk to document-graph location
+        # traverse to document-graph
         [r.host ? r.host.split('.').reverse : '',
          r.parts.map{|p|p.split '%23'}].flatten.map{|name|
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
            # create named-node if missing, advance cursor
-          cursor = cursor[Contains][name] ||= {name: name,
-                                               #Title => name,
-                                               Type => R[Container]}}
-        # reference to data
+          cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
         if !r.fragment # document itself
           resource.map{|k,v|
             cursor[k] = cursor[k].justArray.concat v.justArray}
@@ -39,11 +36,11 @@ class WebResource
       uno = contents.size <= 1
       color = uno ? '#111' : ('#%06x' % (rand 16777216))
       {class: :container, style: "color: #{color}; border-color: #{color}",
-       c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (uno ? '' : (name ? CGI.escapeHTML(name) : '')),
+       c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (uno ? '' : (name ? {_: :span, class: :label, c: CGI.escapeHTML(name)} : '')),
            contents.map{|c|HTML.value(nil,c,env)},
            (HTML.kv(container, env) unless container.empty?)]}}
 
-    # {k => v} table -> Markup
+    # {k => v} -> Markup
     def self.kv hash, env
       hash.delete :name
       ["\n",
@@ -58,7 +55,7 @@ class WebResource
            "\n"]}}, "\n"]
     end
 
-    # [resourceA,resourceB..] -> Markup
+    # [resA,resB,..] -> Markup
     def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
       {_: :table, class: :table,
