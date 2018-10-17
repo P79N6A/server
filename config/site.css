@@ -21,6 +21,7 @@ table {border-spacing: 0}
 img {max-width: 100%}
 img.thumb {max-width: 28em}
 pre {white-space: pre-wrap}
-p {margin:.1em; background-color: #fff; color: #000; border-width: 0 0 .08em 0; border-style: dotted; border-color: #aaa}
+p {margin:.1em; border-width: 0 0 .08em 0; border-style: dotted; border-color: #aaa}
+p, span {background-color: #fff; color: #000}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
 

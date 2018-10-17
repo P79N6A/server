@@ -10,8 +10,8 @@ class WebResource
               Markup[Date][d,env]}, ' ',
             msg[Creator].map{|c|
                Markup[Creator][c,env,msg.uri]}, ' ',
-            msg[Abstract], ' ',
-            msg[Content],
+            msg[Abstract], ' <span>',
+            msg[Content],  '</span>',
             msg[Image].map{|i|
               Markup[Image][i,env]},
             msg[Video].map{|v|
@@ -69,7 +69,7 @@ class WebResource
             a.set_attribute('id', 'tweetedlink'+rand.to_s.sha2)
             a.set_attribute('href', Twitter + (a.attr 'href')) if (a.attr 'href').match /^\//
             yield s, DC+'link', R[a.attr 'href']}
-          yield s, Abstract, HTML.strip(content.inner_html).gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
+          yield s, Content, HTML.strip(content.inner_html).gsub(/<\/?span[^>]*>/,'').gsub(/\n/,'').gsub(/\s+/,' ')
         end}
     end
 
