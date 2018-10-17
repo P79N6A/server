@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	};
 	last = this;
     });
-    if(first && last){ // connect the ends
+    if(first && last){ // close ring
 	last.attr('next',first.attr('id'));
 	first.attr('prev',last.attr('id'));
     };
@@ -65,13 +65,6 @@ document.addEventListener("DOMContentLoaded", function(){
 		    if(href)
 			window.location = href;
 		};
-	    };
-	};
-	if(e.getModifierState("Control")) {
-	    if(key==85){
-		var src = 'view-source:'+window.location.href;
-		navigator.clipboard.writeText(src)
-		window.open(src,'src');
 	    };
 	};
 	if(e.getModifierState("Shift")) {
