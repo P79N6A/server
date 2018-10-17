@@ -9,14 +9,14 @@ class WebResource
       return [405,{},[]] unless Methods.member? method
       # parse query
       env['query'] = query = parseQs env['QUERY_STRING']
-      # bind hostname from query or header field
+      # bind hostname via query or header
       host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
       # bind pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       # evaluate path-expression, preserving trailing-slash
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-      # log request
+      # referrer
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -24,6 +24,7 @@ class WebResource
                  else
                    ' '
                  end
+      # logging
       puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[0m" + path
       # dispatch request
       R['//' + host + path].environment(env).send method
