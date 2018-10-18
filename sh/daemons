@@ -23,7 +23,7 @@ tmux send-keys -t web:2 "su -c 'chroot $userspace /bin/su -c \"mitmdump -p 8080 
 # agent -> original HTTP  dest (80)  -> local daemon  (8000)
 # agent -> original HTTPS dest (443) -> reverse proxy (8080) -> local daemon (8000)
 web_uid=$(id -u)
-su -c "sh $app_path/sh/routeHTTP $web_uid"
+su -c "sh $app_path/sh/routes $web_uid"
 # UDP unimplemented TODO wire up QUIC https://github.com/bbc/nghq
 
 ## database
