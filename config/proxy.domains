@@ -215,6 +215,7 @@
 *.flashtalking.com
 *.flipboard.com
 *.flyertown.ca
+*.flurry.com
 *.fontawesome.com
 *.fonts.net
 *.fontsquirrel.com
@@ -233,6 +234,7 @@
 *.getclicky.com
 *.getdrip.com
 *.getsentry.com
+*.getsitecontrol.com
 *.gfx.ms
 *.gifs.com
 *.gigya.com
@@ -679,6 +681,7 @@ adadvisor.net
 adrta.com
 ads.*
 analytics.*
+api.*
 app-measurement.com
 bit.ly
 bluetoad.com
