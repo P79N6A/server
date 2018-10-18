@@ -1,6 +1,5 @@
 #!/bin/sh
-export http_proxy=http://localhost:8080
-export https_proxy=https://localhost:8080
+export http_proxy=http://localhost:3128
+export https_proxy=https://localhost:3128
 export no_proxy=`cat ~/src/pw/config/proxy.domains | tr "\n" ","`
-#brave
 chromium-browser
