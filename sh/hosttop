@@ -1,7 +1,7 @@
-#!/data/data/com.termux/files/usr/bin/env ruby
+#!/usr/bin/env ruby
 require 'ww'
 hosts = {}
-open('access.log').each_line{|l|
+open(ENV['PREFIX']+'/var/logs/access.log').each_line{|l|
   tab = l.split ' '
   u = tab[6].R
   hosts[u.host] ||= 0
