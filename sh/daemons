@@ -1,6 +1,6 @@
 #!/bin/sh
 app_path=$(realpath ~/src/pw)
-userspace=/data/mnt/alpine
+os_path=/data/mnt/alpine
 
 ## session
 tmux new-session -s web -d -c ~/web
@@ -14,7 +14,7 @@ tmux new-window -t web:1 -d $app_path/sh/proxylog
 
 ## reverse proxy
 tmux new-window -t web:2 -d
-tmux send-keys -t web:2 "su -c 'chroot $userspace /bin/su -c \"mitmdump -p 8080 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
+tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
 
 ## TCP routes
 # explicit proxy
