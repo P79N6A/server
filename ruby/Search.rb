@@ -15,13 +15,13 @@ class WebResource
       case args.size
       when 0
         return []
-      when 2
+      when 2 # two terms in any order
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
-      when 3
+      when 3 # three terms in any order
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
-      when 4
+      when 4 # four terms in any order
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
-      else
+      else # N terms in sequential order of appearance. one scan less invocations..go nuts
         pattern = args.join '.*'
         cmd = "grep -ril #{pattern.sh} #{sh}"
       end
@@ -31,17 +31,20 @@ class WebResource
   end
   module HTTP
 
-    # look for app in FDroid store. if not there it's probably closed-source
+    # lookup app in FDroid store, if not there it's probably closed-source
     Host['play.google.com'] = -> re {
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
-    # TODO redirect to federated/mesh search-nets
+    # TODO redirect to mesh search-nets or just use localhost
     Host['google.com'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
-      when 'maps'
+      when 'complete' # keystroke logger
+        puts 'SEARCH ' + re.q['q'].to_s
+        [404,{},[]]
+      when 'maps' # goto Maps lambda
         Host['maps.google.com'][re]
-      when 'search'
+      when 'search' # goto DDG
         loc = if re.q.has_key? 'q'
                 "https://duckduckgo.com/?q=#{URI.escape re.q['q']}"
               else
@@ -52,7 +55,7 @@ class WebResource
         [404,{},[]]
       end}
 
-    # redirect to open alternative
+    # redirect to open alternatives
     Host['maps.google.com'] = -> re {
       loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
               lat = ll[1]
