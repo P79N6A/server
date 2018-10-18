@@ -6,28 +6,40 @@ iptables  -P OUTPUT DROP
 ip6tables -P OUTPUT DROP
 
 # loopback interface
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A OUTPUT -o lo -j ACCEPT
+iptables  -A INPUT  -i lo -j ACCEPT
+ip6tables -A INPUT  -i lo -j ACCEPT
+iptables  -A OUTPUT -o lo -j ACCEPT
+ip6tables -A OUTPUT -o lo -j ACCEPT
 
 # DNS
-iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
-iptables -A INPUT -p udp --sport 53 -j ACCEPT
+iptables  -A INPUT  -p udp --sport 53 -j ACCEPT
+ip6tables -A INPUT  -p udp --sport 53 -j ACCEPT
+ip6tables -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables  -A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # HTTP
-iptables -A OUTPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT  -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 8000 -j ACCEPT
-iptables -A INPUT  -p tcp --sport 8000 -j ACCEPT
+iptables  -A INPUT  -p tcp --sport 80   -j ACCEPT
+ip6tables -A INPUT  -p tcp --sport 80   -j ACCEPT
+iptables  -A INPUT  -p tcp --sport 443  -j ACCEPT
+ip6tables -A INPUT  -p tcp --sport 443  -j ACCEPT
+iptables  -A INPUT  -p tcp --sport 3128 -j ACCEPT
+ip6tables -A INPUT  -p tcp --sport 3128 -j ACCEPT
+iptables  -A INPUT  -p tcp --sport 8000 -j ACCEPT
+ip6tables -A INPUT  -p tcp --sport 8000 -j ACCEPT
+iptables  -A INPUT  -p tcp --sport 8080 -j ACCEPT
+ip6tables -A INPUT  -p tcp --sport 8080 -j ACCEPT
+iptables  -A OUTPUT -p tcp --dport 80   -j ACCEPT
+ip6tables -A OUTPUT -p tcp --dport 80   -j ACCEPT
+iptables  -A OUTPUT -p tcp --dport 443  -j ACCEPT
+ip6tables -A OUTPUT -p tcp --dport 443  -j ACCEPT
+iptables  -A OUTPUT -p tcp --dport 3128 -j ACCEPT
+ip6tables -A OUTPUT -p tcp --dport 3128 -j ACCEPT
+iptables  -A OUTPUT -p tcp --dport 8000 -j ACCEPT
+ip6tables -A OUTPUT -p tcp --dport 8000 -j ACCEPT
+iptables  -A OUTPUT -p tcp --dport 8080 -j ACCEPT
+ip6tables -A OUTPUT -p tcp --dport 8080 -j ACCEPT
 iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000
 ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000
-
-# HTTPS
-iptables -A OUTPUT -p tcp --dport 443  -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 3128 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -p tcp --dport 8080 -j ACCEPT
-iptables -A INPUT  -p tcp --sport 443  -m conntrack --ctstate ESTABLISHED -j ACCEPT
-iptables -A INPUT  -p tcp --sport 3128 -m conntrack --ctstate ESTABLISHED -j ACCEPT
-iptables -A INPUT  -p tcp --sport 8080 -j ACCEPT
 iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport 443 -j REDIRECT --to-ports 8080
 ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport 443 -j REDIRECT --to-ports 8080
 
