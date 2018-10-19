@@ -10,6 +10,7 @@
 *.abs-cbn.com
 *.abtasty.com
 *.accuweather.com
+*.acxiomapac.com
 *.ad
 *.adblade.com
 *.addroplet.com
@@ -32,6 +33,7 @@
 *.adroll.com
 *.ads-twitter.com
 *.adsafeprotected.com
+*.adsafety.net
 *.adsnative.com
 *.adspsp.com
 *.adsrvr.org
@@ -48,6 +50,7 @@
 *.alexametrics.com
 *.alooma.com
 *.amazon-adsystem.com
+*.amazon.com
 *.amazonaws.com
 *.amgload.net
 *.ampproject.org
@@ -85,8 +88,8 @@
 *.bidswitch.net
 *.bing.com
 *.bing.net
-*.bizographics.com
 *.bizible.com
+*.bizographics.com
 *.bkrtx.com
 *.blackbaud.com
 *.bluecava.com
@@ -219,8 +222,8 @@
 *.firefox.com
 *.flashtalking.com
 *.flipboard.com
-*.flyertown.ca
 *.flurry.com
+*.flyertown.ca
 *.fontawesome.com
 *.fonts.net
 *.fontsquirrel.com
@@ -286,6 +289,7 @@
 *.hubspot.com
 *.hubspot.net
 *.i10c.net
+*.iasds01.com
 *.ic-live.com
 *.idealmedia.com
 *.iesnare.com
@@ -314,7 +318,6 @@
 *.ionicframework.com
 *.iperceptions.com
 *.ipify.org
-*.iasds01.com
 *.issuu.com
 *.ivwbox.de
 *.izooto.com
@@ -512,14 +515,18 @@
 *.revstripe.com
 *.rezync.com
 *.rfihub.com
+*.rfihub.net
 *.rhythmxchange.com
 *.richrelevance.com
 *.rightnowtech.com
+*.rkdms.com
 *.rlcdn.com
 *.rmtag.com
 *.rpxnow.com
+*.rqtrk.eu
 *.rs-stripe.com
 *.rtb123.com
+*.ru4.com
 *.rubiconproject.com
 *.run-syndicate.com
 *.rxthdr.com
@@ -556,6 +563,7 @@
 *.sitewit.com
 *.skimresources.com
 *.sky.com
+*.smaato.net
 *.smartadserver.com
 *.snapchat.com
 *.solidopinion.com
@@ -634,6 +642,7 @@
 *.usatoday.com
 *.usemessages.com
 *.userengage.com
+*.userreport.com
 *.userzoom.com
 *.veinteractive.com
 *.verticalmediabrands.com
@@ -649,6 +658,7 @@
 *.voxmedia.com
 *.vuukle.com
 *.w.org
+*.w55c.net
 *.warnerbros.com
 *.weather.com
 *.webmasterpro.de
