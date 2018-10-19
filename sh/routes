@@ -1,36 +1,38 @@
 #!/bin/sh
 
-# default policy
+# base policy
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
 iptables  -P OUTPUT DROP
 ip6tables -P OUTPUT DROP
-iptables  -A INPUT  -i lo -j ACCEPT
-ip6tables -A INPUT  -i lo -j ACCEPT
-iptables  -A OUTPUT -o lo -j ACCEPT
-ip6tables -A OUTPUT -o lo -j ACCEPT
 
+# abstract port-enabling methods
+open_port=$(realpath $1/sh/open_port)
 open_TCP=$(realpath $1/sh/open_TCP)
 open_UDP=$(realpath $1/sh/open_UDP)
-
-# DNS
-$open_TCP 53
-$open_UDP 53
-
-# HTTP
-iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport  80 -j REDIRECT --to-ports 8000
-ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport  80 -j REDIRECT --to-ports 8000
-iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport 443 -j REDIRECT --to-ports 8080
-ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport 443 -j REDIRECT --to-ports 8080
-$open_TCP 80
-$open_TCP 443
-$open_TCP 3128
-$open_TCP 8000
-$open_TCP 8080
 
 # SSH
 $open_TCP 22
 $open_TCP 8022
+
+# DNS
+$open_port 53
+
+# DHCP
+$open_port 67
+$open_port 68
+
+# HTTP
+# direct unproxied traffic thru transparent proxy for inspection
+iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport  80 -j REDIRECT --to-ports 8000
+ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport  80 -j REDIRECT --to-ports 8000
+iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport 443 -j REDIRECT --to-ports 8080
+ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $2 --dport 443 -j REDIRECT --to-ports 8080 
+$open_TCP 80   # direct HTTP
+$open_TCP 443  # direct HTTPS
+$open_TCP 3128 # forward HTTPS proxy
+$open_TCP 8000 # local service
+$open_TCP 8080 # reverse HTTPS proxy
 
 # Mosh
 $open_UDP 60001
