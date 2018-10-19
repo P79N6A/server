@@ -55,12 +55,11 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       # response handler, first match finishes
-      return fileResponse if node.file?                    # static file
-      return Host[host][self] if Host[host]                # host mapping
-      hosts = host.split('.')[1..-1].unshift('*').join '.' # wildcardize subdomains
-      return Host[hosts][self] if Host[hosts]              # wildcard mapping
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-period
-      filesResponse                                        # static files
+      return fileResponse if node.file?               # static file
+      return Host[host][self] if Host[host]           # host match
+      return Host[subdomain][self] if Host[subdomain] # subdomain-wildcard match
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-segment
+      filesResponse                                   # static files
     end
 
     def entity env, lambda = nil

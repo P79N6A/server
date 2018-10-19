@@ -61,6 +61,9 @@ class WebResource < RDF::URI
 
     def + u; R[to_s + u.to_s] end
     def match p; to_s.match p end
+    def subdomain
+      host.split('.')[1..-1].unshift('*').join '.'
+    end
   end
   include URIs
 
