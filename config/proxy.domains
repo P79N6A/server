@@ -158,6 +158,7 @@
 *.cookielaw.org
 *.coremetrics.com
 *.corus.ca
+*.coveo.com
 *.cpx.to
 *.crashlytics.com
 *.crazyegg.com
@@ -379,8 +380,10 @@
 *.marfeel.com
 *.marinsm.com
 *.marketo.com
+*.marketo.net
 *.matheranalytics.com
 *.mathtag.com
+*.maxmind.com
 *.maxymiser.net
 *.mcclatchydc.com
 *.mdpcdn.com
@@ -547,6 +550,7 @@
 *.s3xified.com
 *.sail-horizon.com
 *.sail-personalize.com
+*.salesloft.com
 *.saymedia.com
 *.sbnation.com
 *.scorecardresearch.com
@@ -668,6 +672,8 @@
 *.videoplayerhub.com
 *.vidora.com
 *.vilynx.com
+*.visitors.live
+visitors.live
 *.visto1.net
 *.visualstudio.com
 *.visualwebsiteoptimizer.com
