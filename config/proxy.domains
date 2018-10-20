@@ -55,6 +55,7 @@
 *.akamai.net
 *.akamaihd.net
 *.akamaized.net
+*.alcmpn.com
 *.alexametrics.com
 *.alooma.com
 *.amazon-adsystem.com
@@ -190,6 +191,7 @@
 *.custhelp.com
 *.cwkuki.com
 *.cxense.com
+*.cxpublic.com
 *.da-ads.com
 *.db-ip.com
 *.dc-storm.com
@@ -376,6 +378,7 @@
 *.lakana.com
 *.latimes.com
 *.liadm.com
+*.licasd.com
 *.licdn.com
 *.lightboxcdn.com
 *.lightstep.com
@@ -582,11 +585,13 @@
 *.s3xified.com
 *.sail-horizon.com
 *.sail-personalize.com
+*.sailthru.com
 *.salesloft.com
 *.saymedia.com
 *.sbnation.com
 *.scorecardresearch.com
 *.scrippsdigital.com
+*.script.ag
 *.scroll.com
 *.scrollerads.com
 *.searchspring.net
@@ -684,6 +689,7 @@
 *.turner.com
 *.tv
 *.tvpassport.com
+*.tvsquared.com
 *.twitter.com
 *.tynt.com
 *.typekit.com
@@ -755,6 +761,7 @@
 *.zqtk.net
 aaxdetect.com
 absorbingband.com
+accounts.*
 ad-delivery.net
 ad.*
 adadvisor.net
@@ -834,6 +841,7 @@ snag.gy
 sumo.com
 sync.*
 t.umblr.com
+tags.*
 ti.me
 tinyurl.com
 track.*
