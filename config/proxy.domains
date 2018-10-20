@@ -31,11 +31,13 @@
 *.adnxs.com
 *.adobe.com
 *.adobedtm.com
+*.adomik.com
 *.adquick.com
 *.adready.com
 *.adreadytractions.com
 *.adrizer.com
 *.adroll.com
+*.adrta.com
 *.ads-twitter.com
 *.adsafeprotected.com
 *.adsafety.net
@@ -118,8 +120,12 @@
 *.btserve.com
 *.bugsnag.com
 *.bzgint.com
+*.c3tag.com
 *.casalemedia.com
 *.ccgateway.net
+*.cdnbasket.net
+*.cdnjquery.com
+*.cdnwidget.com
 *.cedexis-test.com
 *.cedexis.com
 *.celtra.com
@@ -384,6 +390,7 @@
 *.lockerdome.com
 *.lockerdomecdn.com
 *.loginradius.com
+*.lowermybills.com
 *.lphbs.com
 *.mail.ru
 *.mailchimp.com
@@ -641,6 +648,7 @@
 *.tealiumiq.com
 *.telerik.com
 *.tempestpremium.com
+*.the-ozone-project.com
 *.thebrighttag.com
 *.theplatform.com
 *.thr.com
@@ -674,9 +682,11 @@
 *.typekit.com
 *.typekit.net
 *.typography.com
+*.u5c93.com
 *.ubembed.com
 *.ugdturner.com
 *.undertone.com
+*.univide.com
 *.unrulymedia.com
 *.upapi.net
 *.urbanairship.com
@@ -697,6 +707,7 @@
 *.visto1.net
 *.visualstudio.com
 *.visualwebsiteoptimizer.com
+*.voicefive.com
 *.voxmedia.com
 *.vuukle.com
 *.w.org
@@ -813,6 +824,7 @@ siteimproveanalytics.com
 smetrics.*
 snag.gy
 sumo.com
+sync.*
 t.umblr.com
 ti.me
 tinyurl.com
