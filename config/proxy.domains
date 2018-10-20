@@ -2,9 +2,9 @@
 *.247realmedia.com
 *.2mdn.net
 *.2o7.net
+*.33across.com
 *.3gl.net
 *.3lift.com
-*.33across.com
 *.4-tell.net
 *.aamsitecertifier.com
 *.aaxads.com
@@ -69,6 +69,7 @@
 *.appspot.com
 *.apxlv.com
 *.aralego.com
+*.arcasync.com
 *.arcpublishing.com
 *.aspnetcdn.com
 *.assettype.com
@@ -121,6 +122,7 @@
 *.ccgateway.net
 *.cedexis-test.com
 *.cedexis.com
+*.celtra.com
 *.cfigroup.com
 *.chartbeat.com
 *.chartbeat.net
@@ -131,6 +133,7 @@
 *.civicscience.com
 *.clean.gg
 *.clickability.com
+*.clickagy.com
 *.clicktale.net
 *.cloud
 *.cloudflare.com
@@ -145,16 +148,18 @@
 *.comodo.net
 *.company-target.com
 *.compendium.com
-*.conductrics.com
 *.condenastdigital.com
+*.conductrics.com
 *.connatix.com
 *.connectignite.com
+*.connexity.net
 *.consensu.org
 *.consumable.com
 *.consumersource.com
 *.consumertrack.com
 *.contentignite.com
 *.contentinsights.com
+*.contently.com
 *.contextweb.com
 *.conviva.com
 *.cookiebot.com
@@ -166,6 +171,7 @@
 *.crashlytics.com
 *.crazyegg.com
 *.createsend1.com
+*.crispadvertising.com
 *.criteo.com
 *.criteo.net
 *.crosno.net
@@ -201,8 +207,8 @@
 *.dpmsrv.com
 *.drift.com
 *.driftt.com
-*.dynamicyield.com
 *.dvtps.com
+*.dynamicyield.com
 *.eccmp.com
 *.edgekey.net
 *.editmysite.com
@@ -248,9 +254,11 @@
 *.fullstory.com
 *.fwmrm.net
 *.fxcompared.com
+*.g2crowd.com
 *.gannett-cdn.com
 *.gannettdigital.com
 *.gatehousemedia.com
+*.gaug.es
 *.gcion.com
 *.getclicky.com
 *.getdrip.com
@@ -295,6 +303,7 @@
 *.hotjar.com
 *.hs-analytics.net
 *.hs-scripts.com
+*.hsadspixel.net
 *.hsforms.com
 *.hsforms.net
 *.hsleadflows.net
@@ -409,9 +418,11 @@
 *.mirabelsmarketingmanager.com
 *.mirs.com
 *.mktoresp.com
+*.ml314.com
 *.mmstat.com
 *.mmtro.com
 *.moatads.com
+*.moatpixel.com
 *.mookie1.com
 *.mozilla.com
 *.mozilla.net
@@ -479,6 +490,7 @@
 *.patreon.com
 *.paypalobjects.com
 *.perfectaudience.com
+*.perfectmarket.com
 *.perimeterx.net
 *.petametrics.com
 *.pgmcdn.com
@@ -487,6 +499,7 @@
 *.pinimg.com
 *.pinterest.com
 *.pixfuture.com
+*.placed.com
 *.placelocal.com
 *.playbuzz.com
 *.plista.com
@@ -548,8 +561,8 @@
 *.ru4.com
 *.rubiconproject.com
 *.run-syndicate.com
-*.runadtag.com
 *.runads.com
+*.runadtag.com
 *.rundsp.com
 *.rxthdr.com
 *.s-onetag.com
@@ -580,6 +593,7 @@
 *.sinajs.cn
 *.sinclairstoryline.com
 *.site
+*.sitedataprocessing.com
 *.siteimprove.com
 *.sitelock.com
 *.sitescout.com
@@ -609,8 +623,8 @@
 *.stripe.com
 *.stumbleupon.com
 *.summerhamster.com
-*.sumome.com
 *.sumo.com
+*.sumome.com
 *.sun-sentinel.com
 *.supplyframe.com
 *.survata.com
@@ -627,6 +641,7 @@
 *.tealiumiq.com
 *.telerik.com
 *.tempestpremium.com
+*.thebrighttag.com
 *.theplatform.com
 *.thr.com
 *.timeanddate.com
@@ -679,7 +694,6 @@
 *.vidora.com
 *.vilynx.com
 *.visitors.live
-visitors.live
 *.visto1.net
 *.visualstudio.com
 *.visualwebsiteoptimizer.com
@@ -786,6 +800,7 @@ polldaddy.com
 profitrumour.com
 proxy.duckduckgo.com
 putjs.com
+pymx5.com
 reddit.com
 retargetcore.com
 ritogaga.com
@@ -801,8 +816,10 @@ sumo.com
 t.umblr.com
 ti.me
 tinyurl.com
+track.*
 trackcmp.net
 tracker.*
+tracking.*
 trib.al
 trkn.us
 tru.am
@@ -810,6 +827,7 @@ twitter.com
 udmserve.net
 unpkg.com
 va.sndcdn.com
+visitors.live
 vk.com
 w.bos.gl
 youtu.be
