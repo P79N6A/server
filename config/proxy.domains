@@ -46,9 +46,11 @@
 *.adspsp.com
 *.adsrvr.org
 *.adsymptotic.com
+*.adtechus.com
 *.adthrive.com
 *.advance.net
 *.advertising.com
+*.adx1.com
 *.afy11.net
 *.agkn.com
 *.ai
@@ -56,6 +58,7 @@
 *.akamaihd.net
 *.akamaized.net
 *.alcmpn.com
+*.alephd.com
 *.alexametrics.com
 *.alooma.com
 *.amazon-adsystem.com
@@ -241,6 +244,7 @@
 *.eyeota.net
 *.facebook.com
 *.facebook.net
+*.fastclick.net
 *.fastly.net
 *.favish.com
 *.fb.com
@@ -438,6 +442,7 @@
 *.mmtro.com
 *.moatads.com
 *.moatpixel.com
+*.mobileadtrading.com
 *.mookie1.com
 *.mozilla.com
 *.mozilla.net
@@ -460,6 +465,7 @@
 *.ncaudienceexchange.com
 *.netdna-cdn.com
 *.netdna-ssl.com
+*.netseer.com
 *.network
 *.newjobs.com
 *.newrelic.com
@@ -570,6 +576,7 @@
 *.rkdms.com
 *.rlcdn.com
 *.rmtag.com
+*.roimediaconsultants.com
 *.rpxnow.com
 *.rqtrk.eu
 *.rs-stripe.com
@@ -654,6 +661,7 @@
 *.t-mobile.com
 *.taboola.com
 *.tacdn.com
+*.tagcade.com
 *.talkingpointsmemo.com
 *.tapad.com
 *.td563.com
@@ -713,7 +721,9 @@
 *.viafoura.com
 *.viafoura.net
 *.vidazoo.com
+*.videmob.com
 *.videoplayerhub.com
+*.videostat.com
 *.vidora.com
 *.vilynx.com
 *.visitors.live
@@ -781,6 +791,7 @@ cdn.*
 cfl.re
 chimpstatic.com
 connectignite.com
+cookiesync.*
 dapxl.com
 disqus.com
 districtm.net
@@ -820,6 +831,7 @@ orbitfour47.com
 ow.ly
 pippio.com
 pixel.*
+placeimg.com
 platform.*
 po.st
 polldaddy.com
