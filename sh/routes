@@ -12,7 +12,7 @@ open_TCP=$(realpath $1/sh/open_TCP)
 open_UDP=$(realpath $1/sh/open_UDP)
 
 $open_TCP 22 # SSH
-$open_TCP 43 # whois
+$open_TCP 43 # WHOIS
 $open_port 53 # DNS
 $open_port 67 # DHCP
 $open_port 68 # DHCP

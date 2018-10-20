@@ -1,6 +1,8 @@
 #!/bin/sh
 # some shell and sed implementations aren't keen on spaces and esc-sequences in commandlines and char-class specifications
-# this ver works for me on busybox/musl, using [:space:] in lieu of actual space and setting an escape character variable
+# this ver works for me, using [:space:] in lieu of ' ' and putting the esc-char in a variable. if escaping experts have another solution i'm ears but it MUST work on Alpine Linux and Termux and busybox musl bionic and glibc
 esc=$(printf '\033')
 
-tail -f $PREFIX/var/logs/access.log | sed -e "s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*|\1$esc[32;1m\2 $esc[30;7m\3 $esc[36;1m\4$esc[0m $esc[7m\5$esc[0m $esc[2m\6$esc[0m $esc[1m\7$esc[0m|"
+tail -f $PREFIX/var/logs/access.log | \
+    grep -v TCP_DENIED | \
+    sed -e "s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*https*://\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*|\1$esc[32;1m\2 $esc[30;7m\3 $esc[36;1m\4$esc[0m $esc[7m\5$esc[0m $esc[2m\6$esc[0m $esc[1m\7$esc[0m|"

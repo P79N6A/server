@@ -19,6 +19,7 @@
 *.addthisedge.com
 *.addtoany.com
 *.adglare.net
+*.adgrx.com
 *.adicio.com
 *.adjust.com
 *.adkernel.com
@@ -306,7 +307,6 @@
 *.iframe.ly
 *.iglobalstores.com
 *.iheart.com
-*.imgix.net
 *.imrworldwide.com
 *.indexww.com
 *.innity.net
@@ -545,6 +545,9 @@
 *.ru4.com
 *.rubiconproject.com
 *.run-syndicate.com
+*.runadtag.com
+*.runads.com
+*.rundsp.com
 *.rxthdr.com
 *.s-onetag.com
 *.s3xified.com
@@ -796,6 +799,7 @@ t.umblr.com
 ti.me
 tinyurl.com
 trackcmp.net
+tracker.*
 trib.al
 trkn.us
 tru.am
