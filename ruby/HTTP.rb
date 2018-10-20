@@ -6,7 +6,7 @@ class WebResource
 
     def self.call env
       method = env['REQUEST_METHOD']
-      return [405,{},[]] unless Methods.member? method
+      return [202,{},[]] unless Methods.member? method
       # parse query
       env['query'] = query = parseQs env['QUERY_STRING']
       # bind hostname via query or header
