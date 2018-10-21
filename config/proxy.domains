@@ -6,6 +6,7 @@
 *.3gl.net
 *.3lift.com
 *.4-tell.net
+*.4finance.com
 *.aamsitecertifier.com
 *.aaxads.com
 *.abs-cbn.com
@@ -22,6 +23,7 @@
 *.adform.net
 *.adglare.net
 *.adgrx.com
+*.adhigh.net
 *.adicio.com
 *.adjust.com
 *.adkernel.com
@@ -129,6 +131,7 @@
 *.bugsnag.com
 *.bzgint.com
 *.c3tag.com
+*.carambo.la
 *.casalemedia.com
 *.cbarsrv.com
 *.ccgateway.net
@@ -143,8 +146,8 @@
 *.chartbeat.com
 *.chartbeat.net
 *.cint.com
-*.cisco.com
 *.circularhub.com
+*.cisco.com
 *.cityspark.com
 *.cityzenapp.us
 *.civicscience.com
@@ -220,6 +223,7 @@
 *.districtm.net
 *.dm00.com
 *.dmpxs.com
+*.domdex.com
 *.dotomi.com
 *.doubleclick.net
 *.doubleverify.com
@@ -241,6 +245,7 @@
 *.en25.com
 *.ensighten.com
 *.eproof.com
+*.eqads.com
 *.equitystory.com
 *.eu.org
 *.eum-appdynamics.com
@@ -463,6 +468,7 @@
 *.msn.com
 *.murdoog.com
 *.mxpnl.com
+*.mxptint.net
 *.mybluemix.net
 *.myfinance.com
 *.myfonts.net
@@ -475,6 +481,7 @@
 *.ncaudienceexchange.com
 *.netdna-cdn.com
 *.netdna-ssl.com
+*.netmng.com
 *.netseer.com
 *.network
 *.newjobs.com
@@ -664,8 +671,8 @@
 *.stickyadstv.com
 *.storygize.net
 *.stream
-*.streamrail.net
 *.streamrail.com
+*.streamrail.net
 *.stripe.com
 *.stumbleupon.com
 *.summerhamster.com
@@ -817,6 +824,7 @@ connectignite.com
 cookiesync.*
 dapxl.com
 disqus.com
+disqusads.com
 districtm.net
 dlvr.it
 exit.sc
@@ -873,6 +881,7 @@ shop.pe
 siteimproveanalytics.com
 smetrics.*
 snag.gy
+storify.com
 sumo.com
 sync.*
 t.umblr.com
@@ -892,6 +901,6 @@ unpkg.com
 va.sndcdn.com
 visitors.live
 vk.com
-widgets.*
 w.bos.gl
+widgets.*
 youtu.be
