@@ -656,8 +656,10 @@
 *.springboardplatform.com
 *.springserve.com
 *.springserve.net
+*.ssl-images-amazon.com
 *.sstatic.net
 *.stackadapt.com
+*.stackexchange.com
 *.statcounter.com
 *.stickyadstv.com
 *.storygize.net
@@ -890,5 +892,6 @@ unpkg.com
 va.sndcdn.com
 visitors.live
 vk.com
+widgets.*
 w.bos.gl
 youtu.be
