@@ -5,7 +5,12 @@ open_port=$(realpath $1/sh/open_port)
 open_TCP=$(realpath $1/sh/open_TCP)
 open_UDP=$(realpath $1/sh/open_UDP)
 
-# open required ports
+# closed ports
+iptables  -P INPUT DROP
+ip6tables -P INPUT DROP
+iptables  -P OUTPUT DROP
+ip6tables -P OUTPUT DROP
+# open ports
 $open_TCP 22 # SSH
 $open_TCP 43 # WHOIS
 $open_port 53 # DNS
@@ -23,16 +28,3 @@ $open_TCP 8022 # SSH
 $open_TCP 8080 # reverse HTTPS proxy
 $open_UDP 60001 # Mosh
 
-# log and drop remaining packets
-iptables  -N LOGFOUR
-ip6tables -N LOGSIX
-iptables  -A OUTPUT -j LOGFOUR
-ip6tables -A OUTPUT -j LOGSIX
-iptables  -A LOGFOUR -j LOG --log-prefix "IP4 " --log-level 4
-ip6tables -A LOGSIX  -j LOG --log-prefix "IP6 " --log-level 4
-iptables  -A LOGFOUR -j DROP
-ip6tables -A LOGSIX  -j DROP
-iptables  -P INPUT DROP
-ip6tables -P INPUT DROP
-iptables  -P OUTPUT DROP
-ip6tables -P OUTPUT DROP
