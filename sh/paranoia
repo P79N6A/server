@@ -1,9 +1,9 @@
-#!/bin/sh
-
+#!/system/bin/sh
+sh=/data/data/com.termux/files/home/src/pw/sh
 # abstract port-enabling methods
-open_port=$(realpath ~/src/pw/sh/open_port)
-open_TCP=$(realpath ~/src/pw/sh/open_TCP)
-open_UDP=$(realpath ~/src/pw/sh/open_UDP)
+open_port=$(realpath $sh/open_port)
+open_TCP=$(realpath  $sh/open_TCP)
+open_UDP=$(realpath  $sh/open_UDP)
 
 # closed ports
 iptables  -P INPUT DROP
