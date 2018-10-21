@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # abstract port-enabling methods
-open_port=$(realpath $1/sh/open_port)
-open_TCP=$(realpath $1/sh/open_TCP)
-open_UDP=$(realpath $1/sh/open_UDP)
+open_port=$(realpath ~/src/pw/sh/open_port)
+open_TCP=$(realpath ~/src/pw/sh/open_TCP)
+open_UDP=$(realpath ~/src/pw/sh/open_UDP)
 
 # closed ports
 iptables  -P INPUT DROP
