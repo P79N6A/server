@@ -65,6 +65,7 @@
 *.alcmpn.com
 *.alephd.com
 *.alexametrics.com
+*.alienvault.com
 *.alooma.com
 *.amazon-adsystem.com
 *.amazon.com
@@ -131,6 +132,7 @@
 *.btrd.net
 *.btrll.com
 *.btserve.com
+*.b-cdn.net
 *.bugsnag.com
 *.bzgint.com
 *.c3tag.com
@@ -260,6 +262,7 @@
 *.exposebox.com
 *.eyeota.net
 *.eyeviewads.com
+*.eyereturn.com
 *.facebook.com
 *.facebook.net
 *.fastclick.net
@@ -267,6 +270,7 @@
 *.favish.com
 *.fb.com
 *.fbsbx.com
+*.fbcdn.net
 *.fccinteractive.com
 *.feedbackify.com
 *.finanzen.net
@@ -353,6 +357,7 @@
 *.iglobalstores.com
 *.iheart.com
 *.imrworldwide.com
+*.im-apps.net
 *.indexww.com
 *.infolinks.com
 *.innity.net
@@ -437,6 +442,7 @@
 *.mcclatchydc.com
 *.mdpcdn.com
 *.media
+*.media6degrees.com
 *.media-amazon.com
 *.media.net
 *.mediaforge.com
@@ -475,6 +481,7 @@
 *.murdoog.com
 *.mxpnl.com
 *.mxptint.net
+*.mxradon.com
 *.mybluemix.net
 *.myfinance.com
 *.myfonts.net
@@ -624,6 +631,7 @@ rtclx.com
 *.salesloft.com
 *.saymedia.com
 *.sbnation.com
+*.scoop.it
 *.scorecardresearch.com
 *.scrippsdigital.com
 *.script.ag
@@ -643,6 +651,7 @@ rtclx.com
 *.shopperapproved.com
 *.signifyd.com
 *.simpli.fi
+*.simplereach.com
 *.sinaimg.cn
 *.sinajs.cn
 *.sinclairstoryline.com
@@ -805,6 +814,7 @@ rtclx.com
 *.zipalerts.com
 *.zipovoma.com
 *.zone
+*.zopim.com
 *.zqtk.net
 aaxdetect.com
 absorbingband.com
@@ -814,6 +824,7 @@ ad.*
 adadvisor.net
 adrta.com
 ads.*
+amazon.com
 analytics.*
 api.*
 app-measurement.com
