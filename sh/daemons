@@ -1,5 +1,6 @@
 #!/bin/sh
-uid=$(id -u)
+#uid=$(id -u)
+uid=10079
 app_path=$(realpath ~/src/pw)
 os_path=/data/mnt/alpine
 
