@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# abstract port-enabling methods
+open_port=$(realpath $1/sh/open_port)
+open_TCP=$(realpath $1/sh/open_TCP)
+open_UDP=$(realpath $1/sh/open_UDP)
+
+# closed ports
+iptables  -P INPUT DROP
+ip6tables -P INPUT DROP
+iptables  -P OUTPUT DROP
+ip6tables -P OUTPUT DROP
+# open ports
+$open_TCP 22 # SSH
+$open_TCP 43 # WHOIS
+$open_port 53 # DNS
+$open_port 67 # DHCP
+$open_port 68 # DHCP
+$open_TCP 80   # HTTP
+$open_TCP 443  # HTTPS
+$open_TCP 3128 # forward HTTPS proxy
+$open_TCP 8000 # local HTTP daemon
+$open_TCP 8022 # SSH
+$open_TCP 8080 # reverse HTTPS proxy
+$open_UDP 60001 # Mosh
