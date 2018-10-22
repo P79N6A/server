@@ -9,4 +9,5 @@
 /ptracking
 /qp/
 /stats
-/sw.js
+/sw\.js
+/(angular|taboola).*\.js
