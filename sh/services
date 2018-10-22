@@ -5,17 +5,17 @@ open_port=$(realpath $sh/open_port)
 open_TCP=$(realpath  $sh/open_TCP)
 open_UDP=$(realpath  $sh/open_UDP)
 
-$open_TCP 22 # SSH
-$open_TCP 43 # WHOIS
-$open_port 53 # DNS
-$open_port 67 # DHCP
-$open_port 68 # DHCP
-$open_TCP 80   # HTTP
-$open_TCP 443  # HTTPS
-$open_TCP 3128 # forward HTTPS proxy
-$open_TCP 8000 # local HTTP daemon
-$open_TCP 8022 # SSH
-$open_TCP 8080 # reverse HTTPS proxy
+$open_TCP    22 # SSH
+$open_TCP    43 # WHOIS
+$open_port   53 # DNS
+$open_port   67 # DHCP
+$open_port   68 # DHCP
+$open_TCP    80 # HTTP
+$open_TCP   443 # HTTPS
+$open_port 3128 # forward-proxy HTTPS
+$open_port 8000 # local HTTP daemon
+$open_TCP  8022 # SSH
+$open_port 8080 # reverse-proxy HTTPS
 $open_UDP 60001 # Mosh
 $open_UDP 60002
 $open_UDP 60003
