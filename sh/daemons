@@ -7,8 +7,9 @@ os_path=/data/mnt/alpine
 ## session
 tmux new-session -s web -d -c ~/web
 
-## daemon
+## daemons
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
+su -c "sh $app_path/sh/services $app_path"
 
 ## forward proxy
 squid -f $app_path/config/squid.conf
@@ -19,13 +20,10 @@ tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://localhost:8000 --set keep_host_header=true\" - web'" C-m
 
 ## TCP routes
-# explicit proxy
 # agent -> forward proxy (3128)      -> remote daemon (443)
-# transparent proxy
 # agent -> original HTTP  dest (80)  -> local daemon  (8000)
 # agent -> original HTTPS dest (443) -> reverse proxy (8080) -> local daemon (8000)
 su -c "sh $app_path/sh/routes $uid"
-# UDP unimplemented TODO wire up QUIC https://github.com/bbc/nghq
 
 ## database
 tmux new-window -t web:3 -d
