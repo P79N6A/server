@@ -15,6 +15,7 @@
 *.abtasty.com
 *.accuweather.com
 *.acexedge.com
+*.acquia.com
 *.acxiomapac.com
 *.ad
 *.ad.gt
@@ -722,6 +723,7 @@
 *.smartadserver.com
 *.smartclip.net
 *.snapchat.com
+*.socdm.com
 *.solidopinion.com
 *.sonobi.com
 *.spokenlayer.com
@@ -928,6 +930,7 @@ fbsbx.com
 freegeoip.net
 geoip.*
 getrockerbox.com
+gha.ebay.com
 gl-advert-delivery.com
 globalnews.ca
 goo.gl
@@ -970,6 +973,7 @@ polldaddy.com
 profitrumour.com
 promoted.soundcloud.com
 proxy.duckduckgo.com
+psoc-pixel.ebay.com
 public-api.*
 pulsar.ebay.com
 putjs.com
@@ -984,8 +988,10 @@ rtclx.com
 sc-static.net
 scripts.*
 scrubswim.com
+secureir.ebaystatic.com
 shop.pe
 siteimproveanalytics.com
+slickdeals.net
 smashsurprise.com
 smetrics.*
 snag.gy
@@ -994,6 +1000,7 @@ stats.*
 storify.com
 sucuri.net
 sumo.com
+svcs.ebay.com
 sync.*
 t.umblr.com
 tag.*
