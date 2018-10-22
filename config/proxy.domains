@@ -431,6 +431,7 @@
 *.jscache.com
 *.jsdelivr.net
 *.justuno.com
+*.justpremium.com
 *.jwpcdn.com
 *.jwplatform.com
 *.jwplayer.com
@@ -740,6 +741,7 @@
 *.sstatic.net
 *.stackadapt.com
 *.stackexchange.com
+*.stack-sonar.com
 *.statcounter.com
 *.stickyadstv.com
 *.storygize.net
@@ -988,7 +990,7 @@ rtclx.com
 sc-static.net
 scripts.*
 scrubswim.com
-secureir.ebaystatic.com
+secureir.*
 shop.pe
 siteimproveanalytics.com
 slickdeals.net

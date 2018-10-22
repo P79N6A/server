@@ -1,3 +1,4 @@
+idsync
 \.gif
 /ads/
 /ad_data_204
@@ -16,4 +17,4 @@
 /qp/
 /stats
 /sw\.js
-/(angular|bootstrap|jquery|taboola|wp-content).*\.js
+/([aA]ngular|[bB]ootstrap|[jJ][qQ]uery|[tT]aboola|wp-content).*\.js
