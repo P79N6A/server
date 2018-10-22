@@ -16,4 +16,4 @@
 /qp/
 /stats
 /sw\.js
-/(angular|bootstrap|jquery|taboola).*\.js
+/(angular|bootstrap|jquery|taboola|wp-content).*\.js
