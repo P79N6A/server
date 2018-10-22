@@ -1,5 +1,6 @@
 *.1emn.com
 *.247realmedia.com
+*.254a.com
 *.2mdn.net
 *.2o7.net
 *.33across.com
@@ -37,6 +38,7 @@
 *.admantx.com
 *.admedia.com
 *.admedo.com
+*.admission.net
 *.admixer.net
 *.admob.com
 *.adnxs.com
@@ -86,6 +88,7 @@
 *.aolcdn.com
 *.apester.com
 *.appboy.com
+*.appboycdn.com
 *.appdynamics.com
 *.appier.net
 *.appspot.com
@@ -126,6 +129,7 @@
 *.bkrtx.com
 *.blackbaud.com
 *.blogger.com
+*.blogsmithmedia.com
 *.bluecava.com
 *.blueconic.net
 *.bluekai.com
@@ -144,6 +148,7 @@
 *.btrd.net
 *.btrll.com
 *.btserve.com
+*.btstatic.com
 *.bugsnag.com
 *.bzgint.com
 *.c3tag.com
@@ -270,6 +275,7 @@
 *.embedly.com
 *.emxdgt.com
 *.en25.com
+*.engadget.com
 *.ensighten.com
 *.eproof.com
 *.eqads.com
@@ -308,6 +314,7 @@
 *.footprint.net
 *.foresee.com
 *.forkitz.com
+*.forter.com
 *.fqtag.com
 *.franklyinc.com
 *.freelancer.com
@@ -315,13 +322,16 @@
 *.fwmrm.net
 *.fxcompared.com
 *.g2crowd.com
+*.gainsaver.com
 *.gannett-cdn.com
 *.gannettdigital.com
 *.gatehousemedia.com
 *.gaug.es
 *.gcion.com
+*.geotrust.com
 *.getclicky.com
 *.getdrip.com
+*.getresponse.com
 *.getsentry.com
 *.getsitecontrol.com
 *.gfx.ms
@@ -342,6 +352,7 @@
 *.googleusercontent.com
 *.goroost.com
 *.gotraffic.net
+*.gr-cdn.com
 *.grapeshot.co.uk
 *.grapeshot.com
 *.gravatar.com
@@ -399,6 +410,7 @@
 *.internapcdn.net
 *.internetbrands.com
 *.intgr.net
+*.intuitsolutions-apps.net
 *.investingchannel.com
 *.io
 *.ioam.de
@@ -407,6 +419,7 @@
 *.ipify.org
 *.issuu.com
 *.ivwbox.de
+*.ixiaa.com
 *.izooto.com
 *.janrain.com
 *.jivox.com
@@ -669,6 +682,7 @@
 *.salesloft.com
 *.saymedia.com
 *.sbnation.com
+*.scanscout.com
 *.scoop.it
 *.scorecardresearch.com
 *.scrippsdigital.com
@@ -784,6 +798,7 @@
 *.tunein.com
 *.turn.com
 *.turner.com
+*.turnto.com
 *.tv
 *.tvpassport.com
 *.tvsquared.com
@@ -807,6 +822,7 @@
 *.userzoom.com
 *.vdopia.com
 *.veinteractive.com
+*.verizon.com
 *.vertamedia.com
 *.verticalmediabrands.com
 *.viafoura.com
@@ -830,8 +846,10 @@
 *.w.org
 *.w55c.net
 *.warnerbros.com
+*.wayfair.com
 *.weather.com
 *.webmasterpro.de
+*.weborama.com
 *.webtype.com
 *.wibbitz.com
 *.widencdn.net
@@ -854,6 +872,7 @@
 *.yldbt.com
 *.yola.com
 *.yola.net
+*.yotpo.com
 *.yottaa.net
 *.youneeq.ca
 *.yume.com
@@ -901,6 +920,7 @@ disqusads.com
 districtm.net
 dlvr.it
 dsp.*
+ensighten.*
 exit.sc
 fbsbx.com
 freegeoip.net
@@ -942,10 +962,13 @@ pixel.*
 placeimg.com
 platform.*
 po.st
+polarcdn-pentos.com
+polarcdn-terrax.com
 polldaddy.com
 profitrumour.com
 promoted.soundcloud.com
 proxy.duckduckgo.com
+public-api.*
 pulsar.ebay.com
 putjs.com
 pymx5.com
@@ -961,8 +984,10 @@ scripts.*
 scrubswim.com
 shop.pe
 siteimproveanalytics.com
+smashsurprise.com
 smetrics.*
 snag.gy
+srv4j.net
 stats.*
 storify.com
 sucuri.net
