@@ -141,6 +141,7 @@
 *.bootstrapcdn.com
 *.bounceexchange.com
 *.brealtime.com
+*.brightcomvideo.com
 *.brightcove.com
 *.brightcove.net
 *.brightcovecdn.com
@@ -192,6 +193,7 @@
 *.cmcore.com
 *.cnevids.com
 *.co
+*.cognitivlabs.com
 *.cogocast.net
 *.communityq.com
 *.comodo.com
@@ -285,6 +287,7 @@
 *.equitystory.com
 *.eu.org
 *.eum-appdynamics.com
+*.everestads.net
 *.everesttech.net
 *.evergage.com
 *.evidon.com
@@ -337,6 +340,8 @@
 *.getresponse.com
 *.getsentry.com
 *.getsitecontrol.com
+*.gexperiments2.com
+*.gexperiments3.com
 *.gfx.ms
 *.gifs.com
 *.gigya.com
@@ -397,6 +402,7 @@
 *.iglobalstores.com
 *.iheart.com
 *.im-apps.net
+*.impdesk.com
 *.imrworldwide.com
 *.indexww.com
 *.infolinks.com
@@ -430,8 +436,8 @@
 *.jrs5.com
 *.jscache.com
 *.jsdelivr.net
-*.justuno.com
 *.justpremium.com
+*.justuno.com
 *.jwpcdn.com
 *.jwplatform.com
 *.jwplayer.com
@@ -447,6 +453,8 @@
 *.klangoo.com
 *.krxd.net
 *.kxcdn.com
+*.ladsp.com
+*.ladsp.jp
 *.lakana.com
 *.latimes.com
 *.leadmanagerfx.com
@@ -548,6 +556,7 @@
 *.netdna-ssl.com
 *.netmng.com
 *.netseer.com
+*.netshelter.net
 *.network
 *.newjobs.com
 *.newrelic.com
@@ -566,6 +575,7 @@
 *.nxtck.com
 *.oath.com
 *.oculu.com
+*.ojrq.net
 *.okanjo.com
 *.olark.com
 *.omnitagjs.com
@@ -623,6 +633,7 @@
 *.privacy-center.org
 *.pro-market.net
 *.profitrumour.com
+*.pswec.com
 *.pubexchange.com
 *.publir.com
 *.pubmatic.com
@@ -641,6 +652,7 @@
 *.quora.com
 *.quoracdn.net
 *.rackcdn.com
+*.rapidbadger.com
 *.ravenjs.com
 *.readspeaker.com
 *.realpage.com
@@ -737,11 +749,12 @@
 *.springboardplatform.com
 *.springserve.com
 *.springserve.net
+*.sptrkr.com
 *.ssl-images-amazon.com
 *.sstatic.net
+*.stack-sonar.com
 *.stackadapt.com
 *.stackexchange.com
-*.stack-sonar.com
 *.statcounter.com
 *.stickyadstv.com
 *.storygize.net
@@ -883,6 +896,7 @@
 *.youneeq.ca
 *.yume.com
 *.zdassets.com
+*.zdbb.net
 *.zemanta.com
 *.zencdn.net
 *.zendesk.com
@@ -1027,3 +1041,4 @@ vk.com
 w.bos.gl
 widgets.*
 youtu.be
+zdbb.net
