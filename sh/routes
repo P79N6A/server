@@ -3,7 +3,9 @@ iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
 iptables  -P OUTPUT DROP
 ip6tables -P OUTPUT DROP
-# drop QUIC until it is wired up
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+# drop QUIC until it's enabled
 iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP

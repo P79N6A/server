@@ -15,4 +15,4 @@
 /qp/
 /stats
 /sw\.js
-/(angular|taboola).*\.js
+/(angular|bootstrap|jquery|taboola).*\.js
