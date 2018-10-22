@@ -17,9 +17,8 @@
 *.acexedge.com
 *.acquia.com
 *.acxiomapac.com
-*.admatrix.jp
-*.ad-m.asia
 *.ad
+*.ad-m.asia
 *.ad.gt
 *.adblade.com
 *.adbrn.com
@@ -39,6 +38,7 @@
 *.adkernel.com
 *.adlightning.com
 *.admantx.com
+*.admatrix.jp
 *.admedia.com
 *.admedo.com
 *.admission.net
@@ -91,6 +91,7 @@
 *.anvato.net
 *.aol.com
 *.aolcdn.com
+*.aolp.jp
 *.apester.com
 *.appboy.com
 *.appboycdn.com
@@ -165,9 +166,9 @@
 *.casalemedia.com
 *.cbarsrv.com
 *.ccgateway.net
-*.cdnsynd.com
 *.cdnbasket.net
 *.cdnjquery.com
+*.cdnsynd.com
 *.cdnwidget.com
 *.cdxns1.com
 *.cedexis-radar.net
@@ -178,6 +179,7 @@
 *.cfigroup.com
 *.chartbeat.com
 *.chartbeat.net
+*.chitika.net
 *.cint.com
 *.circularhub.com
 *.cisco.com
@@ -197,8 +199,8 @@
 *.clrstm.com
 *.club
 *.cmcore.com
-*.cnevids.com
 *.cnet.com
+*.cnevids.com
 *.co
 *.cognitivlabs.com
 *.cogocast.net
@@ -262,9 +264,11 @@
 *.distiltag.com
 *.districtm.ca
 *.districtm.net
-*.dmca.com
 *.dm00.com
+*.dmca.com
 *.dmpxs.com
+*.docomo-analytics.com
+*.docomo.ne.jp
 *.domdex.com
 *.dotomi.com
 *.doubleclick.net
@@ -278,6 +282,7 @@
 *.dvtps.com
 *.dynamicyield.com
 *.dyntrk.com
+*.ec-concier.com
 *.eccmp.com
 *.edgekey.net
 *.editmysite.com
@@ -359,6 +364,7 @@
 *.go-mpulse.net
 *.go.com
 *.gobankingrates.com
+*.goo.ne.jp
 *.google-analytics.com
 *.google.com
 *.googleadservices.com
@@ -401,6 +407,7 @@
 *.htvapps.com
 *.hubspot.com
 *.hubspot.net
+*.i-mobile.co.jp
 *.i10c.net
 *.iasds01.com
 *.ib-ibi.com
@@ -411,7 +418,6 @@
 *.iglobalstores.com
 *.iheart.com
 *.im-apps.net
-*.i-mobile.co.jp
 *.impact-ad.jp
 *.impdesk.com
 *.imrworldwide.com
@@ -539,8 +545,8 @@
 *.mmtro.com
 *.moatads.com
 *.moatpixel.com
-*.mobilenations.com
 *.mobileadtrading.com
+*.mobilenations.com
 *.mookie1.com
 *.mozilla.com
 *.mozilla.net
@@ -596,9 +602,10 @@
 *.omniture.com
 *.omtrdc.net
 *.onesignal.com
+*.onestore.ms
+*.onetag-sys.com
 *.onetrust.com
 *.online-metrix.net
-*.onestore.ms
 *.onscroll.com
 *.ooyala.com
 *.opendsp.com
@@ -789,8 +796,8 @@
 *.swiftype.com
 *.swiftypecdn.com
 *.switchadhub.com
-*.syn-cdn.com
 *.syn-api.com
+*.syn-cdn.com
 *.syncronex.com
 *.t-mobile.com
 *.taboola.com
@@ -905,13 +912,15 @@
 *.wsi.com
 *.wsod.com
 *.xg4ken.com
+*.xlisting.jp
 *.yadro.ru
-*.yahoo.com
 *.yahoo.co.jp
+*.yahoo.com
 *.yandex.ru
 *.yellowpages.com
 *.yieldmo.com
 *.yimg.com
+*.yjtag.jp
 *.yldbt.com
 *.yola.com
 *.yola.net
@@ -1001,6 +1010,7 @@ nervoussummer.com
 nxtck.com
 nyer.cm
 nyti.ms
+ocsrest.ebay.com
 onesignal.com
 onetag-sys.com
 orbitfour47.com
@@ -1009,11 +1019,11 @@ pippio.com
 pixel.*
 placeimg.com
 platform.*
-privacyscore.org
 po.st
 polarcdn-pentos.com
 polarcdn-terrax.com
 polldaddy.com
+privacyscore.org
 profitrumour.com
 promoted.soundcloud.com
 proxy.duckduckgo.com
@@ -1036,16 +1046,15 @@ secureir.*
 shop.pe
 siteimproveanalytics.com
 slickdeals.net
-succeedscene.com
 smashsurprise.com
 smetrics.*
 snag.gy
 spiffymachine.com
 srv.main.ebayrtm.com
-ocsrest.ebay.com
 srv4j.net
 stats.*
 storify.com
+succeedscene.com
 sucuri.net
 sumo.com
 svcs.ebay.com
@@ -1073,7 +1082,6 @@ visitors.live
 vk.com
 w.bos.gl
 widgets.*
-*.yjtag.jp
 youtu.be
-zrk.imgur.com
 zdbb.net
+zrk.imgur.com
