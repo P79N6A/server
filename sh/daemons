@@ -13,7 +13,8 @@ su -c "sh $app_path/sh/services $app_path"
 
 ## forward proxy
 squid -f $app_path/config/squid.conf
-tmux new-window -t web:1 -d $app_path/sh/proxylog
+#tmux new-window -t web:1 -d $app_path/sh/proxylog
+tmux new-window -t web:1 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
 
 ## reverse proxy
 tmux new-window -t web:2 -d
