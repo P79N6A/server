@@ -1,6 +1,6 @@
 #!/system/bin/sh
 #sh=/data/data/com.termux/files/home/src/pw/sh
-sh=$1
+sh=$1/sh
 # abstract port-enabling methods
 open_port=$(realpath $sh/open_port)
 open_TCP=$(realpath  $sh/open_TCP)
