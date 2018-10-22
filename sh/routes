@@ -1,10 +1,16 @@
 #!/bin/sh
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
+iptables  -A INPUT -p icmp -j ACCEPT
+ip6tables -A INPUT -p icmp -j ACCEPT
+iptables  -A INPUT -i lo -j ACCEPT
+ip6tables -A INPUT -i lo -j ACCEPT
 iptables  -P OUTPUT DROP
 ip6tables -P OUTPUT DROP
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A OUTPUT -o lo -j ACCEPT
+iptables  -A OUTPUT -p icmp -j ACCEPT
+ip6tables -A OUTPUT -p icmp -j ACCEPT
+iptables  -A OUTPUT -o lo -j ACCEPT
+ip6tables -A OUTPUT -o lo -j ACCEPT
 # drop QUIC until it's enabled
 iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
