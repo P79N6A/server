@@ -313,6 +313,7 @@
 *.eyeota.net
 *.eyereturn.com
 *.eyeviewads.com
+*.ezoic.net
 *.facebook.com
 *.facebook.net
 *.fastclick.net
@@ -424,6 +425,7 @@
 *.impact-ad.jp
 *.impdesk.com
 *.imrworldwide.com
+*.infinity-tracking.net
 *.indexww.com
 *.infolinks.com
 *.innity.net
@@ -479,6 +481,7 @@
 *.ladsp.jp
 *.lakana.com
 *.latimes.com
+*.leadforensics.com
 *.leadmanagerfx.com
 *.liadm.com
 *.licasd.com
@@ -1009,6 +1012,7 @@ l.instagram.com
 loadercdn.com
 localhost
 lockerdome.com
+metrics.*
 meter.*
 metro.co.uk
 ml314.com
