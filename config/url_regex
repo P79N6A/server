@@ -17,4 +17,4 @@ idsync
 /qp/
 /stats
 /sw\.js
-/([aA]ngular|[bB]ootstrap|[jJ][qQ]uery|[tT]aboola|wp-content).*\.js
+/([aA]ngular|[bB]ootstrap|[jJ][qQ]uery|[tT]aboola|wp-content).*\.(css|js)

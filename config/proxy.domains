@@ -106,6 +106,7 @@
 *.atgsvcs.com
 *.atwola.com
 *.auth0.com
+*.automatad.com
 *.azureedge.net
 *.azurewebsites.net
 *.b-cdn.net
@@ -192,6 +193,7 @@
 *.club
 *.cmcore.com
 *.cnevids.com
+*.cnet.com
 *.co
 *.cognitivlabs.com
 *.cogocast.net
@@ -640,6 +642,7 @@
 *.pubmatic.com
 *.pubsqrd.com
 *.pulpix.com
+*.purch.com
 *.purechat.com
 *.pushwoosh.com
 *.qlitics.com
@@ -1044,4 +1047,5 @@ vk.com
 w.bos.gl
 widgets.*
 youtu.be
+zrk.imgur.com
 zdbb.net
