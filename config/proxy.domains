@@ -121,6 +121,7 @@
 *.azure.net
 *.azureedge.net
 *.azurewebsites.net
+*.bam-x.com
 *.b-cdn.net
 *.b2c.com
 *.babator.com
@@ -201,6 +202,7 @@
 *.clickfuse.com
 *.clickonometrics.pl
 *.clicktale.net
+*.clicktripz.com
 *.cliipa.com
 *.cloud
 *.cloudflare.com
@@ -234,6 +236,7 @@
 *.conviva.com
 *.cookiebot.com
 *.cookielaw.org
+*.couponarea.com
 *.coremetrics.com
 *.corus.ca
 *.coveo.com
@@ -523,6 +526,7 @@
 *.lphbs.com
 *.lpsnmedia.net
 *.luckyorange.net
+*.mapquest.com
 *.mail.ru
 *.mailchimp.com
 *.mailchimpapp.com
@@ -570,6 +574,7 @@
 *.mobilenations.com
 *.mookie1.com
 *.mopub.com
+*.moveaws.com
 *.mozilla.com
 *.mozilla.net
 *.mozilla.org
@@ -673,6 +678,7 @@
 *.powerlinks.com
 *.powr.com
 *.predictiveresponse.net
+*.priceline.com
 *.primedia.com
 *.privacy-center.org
 privymktg.com
@@ -694,6 +700,8 @@ privymktg.com
 *.quantcast.com
 *.quantcount.com
 *.quantserve.com
+*.qubit.com
+*.qubitproducts.com
 *.queryly.com
 *.quest.com
 *.quora.com
@@ -709,6 +717,7 @@ privymktg.com
 *.reddit.com
 *.redlink.com
 *.refersion.com
+*.refinery29.com
 *.relaymedia.com
 *.relsci.com
 *.report-uri.com
