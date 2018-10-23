@@ -80,6 +80,7 @@
 *.albacross.com
 *.alcmpn.com
 *.alephd.com
+*.alertir.com
 *.alexametrics.com
 *.alienvault.com
 *.alooma.com
@@ -329,6 +330,7 @@
 *.fbsbx.com
 *.fccinteractive.com
 *.feedbackify.com
+*.feedblitz.com
 *.finanzen.net
 *.firebaseio.com
 *.firefox.com
@@ -337,6 +339,7 @@
 *.flurry.com
 *.flyertown.ca
 *.fontawesome.com
+*.fonts.com
 *.fonts.net
 *.fontsquirrel.com
 *.footprint.net
@@ -402,6 +405,7 @@
 *.gweini.com
 *.h-bid.com
 *.h-cdn.com
+*.hexagonsi.com
 *.hearstapps.com
 *.hearstnp.com
 *.hellobar.com
@@ -965,6 +969,7 @@ securepaths.com
 *.zergnet.com
 *.zipalerts.com
 *.zipovoma.com
+*.zkcdn.net
 *.zone
 *.zopim.com
 *.zqtk.net
