@@ -1,4 +1,5 @@
 #!/bin/sh
+# display colorized squid log
 # some shell and sed implementations aren't keen on spaces and esc-sequences in commandlines and char-class specifications
 # this ver works for me using [:space:] in lieu of ' ' and putting esc-char in a variable. if escaping experts have another solution working across bionic/musl/glibc coreutils & busybox renditions of sed i'm ears
 esc=$(printf '\033')
