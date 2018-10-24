@@ -16,6 +16,5 @@ idsync
 /ptracking
 /qp/
 /stats
-/sync
 /sw\.js
 /([aA]ngular|[bB]ootstrap|[jJ][qQ]uery|[tT]aboola|wp-content).*\.(css|js)
