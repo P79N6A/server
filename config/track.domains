@@ -311,7 +311,6 @@
 *.facebook.com
 *.facebook.net
 *.fastclick.net
-*.fastly.net
 *.favish.com
 *.fb.com
 *.fbsbx.com
@@ -779,7 +778,6 @@
 *.springserve.com
 *.springserve.net
 *.sptrkr.com
-*.ssl-images-amazon.com
 *.sstatic.net
 *.stack-sonar.com
 *.stackadapt.com
@@ -1030,7 +1028,6 @@ privacyscore.org
 privymktg.com
 profitrumour.com
 promoted.soundcloud.com
-proxy.duckduckgo.com
 psoc-pixel.ebay.com
 public-api.*
 pulsar.ebay.com

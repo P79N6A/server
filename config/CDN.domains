@@ -16,6 +16,7 @@
 *.cloudflare.com
 *.cloudfront.net
 *.disquscdn.com
+*.fastly.net
 *.fbcdn.net
 *.gannett-cdn.com
 *.gr-cdn.com
@@ -37,6 +38,7 @@
 *.rackcdn.com
 *.rlcdn.com
 *.spotxcdn.com
+*.ssl-images-amazon.com
 *.swiftypecdn.com
 *.syn-cdn.com
 *.tacdn.com
@@ -48,4 +50,5 @@ cdn.*
 loadercdn.com
 polarcdn-pentos.com
 polarcdn-terrax.com
+proxy.duckduckgo.com
 va.sndcdn.com
