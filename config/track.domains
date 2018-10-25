@@ -88,7 +88,6 @@
 *.alooma.com
 *.amazon-adsystem.com
 *.amazon.com
-*.amazonaws.com
 *.amgload.net
 *.ampproject.org
 *.and.co.uk
@@ -97,11 +96,9 @@
 *.anrdoezrs.net
 *.anvato.net
 *.aol.com
-*.aolcdn.com
 *.aolp.jp
 *.apester.com
 *.appboy.com
-*.appboycdn.com
 *.appcues.com
 *.appdynamics.com
 *.appier.net
@@ -112,7 +109,6 @@
 *.arcasync.com
 *.arcpublishing.com
 *.areyouahuman.com
-*.aspnetcdn.com
 *.assettype.com
 *.assoc-amazon.com
 *.atdmt.com
@@ -123,7 +119,6 @@
 *.azure.net
 *.azureedge.net
 *.azurewebsites.net
-*.b-cdn.net
 *.b2c.com
 *.babator.com
 *.bam-x.com
@@ -154,15 +149,12 @@
 *.bnqt.com
 *.boltdns.net
 *.boomtrain.com
-*.bootstrapcdn.com
 *.bounceexchange.com
 *.bouncex.net
 *.brealtime.com
 *.brightcomvideo.com
 *.brightcove.com
 *.brightcove.net
-*.brightcovecdn.com
-*.brightspotcdn.com
 *.browsiprod.com
 *.bsd.net
 *.btrd.net
@@ -178,10 +170,6 @@
 *.casalemedia.com
 *.cbarsrv.com
 *.ccgateway.net
-*.cdnbasket.net
-*.cdnjquery.com
-*.cdnsynd.com
-*.cdnwidget.com
 *.cdxns1.com
 *.cedexis-radar.net
 *.cedexis-test.com
@@ -208,8 +196,6 @@
 *.clicktripz.com
 *.cliipa.com
 *.cloud
-*.cloudflare.com
-*.cloudfront.net
 *.clrstm.com
 *.club
 *.cmcore.com
@@ -275,7 +261,6 @@
 *.dianomi.com
 *.digitru.st
 *.disqus.com
-*.disquscdn.com
 *.distiltag.com
 *.districtm.ca
 *.districtm.net
@@ -332,7 +317,6 @@
 *.fastly.net
 *.favish.com
 *.fb.com
-*.fbcdn.net
 *.fbsbx.com
 *.fccinteractive.com
 *.feedbackify.com
@@ -363,7 +347,6 @@
 *.fxcompared.com
 *.g2crowd.com
 *.gainsaver.com
-*.gannett-cdn.com
 *.gannettdigital.com
 *.gatehousemedia.com
 *.gaug.es
@@ -395,7 +378,6 @@
 *.googleusercontent.com
 *.goroost.com
 *.gotraffic.net
-*.gr-cdn.com
 *.grapeshot.co.uk
 *.grapeshot.com
 *.gravatar.com
@@ -411,7 +393,6 @@
 *.gwallet.com
 *.gweini.com
 *.h-bid.com
-*.h-cdn.com
 *.hearstapps.com
 *.hearstnp.com
 *.hellobar.com
@@ -458,9 +439,7 @@
 *.intellitxt.com
 *.intentarget.com
 *.intentiq.com
-*.intercomcdn.com
 *.intermarkets.net
-*.internapcdn.net
 *.internetbrands.com
 *.intgr.net
 *.intuitsolutions-apps.net
@@ -483,7 +462,6 @@
 *.jsdelivr.net
 *.justpremium.com
 *.justuno.com
-*.jwpcdn.com
 *.jwplatform.com
 *.jwplayer.com
 *.kaltura.com
@@ -499,7 +477,6 @@
 *.korrelate.net
 *.krxd.net
 *.ktxtr.com
-*.kxcdn.com
 *.ladsp.com
 *.ladsp.jp
 *.lakana.com
@@ -509,8 +486,6 @@
 *.lenmit.com
 *.liadm.com
 *.licasd.com
-*.licdn.com
-*.lightboxcdn.com
 *.lightstep.com
 *.lijit.com
 *.limelight.com
@@ -528,7 +503,6 @@
 *.livestream.com
 *.lkqd.net
 *.lockerdome.com
-*.lockerdomecdn.com
 *.loginradius.com
 *.lowermybills.com
 *.lphbs.com
@@ -549,7 +523,6 @@
 *.maxmind.com
 *.maxymiser.net
 *.mcclatchydc.com
-*.mdpcdn.com
 *.media
 *.media-amazon.com
 *.media.net
@@ -600,7 +573,6 @@
 *.myfonts.net
 *.myvisualiq.net
 *.mywebsite-editor.com
-*.mzbcdn.net
 *.nakanohito.jp
 *.nandomedia.com
 *.narrativ.com
@@ -608,8 +580,6 @@
 *.nativeads.com
 *.nbcudigitaladops.com
 *.ncaudienceexchange.com
-*.netdna-cdn.com
-*.netdna-ssl.com
 *.netmng.com
 *.netseer.com
 *.netshelter.net
@@ -668,7 +638,6 @@
 *.perfectmarket.com
 *.perimeterx.net
 *.petametrics.com
-*.pgmcdn.com
 *.piguiqproxy.com
 *.pingdom.net
 *.pinimg.com
@@ -679,7 +648,6 @@
 *.playbuzz.com
 *.plista.com
 *.po.st
-*.polarcdn.com
 *.polarmobile.com
 *.popin.cc
 *.poratav.com
@@ -713,8 +681,6 @@
 *.queryly.com
 *.quest.com
 *.quora.com
-*.quoracdn.net
-*.rackcdn.com
 *.rapidbadger.com
 *.ravenjs.com
 *.readspeaker.com
@@ -740,7 +706,6 @@
 *.richrelevance.com
 *.rightnowtech.com
 *.rkdms.com
-*.rlcdn.com
 *.rmtag.com
 *.rockyou.net
 *.roimediaconsultants.com
@@ -811,7 +776,6 @@
 *.spot.im
 *.spotible.com
 *.spotify.com
-*.spotxcdn.com
 *.spotxchange.com
 *.spoutable.com
 *.springboardplatform.com
@@ -840,14 +804,11 @@
 *.supplyframe.com
 *.survata.com
 *.swiftype.com
-*.swiftypecdn.com
 *.switchadhub.com
 *.syn-api.com
-*.syn-cdn.com
 *.syncronex.com
 *.t-mobile.com
 *.taboola.com
-*.tacdn.com
 *.tagcade.com
 *.talkingpointsmemo.com
 *.tapad.com
@@ -866,7 +827,6 @@
 *.thr.com
 *.timeanddate.com
 *.tinypass.com
-*.tiqcdn.com
 *.today.com
 *.townnews.com
 *.trackjs.com
@@ -949,7 +909,6 @@
 *.weborama.fr
 *.webtype.com
 *.wibbitz.com
-*.widencdn.net
 *.windows.net
 *.wishabi.com
 *.wishabi.net
@@ -979,12 +938,10 @@
 *.zdassets.com
 *.zdbb.net
 *.zemanta.com
-*.zencdn.net
 *.zendesk.com
 *.zergnet.com
 *.zipalerts.com
 *.zipovoma.com
-*.zkcdn.net
 *.zone
 *.zopim.com
 *.zqtk.net
@@ -1011,7 +968,6 @@ browser-update.org
 bttrack.com
 buff.ly
 c212.net
-cdn.*
 cfl.re
 chimpstatic.com
 connectignite.com
@@ -1051,7 +1007,6 @@ kinja.com
 l
 l.instagram.com
 likeshop.me
-loadercdn.com
 localhost
 lockerdome.com
 meter.*
@@ -1073,8 +1028,6 @@ pixel.*
 placeimg.com
 platform.*
 po.st
-polarcdn-pentos.com
-polarcdn-terrax.com
 polldaddy.com
 privacyscore.org
 privymktg.com
@@ -1134,7 +1087,6 @@ unpkg.com
 uptime.com
 usersegment.*
 videotracker.*
-va.sndcdn.com
 visitors.live
 vk.com
 w.bos.gl
