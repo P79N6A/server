@@ -1,6 +1,6 @@
 #!/bin/sh
 #uid=$(id -u)
-uid=10079
+uid=10079 # remove alpine chroot when mitmproxy is fixed
 app_path=$(realpath ~/src/pw)
 os_path=/data/mnt/alpine
 
@@ -8,7 +8,9 @@ os_path=/data/mnt/alpine
 tmux new-session -s web -d -c ~/web
 
 ## daemons
+# local daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
+# open ports
 su -c "sh $app_path/sh/services $app_path"
 
 ## forward proxy to net
@@ -23,9 +25,9 @@ tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true\" - web'" C-m
 
 ## TCP routes
-# out to net
+# OUT to net
 # agent -> forward proxy (3128) -> HTTPS (443)
-# in to daemon
+# IN to daemon
 # agent -> HTTP (80) -> daemon (8000)
 # agent -> HTTPS (443) -> reverse proxy (8080) -> daemon (8000)
 su -c "sh $app_path/sh/routes $uid"
