@@ -1,3 +1,6 @@
+*.akamai.net
+*.akamaihd.net
+*.akamaized.net
 *.amazonaws.com
 *.aolcdn.com
 *.appboycdn.com
