@@ -1,6 +1,6 @@
 #!/bin/sh
 #uid=$(id -u)
-uid=10079 # remove alpine chroot when mitmproxy is fixed
+uid=10079 # remove alpine chroot when mitmproxy/termux/cryptography/openssl-engine issue fixed, or switch to squid for reverse proxy
 app_path=$(realpath ~/src/pw)
 os_path=/data/mnt/alpine
 
@@ -33,7 +33,7 @@ su -c "sh $app_path/sh/routes $uid"
 ## database
 tmux new-window -t web:3 -d
 # sync day-dir
-tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
+#tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
 # sync month-dir
 tmux send-keys -t web:3 "watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`" C-m
 
