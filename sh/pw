@@ -11,12 +11,14 @@ tmux new-session -s web -d -c ~/web
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 su -c "sh $app_path/sh/services $app_path"
 
-## forward proxy
+## forward proxy to net
 squid -f $app_path/config/squid.conf
+# tail proxy log
 #tmux new-window -t web:1 -d $app_path/sh/proxylog
+# tail proxy log on gateway
 tmux new-window -t web:1 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
 
-## reverse proxy
+## reverse proxy to daemon
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true\" - web'" C-m
 
@@ -28,7 +30,10 @@ su -c "sh $app_path/sh/routes $uid"
 
 ## database
 tmux new-window -t web:3 -d
+# sync day-dir
 tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
+# sync month-dir
+tmux send-keys -t web:3 "watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`" C-m
 
-## user control
+## user input
 tmux attach-session -t web
