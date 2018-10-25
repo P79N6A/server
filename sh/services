@@ -13,6 +13,7 @@ $open_port   68 # DHCP
 $open_TCP    80 # HTTP
 $open_TCP   443 # HTTPS
 $open_port 3128 # forward-proxy HTTPS
+$open_port 6789 # IRC
 $open_port 8000 # local HTTP daemon
 $open_TCP  8022 # SSH
 $open_port 8080 # reverse-proxy HTTPS

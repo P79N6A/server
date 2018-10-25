@@ -20,7 +20,7 @@ iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
-# route incoming and 'stray' outgoing traffic (apps ignoring proxy setting) to high-port handlers (to bypass, use forward-proxy or be the proxy uid)
+# route 'stray' outgoing traffic (apps ignoring proxy setting) to high-port handler (to bypass, use forward-proxy or be the proxy uid)
 echo configuring OUTPUT path
 iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v4 HTTP to daemon on high-port
 ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v6 HTTP to daemon on high-port
