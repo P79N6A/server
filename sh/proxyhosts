@@ -1,12 +1,12 @@
 #!/bin/sh
 echo
+conf=~/src/pw/config
 
 # output proxy domains in comma-seperated format
-cat ~/src/pw/config/API.domains ~/src/pw/config/track.domains |
+cat $conf/API.domains $conf/CDN.domains $conf/track.domains |
     tr "\n" "," | sed -e 's/.$//' # remove final trailing-comma
 
 # paste output in "bypass proxy for:" box or no_proxy env-var, or use browse script which does the latter for you
-
-# confusingly "No/bypassed Proxy" as in no forward-proxy, but instead the reverse proxy to local daemon
+# (confusingly "No/bypassed Proxy" means no forward-proxy, rather the reverse-proxy (to custom handlers))
 
 echo;echo
