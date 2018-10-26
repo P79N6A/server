@@ -19,6 +19,8 @@
 *.fastly.net
 *.fbcdn.net
 *.gannett-cdn.com
+*.github.com
+*.githubapp.com
 *.gr-cdn.com
 *.h-cdn.com
 *.intercomcdn.com
@@ -43,6 +45,7 @@
 *.syn-cdn.com
 *.tacdn.com
 *.tiqcdn.com
+*.wal.co
 *.widencdn.net
 *.zencdn.net
 *.zkcdn.net
