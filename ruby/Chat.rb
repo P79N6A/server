@@ -25,7 +25,7 @@ class WebResource
   end
   module HTTP
 
-    Host['twitter.com'] = Host['www.twitter.com'] = -> re {
+    Host['twitter.com'] = Host['mobile.twitter.com'] = Host['www.twitter.com'] = -> re {
       if re.path == '/'
         # show follow list
         graph = {}
