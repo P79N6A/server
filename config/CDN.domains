@@ -16,6 +16,7 @@
 *.cloudflare.com
 *.cloudfront.net
 *.disquscdn.com
+*.edgecastcdn.net
 *.fastly.net
 *.fbcdn.net
 *.gannett-cdn.com
@@ -39,6 +40,7 @@
 *.polarcdn.com
 *.quoracdn.net
 *.rackcdn.com
+*.redd.it
 *.redditmedia.com
 *.redditstatic.com
 *.rlcdn.com
