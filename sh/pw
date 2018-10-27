@@ -24,6 +24,7 @@ tmux new-window -t web:1 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
 ## reverse proxy
 tmux new-window -t web:2 -d
 tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true\" - web'" C-m
+# to send this traffic out to net, set mode: -m transparent
 
 ## database
 tmux new-window -t web:3 -d
