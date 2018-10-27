@@ -1,27 +1,25 @@
 #!/system/bin/sh
-# policy: deny unless allowed
-echo setting default policy
+# policy: deny if not explicitly allowed
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
 iptables  -P OUTPUT DROP
 ip6tables -P OUTPUT DROP
-# allow ICMP
-iptables  -A INPUT -p icmp -j ACCEPT
-ip6tables -A INPUT -p icmp -j ACCEPT
-iptables  -A OUTPUT -p icmp -j ACCEPT
-ip6tables -A OUTPUT -p icmp -j ACCEPT
 # allow localhost
 iptables  -A INPUT -i lo -j ACCEPT
 ip6tables -A INPUT -i lo -j ACCEPT
 iptables  -A OUTPUT -o lo -j ACCEPT
 ip6tables -A OUTPUT -o lo -j ACCEPT
-# drop QUIC until it's enabled
+# allow ICMP
+iptables  -A INPUT -p icmp -j ACCEPT
+ip6tables -A INPUT -p icmp -j ACCEPT
+iptables  -A OUTPUT -p icmp -j ACCEPT
+ip6tables -A OUTPUT -p icmp -j ACCEPT
+# drop QUIC until tool support improves
 iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
 # route 'stray' outgoing traffic (apps ignoring proxy setting) to high-port handler (to bypass, use forward-proxy or be the proxy uid)
-echo configuring OUTPUT path
 iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v4 HTTP to daemon on high-port
 ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v6 HTTP to daemon on high-port
 iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport 443 -j REDIRECT --to-ports 8080 # proxy-oblivious outgoing v4 HTTPS to reverse-proxy on high-port
