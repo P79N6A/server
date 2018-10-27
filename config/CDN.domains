@@ -29,6 +29,7 @@
 *.gitlab-static.net
 *.gr-cdn.com
 *.h-cdn.com
+*.imgur.com
 *.intercomcdn.com
 *.internapcdn.net
 *.jwpcdn.com
@@ -67,6 +68,7 @@
 *.zencdn.net
 *.zkcdn.net
 cdn.*
+imgur.com
 loadercdn.com
 polarcdn-pentos.com
 polarcdn-terrax.com
