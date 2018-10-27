@@ -1,0 +1,30 @@
+emulated archiving - JS versioned links in archived HTML
+go direct (dns switch)
+better wildcard matching in hosts
+audiostream type - radio.ttl
+per-site history
+show siblings in 404
+merge http://l/2018/10/12/?Q=dubplateresearch and l/u/dubplateresearch?host=reddit.com
+alternate groupings - path, to/from, dates
+more twitter extraction (op in thread, images)
+HTML extraction
+cache dirs for host+path
+week/month/hour paging UI topbar
+IRC realtime client and archival POSTs
+better merging of local index and update feed (reddit/twitter user pages) (prevent duplicate origin fetches in short timespan)
+index backlinks at feed req time and others
+show old posts too for refreshed remotes
+sslsplit flow (in chroot)
+mail connie
+mail clint
+weechat: part chans, /last, daydirs
+fetch on 404 (http only and/or whitelisted domains)
+persist host link to hrefs
+ham radio refund
+troff triplr
+.1, .2, etc triple to troff
+GO on reddit post -> show index (same sender, +?) matches in time context . UP DOWN manual page sel w/ infinite
+DNS
+diff http://l/2018/10/17/?q=mattapan#prev
+dedupe repeat titles
+Search host specific - !tw realtime
