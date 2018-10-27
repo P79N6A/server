@@ -25,6 +25,8 @@
 *.ggpht.com
 *.github.com
 *.githubapp.com
+*.gitlab.net
+*.gitlab-static.net
 *.gr-cdn.com
 *.h-cdn.com
 *.intercomcdn.com
