@@ -1,5 +1,5 @@
 idsync
-.*\.gif$
+.*\.gif
 /ads/
 /ad_data_204
 /ajax/bz
