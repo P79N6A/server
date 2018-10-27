@@ -1,6 +1,7 @@
 *.akamai.net
 *.akamaihd.net
 *.akamaized.net
+*.alicdn.com
 *.amazonaws.com
 *.aolcdn.com
 *.appboycdn.com
@@ -11,6 +12,7 @@
 *.brightspotcdn.com
 *.cdnbasket.net
 *.cdnjquery.com
+*.cdninstagram.com
 *.cdnsynd.com
 *.cdnwidget.com
 *.cloudflare.com
@@ -51,10 +53,13 @@
 *.ssl-images-amazon.com
 *.swiftypecdn.com
 *.syn-cdn.com
+*.s-nbcnews.com
 *.tacdn.com
 *.tiqcdn.com
+*.twimg.com
 *.wal.co
 *.widencdn.net
+*.ytimg.com
 *.zencdn.net
 *.zkcdn.net
 cdn.*
