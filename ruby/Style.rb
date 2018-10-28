@@ -86,19 +86,7 @@ header, nav, footer {display: none}
         [301, {'Location' => font, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
 
-    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
-      Host[host] = Font}
-
-    # populate local static-cache
-    Host['*.amazonaws.com'] = Host['*.ssl-images-amazon.com'] = Host['*.cloudfront.net'] = Host['*.wordpress.com'] = -> re {
-      case re.ext
-      when 'css'
-        CSS
-      when /^(jpg|png|gif|webp)$/i
-        CachedImage[re]
-      else
-        [404,{},[]]
-      end}
+    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|Host[host] = Font}
   end
 
 end

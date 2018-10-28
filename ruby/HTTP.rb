@@ -113,6 +113,20 @@ class WebResource
       }.intersperse("&").join('')
     end
 
+    CDN = -> re {
+      puts "CDN #{re.uri}"
+      case re.ext
+      when 'css'
+        CSS
+      when /^(jpg|png|gif|webp)$/i
+        CachedImage[re]
+      else
+        [404,{},[]]
+      end}
+
+    '.conf/CDN.domains'.R.lines.map{|host|
+      Host[host] = CDN}
+
   end
   include HTTP
 end

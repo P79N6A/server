@@ -29,7 +29,7 @@ class WebResource
 
     Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
 
-    #redirect to og:image linked in HTML metadata
+    #redirect to image in doc metadata
     WrappedImage = -> re {
       img = R['https://'+re.host+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
       loc = img.host ? ('https://' + img.host + img.path) : img.path
@@ -37,9 +37,21 @@ class WebResource
 
     CachedImage = -> re {
       hash = (re.host + re.path + re.qs).sha2
-      file = R['/.cache/'+hash[0..2]+'/'+hash[3..-1] + '.' + re.ext]
+      container = R['/.cache/img/' + hash[0..2] + '/' + hash[3..-1] + '/']
+      file = container + 'i.' + re.ext
 
-    }
+      if !container.exist?
+        container.mkdir
+        open('https:' + re.uri) do |response|
+          file.writeFile response.read
+        end
+      end
+
+      if file.exist?
+        file.env(re.env).fileResponse
+      else
+        [404,{},[]]
+      end}
 
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?
