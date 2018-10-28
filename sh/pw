@@ -7,7 +7,8 @@ tmux new-session -s web -d -c ~/web
 
 # routing
 su -c "sh $app_path/sh/services $app_path"
-su -c "sh $app_path/sh/routes"
+proxy=$(id -u)
+su -c "sh $app_path/sh/routes $proxy"
 
 ## daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m

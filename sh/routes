@@ -19,8 +19,10 @@ iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
-# send traffic ignoring proxy setting thru proxy for inspection
-iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 # v4 HTTP to daemon on high-port
-ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 # v6 HTTP to daemon on high-port
-iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 # v4 HTTPS to reverse-proxy on high-port
-ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 # v6 HTTPS to reverse-proxy on high-port
+# send traffic ignoring proxy settings thru proxy for inspection/logging/rewriting/dropping, allowing proxy/daemon user direct net access
+#proxy=$(id -u) # this script is often run as a different UID than the caller so we have a parametric proxy/daemon uid
+proxy=$1
+iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $proxy # v4 HTTP to high-port daemon
+ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $proxy # v6 HTTP to high-port daemon
+iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $proxy # v4 HTTPS to high-port reverse-proxy
+ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $proxy # v6 HTTPS to high-port reverse-proxy
