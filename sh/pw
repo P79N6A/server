@@ -1,33 +1,20 @@
 #!/bin/sh
 app_path=$(realpath ~/src/pw)
-os_path=/data/mnt/alpine
-
-## session
+uid=$(id -u)
+# session
 tmux new-session -s web -d -c ~/web
-
-# routing
+# routes
 su -c "sh $app_path/sh/services $app_path"
-proxy=$(id -u)
-su -c "sh $app_path/sh/routes $proxy"
-
-## daemon
+su -c "sh $app_path/sh/routes $uid"
+# daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
-
-## forward proxy ( to net )
+# proxy
 squid -f $app_path/config/squid.conf
-# tail proxy log
-#tmux new-window -t web:1 -d $app_path/sh/proxylog
-tmux new-window -t web:1 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
-
-## reverse proxy ( to daemon )
-tmux new-window -t web:2 -d
-tmux send-keys -t web:2 "su -c 'chroot $os_path /bin/su -c \"mitmdump -p 8080 -m reverse:http://127.0.0.1:8000 --set keep_host_header=true\" - web'" C-m
-
-## database
+# tail logs
+tmux new-window -t web:1 -d $app_path/sh/proxylog
+tmux new-window -t web:2 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
+# data synchronization
 tmux new-window -t web:3 -d
-# sync day-dir
-#tmux send-keys -t web:3 "watch -n 288 rsync -av $DATAPEER:web/`date +%Y/%m/%d` ~/web/`date +%Y/%m`" C-m
-# sync month-dir
 tmux send-keys -t web:3 "watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`" C-m
-
+# user controls
 tmux attach-session -t web
