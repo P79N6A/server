@@ -114,7 +114,6 @@ class WebResource
     end
 
     CDN = -> re {
-      puts "CDN #{re.uri}"
       case re.ext
       when 'css'
         CSS
