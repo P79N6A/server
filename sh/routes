@@ -19,8 +19,8 @@ iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
-# route 'stray' outgoing traffic (apps ignoring proxy setting) to high-port handler (to bypass, use forward-proxy or be the proxy uid)
-iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v4 HTTP to daemon on high-port
-ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport  80 -j REDIRECT --to-ports 8000 # proxy-oblivious outgoing v6 HTTP to daemon on high-port
-iptables  -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport 443 -j REDIRECT --to-ports 8080 # proxy-oblivious outgoing v4 HTTPS to reverse-proxy on high-port
-ip6tables -t nat -A OUTPUT -p tcp -m owner ! --uid-owner $1 --dport 443 -j REDIRECT --to-ports 8080 # proxy-oblivious outgoing v6 HTTPS to reverse-proxy on high-port
+# send traffic ignoring proxy setting thru proxy for inspection
+iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 # v4 HTTP to daemon on high-port
+ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 # v6 HTTP to daemon on high-port
+iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 # v4 HTTPS to reverse-proxy on high-port
+ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 # v6 HTTPS to reverse-proxy on high-port

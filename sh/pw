@@ -1,6 +1,4 @@
 #!/bin/sh
-#uid=$(id -u)
-uid=10079 # remove alpine chroot when mitmproxy/termux/cryptography/openssl-engine issue fixed, or switch to squid for reverse proxy
 app_path=$(realpath ~/src/pw)
 os_path=/data/mnt/alpine
 
@@ -9,7 +7,7 @@ tmux new-session -s web -d -c ~/web
 
 # routing-table
 su -c "sh $app_path/sh/services $app_path"
-su -c "sh $app_path/sh/routes $uid"
+su -c "sh $app_path/sh/routes"
 
 ## daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
