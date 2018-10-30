@@ -1,4 +1,5 @@
 #!/bin/sh
+uid=$1
 # start with a blank slate
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
@@ -20,8 +21,7 @@ ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
 # traffic to proxy, unless originating from proxy uid
-uid=$1
-iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid # v4 HTTP to high-port daemon
-ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid # v6 HTTP to high-port daemon
-iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid # v4 HTTPS to high-port reverse-proxy
-ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid # v6 HTTPS to high-port reverse-proxy
+iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid # IPv4 HTTP to daemon
+ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid # IPv6 HTTP to daemon
+iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $uid # IPv4 HTTPS to proxy
+ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $uid # IPv6 HTTPS to proxy
