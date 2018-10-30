@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/bin/sh
 # start with a blank slate
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
