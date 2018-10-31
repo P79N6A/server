@@ -1,4 +1,4 @@
-#!/system/bin/sh
+#!/bin/sh
 iptables  -A INPUT  -p udp --sport $1 -j ACCEPT
 ip6tables -A INPUT  -p udp --sport $1 -j ACCEPT
 iptables  -A OUTPUT -p udp --dport $1 -j ACCEPT
