@@ -3,7 +3,7 @@ class WebResource
 
     Group['flat'] = -> graph { graph }
 
-    # URI controls tree structure
+    # URI path to tree structure
     Group['tree'] = -> graph {
       tree = {}
       # select resource(s)
@@ -34,8 +34,8 @@ class WebResource
       contents = container.delete(Contains).do{|cs|
         cs.class == Hash ? cs.values : cs}.justArray #represented as single Object, Array of Objects, or URI-indexed Hash
       uno = contents.size <= 1
-      color = uno ? '#111' : ('#%06x' % (rand 16777216))
-      {class: :container, style: "color: #{color}; border-color: #{color}",
+      css = uno ? "background-color: #000" : "background-color: #{'#%06x' % (rand 16777216)}"
+      {class: :container, style: css,
        c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (uno ? '' : (name ? {_: :span, class: :label, c: CGI.escapeHTML(name)} : '')),
            contents.map{|c|HTML.value(nil,c,env)},
            (HTML.kv(container, env) unless container.empty?)]}}
