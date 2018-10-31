@@ -13,9 +13,9 @@ a.title {font-size:1.1em; background-color: #000; color: #fff; border-radius: .3
 a.date {float: right; font-weight: normal; font-size:.8em; background-color: #000; color:#888}
 a.link {background-color: #bbb; color: #000}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
-.container {border-width: .1em; padding: 0; margin: .1em; border-style: solid; border-radius: .2em}
+.container {border-width: .08em; padding: 0; margin: .1em; border-style: solid; border-radius: .23em}
 .container > .label {font-size:.9em}
-.post {border-radius: .3em; border: .1em solid #aaa; background-color: #222; color: #fff; margin: .2em;max-width:80ex}
+.post {border-radius: .23em; border: .08em solid #aaa; background-color: #222; color: #fff; margin: .2em;max-width:80ex}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 img {max-width: 100%}

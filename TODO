@@ -11,6 +11,7 @@ index backlinks at feed req time and others
 show old posts on refreshed-remote requests
 weechat: irssi-ish log path hourdirs
 fetch on 404 (DNS integration for whitelisted domains)
+use ~/.config and ~/.cache
 persist host link to hrefs
 troff triplr - .1, .2, etc - sslsplit docs eg
 on post -> show index (same sender, +?) matches in time context . UP DOWN manual page sel
