@@ -45,7 +45,7 @@ class WebResource
 
       # name -> CSS tag
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
-      cssFiles = [:icons]; cssFiles.push :code if graph.values.find{|r|r.R.a SIOC+'SourceCode'}
+      cssFiles = %w{site icons code}
 
       # HEAD links -> HTML
       link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}}
@@ -59,8 +59,8 @@ class WebResource
                              {_: :title, c: title},
                              {_: :link, rel: :icon, href: '/.conf/icon.png'},
                              *@r[:links].do{|links| links.map{|type,uri|
-                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}},
-                             css['site']].map{|e|['  ',e,"\n"]}}, "\n\n",
+                                 {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}
+                            ].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
                          c: ["\n",
                              link[:up, '&#9650;'],
