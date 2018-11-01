@@ -18,4 +18,4 @@ idsync
 /stats
 /sw\.js
 /wp-rum/
-([aA]nalytics|[aA]ngular|[bB]ootstrap|[jJ][qQ]uery|[tT]aboola|[tT]rack|wp-content).*\.(css|js)
+([aA]nalytics|[tT]aboola|[tT]rack|wp-content).*\.(css|js)
