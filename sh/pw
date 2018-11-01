@@ -3,20 +3,17 @@ uid=$(id -u)
 app_path=$(realpath ~/src/pw)
 server_root=$(realpath ~/web)
 cd $server_root
-# session
+# session handler
 tmux new-session -s web -d -c $server_root
 # routes
 su -c "sh $app_path/sh/services $app_path"
 su -c "sh $app_path/sh/routes $uid"
-# daemon
+# local daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
-# proxy
+# frontend
 squid -f $app_path/config/squid.conf
-# log
-tmux new-window -t web:1 -d $app_path/sh/proxylog
-tmux new-window -t web:2 -d ssh -p 8022 192.168.43.1 ~/src/pw/sh/proxylog
-# data
-tmux new-window -t web:3 -d
-tmux send-keys -t web:3 "watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`" C-m
+tmux new-window -t web:1 -d $app_path/sh/log
+# data sync
+tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
 # control
 tmux attach-session -t web
