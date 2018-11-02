@@ -65,7 +65,7 @@ class WebResource
         WrappedImage[re]
       end}
 
-    Host['instagram.com'] = Host['www.instagram.com'] = -> re {
+    Host['instagram.com'] = Host['.instagram.com'] = -> re {
       if re.parts[0] == 'p'
         WrappedImage[re]
       else
