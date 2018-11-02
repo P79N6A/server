@@ -35,10 +35,16 @@ class WebResource
     Host['play.google.com'] = -> re {
       [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
 
-    # TODO redirect to mesh search-nets or just use localhost
+    Host['connectivitycheck.gstatic.com'] = -> re {
+      [204,{'Content-Length' => 0},[]]}
+
     Host['google.com'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
+      when 'gen_204'
+        Host['connectivitycheck.gstatic.com'][re]
+      when 'generate_204'
+        Host['connectivitycheck.gstatic.com'][re]
       when 'complete' # keystroke logger
         puts 'SEARCH ' + re.q['q'].to_s
         [404,{},[]]

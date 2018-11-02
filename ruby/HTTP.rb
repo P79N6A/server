@@ -113,9 +113,6 @@ class WebResource
       }.intersperse("&").join('')
     end
 
-    Host['connectivitycheck.gstatic.com'] = -> re {
-      [204,{'Content-Length' => 0},[]]}
-
     CDN = -> re {
       case re.ext
       when 'css'
