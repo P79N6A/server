@@ -13,8 +13,7 @@ tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
 # frontend
 squid -f $app_path/config/squid.conf
 tmux new-window -t web:1 -d $app_path/sh/access_log
-tmux new-window -t web:2 -d $app_path/sh/error_log
 # data sync
-tmux new-window -t web:3 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
+tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
 # control
 tmux attach-session -t web
