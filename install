@@ -1,5 +1,4 @@
 #!/bin/sh
-
 ## pkgs
 # Alpine
 which apk && apk add alpine-sdk graphicsmagick ruby ruby-dev ruby-rdoc python python3-dev py3-cffi py3-pip openssl-dev rsync libxslt-dev tmux squid
@@ -7,16 +6,13 @@ which apk && apk add alpine-sdk graphicsmagick ruby ruby-dev ruby-rdoc python py
 which apt-add-repository && apt-get install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libssl-dev libxslt-dev clang tmux squid make rsync libffi-dev python-dev python3-pip
 # Termux
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
-
 ## Ruby libs
 cd ruby
 ruby install
 gem install bundler
 bundle install
-
 ## Python libs
 pip3 install --upgrade mitmproxy pygments
-
 ## certificate
 cert=$(realpath ~/src/pw/config/CA.pem)
 openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout myCA.pem -out $cert
