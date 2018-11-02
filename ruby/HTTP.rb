@@ -123,9 +123,6 @@ class WebResource
         [404,{},[]]
       end}
 
-    '.conf/CDN.domains'.R.lines.map{|host|
-      Host[host] = CDN}
-
   end
   include HTTP
 end

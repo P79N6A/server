@@ -74,6 +74,8 @@ class WebResource
             end
       [302,{'Location' => loc},[]]}
 
+    '.conf/indirect.domains'.R.lines.map{|host|Host[host] ||= CDN}
+
   end
   module HTML
     def htmlGrep graph, q
