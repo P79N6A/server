@@ -117,7 +117,7 @@ class WebResource
       case re.ext
       when 'css'
         CSS
-      when /^(jpg|png|gif|webp)$/i
+      when /^(jpg|png|webp)$/i
         CachedImage[re]
       else
         [404,{},[]]
