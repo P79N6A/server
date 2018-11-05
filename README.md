@@ -1,5 +1,5 @@
 ```
-mkdir ~/src ~/web
+mkdir -p ~/src ~/web/log
 cd ~/src
 git clone https://gitlab.com/ix/pw
 cd pw
