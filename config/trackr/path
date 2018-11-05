@@ -1,5 +1,5 @@
 idsync
-\.gif
+\.(gif|php)
 /ads/
 /ajax/bz
 /get_midroll_info
