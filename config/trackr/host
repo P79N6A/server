@@ -1,8 +1,6 @@
-^accounts\.
 ^ad\.
 ^ads\.
 ^analytics\.
-^api\.
 ^cookiesync\.
 ^dsp\.
 ^ensighten\.
@@ -12,7 +10,6 @@
 ^meter\.
 ^metrics\.
 ^pixel\.
-^platform\.
 ^public-api\.
 ^r-login\.
 ^scripts\.
