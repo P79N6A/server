@@ -1,5 +1,5 @@
-idsync
 \.(gif|php)
+idsync
 /ads/
 /ajax/bz
 /get_midroll_info
@@ -9,6 +9,5 @@ idsync
 /ptracking
 /qp/
 /stats
-/sw\.js
 /wp-rum/
-([aA]nalytics|[tT]aboola|[tT]rack|wp-content).*\.(css|js)
+([aA]nalytics|[tT]aboola|[tT]rack|/sw).*\.js
