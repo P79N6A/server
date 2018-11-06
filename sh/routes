@@ -1,6 +1,6 @@
 #!/bin/sh
 uid=$1
-# start with a blank slate
+# initial policy
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
 iptables  -P OUTPUT DROP
@@ -15,13 +15,13 @@ iptables  -A INPUT -p icmp -j ACCEPT
 ip6tables -A INPUT -p icmp -j ACCEPT
 iptables  -A OUTPUT -p icmp -j ACCEPT
 ip6tables -A OUTPUT -p icmp -j ACCEPT
-# drop QUIC until tool support improves
+# look into handling QUIC, for now use TCP protocols on HTTP ports
 iptables  -A OUTPUT -p udp --dport 80 -j DROP
 ip6tables -A OUTPUT -p udp --dport 80 -j DROP
 iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
-# traffic to proxy
+# transparent proxy
 iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid
 ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid
-iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $uid
-ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8080 -m owner ! --uid-owner $uid
+iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
+ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid

@@ -8,10 +8,10 @@ sh $1/open_TCP    80 # HTTP
 sh $1/open_TCP   443 # HTTPS
 sh $1/open_port 6789 # IRC
 sh $1/open_port 8000 # HTTP
-sh $1/open_port 8008 # HTTPS
 sh $1/open_TCP  8022 # SSH
-sh $1/open_port 8080 # HTTPS
-sh $1/open_port 8081 # HTTP
+sh $1/open_port 8080 # HTTPS explicit proxy
+sh $1/open_port 8081 # HTTPS transparent proxy
+sh $1/open_port 8082 # HTTP transparent proxy
 sh $1/open_UDP 60001 # Mosh
 sh $1/open_UDP 60002
 sh $1/open_UDP 60003
