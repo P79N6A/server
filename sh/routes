@@ -1,4 +1,7 @@
 #!/bin/sh
+uid=$1
+scripts=$2
+
 # initial policy
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
@@ -25,21 +28,21 @@ ip6tables -A OUTPUT -p udp --dport 443 -j DROP
 # transparent proxy
 iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000
 ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000
-iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081
-ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081
+iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
+ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
 
-sh $1/open_TCP    22 # SSH
-sh $1/open_TCP    43 # WHOIS
-sh $1/open_port   53 # DNS
-sh $1/open_port   67 # DHCP
-sh $1/open_port   68 # DHCP
-sh $1/open_TCP    80 # HTTP
-sh $1/open_TCP   443 # HTTPS
-sh $1/open_port 6789 # IRC
-sh $1/open_port 8000 # HTTP
-sh $1/open_TCP  8022 # SSH
-sh $1/open_port 8080 # HTTPS explicit proxy
-sh $1/open_port 8081 # HTTPS transparent proxy
-sh $1/open_UDP 60001 # Mosh
-sh $1/open_UDP 60002
-sh $1/open_UDP 60003
+sh $scripts/open_TCP    22 # SSH
+sh $scripts/open_TCP    43 # WHOIS
+sh $scripts/open_port   53 # DNS
+sh $scripts/open_port   67 # DHCP
+sh $scripts/open_port   68 # DHCP
+sh $scripts/open_TCP    80 # HTTP
+sh $scripts/open_TCP   443 # HTTPS
+sh $scripts/open_port 6789 # IRC
+sh $scripts/open_port 8000 # HTTP
+sh $scripts/open_TCP  8022 # SSH
+sh $scripts/open_port 8080 # HTTPS explicit proxy
+sh $scripts/open_port 8081 # HTTPS transparent proxy
+sh $scripts/open_UDP 60001 # Mosh
+sh $scripts/open_UDP 60002
+sh $scripts/open_UDP 60003

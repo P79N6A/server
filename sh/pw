@@ -6,7 +6,8 @@ cd $base
 tmux new-session -s web -d -c $base
 
 # network config
-su -c "sh $app/sh/routes $app/sh"
+uid=$(id -u)
+su -c "sh $app/sh/routes $uid $app/sh"
 
 # local daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
