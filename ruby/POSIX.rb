@@ -5,13 +5,6 @@ class WebResource
   module POSIX
     GlobChars = /[\*\{\[]/
 
-    def self.splitArgs args
-      args.shellsplit
-    rescue
-      puts "shell tokenization failed: #{args}"
-      args.split(/\W/)
-    end
-
     def link n
       send LinkMethod, n unless n.exist?
     rescue Exception => e
@@ -138,6 +131,13 @@ class WebResource
         end
         [self, files]
        end).justArray.flatten.compact.uniq.select &:exist?
+    end
+
+    def self.splitArgs args
+      args.shellsplit
+    rescue
+      puts "tokenize failure: #{args}"
+      args.split /\W/
     end
 
   end

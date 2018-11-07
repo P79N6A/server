@@ -1,19 +1,22 @@
 #!/bin/sh
-uid=$(id -u)
-app_path=$(realpath ~/src/pw)
-server_root=$(realpath ~/web)
-cd $server_root
-# session handler
-tmux new-session -s web -d -c $server_root
-# routes
-su -c "sh $app_path/sh/services $app_path/sh"
-su -c "sh $app_path/sh/routes $uid"
+app=$(realpath ~/src/pw)
+base=$(realpath ~/web)
+# session handle
+cd $base
+tmux new-session -s web -d -c $base
+
+# network config
+su -c "sh $app/sh/routes $app/sh"
+
 # local daemon
 tmux send-keys -t web:0 'unicorn -N -p 8000 .conf/rack.ru' C-m
-# frontend
-squid -f $app_path/config/squid.conf
-tmux new-window -t web:1 -d $app_path/sh/access_log
+
+# HTTPS frontend
+squid -f $app/config/squidedge.conf
+tmux new-window -t web:1 -d $app/sh/access_log
+
 # data sync
 tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
+
 # control
 tmux attach-session -t web
