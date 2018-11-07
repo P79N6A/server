@@ -1,0 +1,8 @@
+#/system/bin/sh
+mount /dev/block/sda2 /data/mnt
+mount -o bind /data/mnt/home/ix /data/data/com.termux/files/home
+cd /data/mnt
+mount -o bind /dev dev
+mount -t proc none proc
+mount -o bind /sys sys
+sh home/ix/src/pw/sh/routes home/ix/src/pw/sh
