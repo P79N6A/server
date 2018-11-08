@@ -31,18 +31,19 @@ ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000
 iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
 ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
 
-sh $scripts/open_TCP    22 # SSH
-sh $scripts/open_TCP    43 # WHOIS
-sh $scripts/open_port   53 # DNS
-sh $scripts/open_port   67 # DHCP
-sh $scripts/open_port   68 # DHCP
-sh $scripts/open_TCP    80 # HTTP
-sh $scripts/open_TCP   443 # HTTPS
-sh $scripts/open_port 6789 # IRC
-sh $scripts/open_port 8000 # HTTP
-sh $scripts/open_TCP  8022 # SSH
-sh $scripts/open_port 8080 # HTTPS explicit proxy
-sh $scripts/open_port 8081 # HTTPS transparent proxy
-sh $scripts/open_UDP 60001 # Mosh
-sh $scripts/open_UDP 60002
-sh $scripts/open_UDP 60003
+sh $scripts/open_port    22 # SSH
+sh $scripts/open_port    43 # WHOIS
+sh $scripts/open_port    53 # DNS
+sh $scripts/open_port    67 # DHCP
+sh $scripts/open_port    68 # DHCP
+sh $scripts/open_port    80 # HTTP
+sh $scripts/open_port   443 # HTTPS
+sh $scripts/open_port  3130 # ICP
+sh $scripts/open_port  6789 # IRC
+sh $scripts/open_port  8000 # HTTP
+sh $scripts/open_port  8022 # SSH
+sh $scripts/open_port  8080 # HTTPS explicit proxy
+sh $scripts/open_port  8081 # HTTPS transparent proxy
+sh $scripts/open_port 60001 # Mosh
+sh $scripts/open_port 60002
+sh $scripts/open_port 60003
