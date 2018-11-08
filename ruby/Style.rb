@@ -86,7 +86,8 @@ header, nav, footer {display: none}
         [301, {'Location' => font, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
 
-    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|Host[host] = Font}
+    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
+      Host[host] = Font}
   end
 
 end
