@@ -1,13 +1,13 @@
-\.(gif|php)
 idsync
-/ads/
+/ads
 /ajax/bz
 /get_midroll_info
 /log_event
 /pagead
 /pixel
 /ptracking
-/qp/
+/qp
 /stats
-/wp-rum/
+/wp-rum
 ([aA]nalytics|[tT]aboola|[tT]rack|/sw).*\.js
+\.gif
