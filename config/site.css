@@ -1,4 +1,5 @@
 * {vertical-align:top}
+body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff}
 #up,#down,#prev,#next {font-size: 2em; background-color:#000; color: #eee}
 #up,#down {display:block;}
 #prev,#next {position: fixed; height: 100%; padding-top: .89em}
@@ -6,7 +7,6 @@
 #down {margin-top:.3em}
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
-body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff}
 a    {text-decoration: none; font-weight: bold; background-color: white; color: black; overflow: hidden}
 a,p {max-width: 78ex}
 a.title {font-size:1.1em; background-color: #000; color: #fff; border-radius: .3em; padding: 0}
