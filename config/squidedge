@@ -1,5 +1,0 @@
-# gateway peer
-cache_peer gateway parent 8080 3130 tls default name=gateway
-cache_peer_access gateway deny adapt
-cache_peer_access gateway allow all
-never_direct allow all
