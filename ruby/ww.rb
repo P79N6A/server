@@ -1,7 +1,7 @@
 # dependencies
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 # this library
-%w{URI MIME POSIX HTML Feed JSON Text Time Mail Post Tree Calendar Chat HTTP Image Style Search}.map{|i|require_relative i}
+%w{URI MIME POSIX HTTP HTML Feed JSON Text Image Mail Post Time Tree Calendar Chat Style Search}.map{|i|require_relative i}
 # shorthand alias
 R = WebResource
 # extend stdlib

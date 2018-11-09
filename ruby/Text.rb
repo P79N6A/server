@@ -1,8 +1,6 @@
 # coding: utf-8
 class WebResource
   module Webize
-    def lines; e ? (open localPath).readlines.map(&:chomp) : [] end
-
     def triplrArchive &f;     yield uri, Type, R[Stat+'Archive']; triplrFile &f end
     def triplrAudio &f;       yield uri, Type, R[Sound]; triplrFile &f end
     def triplrDataFile &f;    yield uri, Type, R[Stat+'DataFile']; triplrFile &f end
@@ -80,32 +78,4 @@ class String
   def sha2; Digest::SHA2.hexdigest self end
   def to_utf8; encode('UTF-8', undef: :replace, invalid: :replace, replace: '?') end
   def utf8; force_encoding 'UTF-8' end
-  def sh; Shellwords.escape self end
-
-  # text -> HTML. (rel,href) tuples yielded to optional code-block
-  def hrefs &blk
-    # leading/trailing [<>()] stripped, trailing [,.] dropped
-    pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
-    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
-      (link.empty? && '' ||
-       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
-       (resource = link.R
-        if blk
-          type = case link
-                 when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
-                   R::Image
-                 when /(youtube.com|(mkv|mp4|webm)$)/i
-                   R::Video
-                 else
-                   R::Link
-                 end
-          yield type, resource
-        end
-        CGI.escapeHTML(resource.uri.sub /^http:../,'')) +
-       '</a>') +
-      (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match
-  rescue
-    puts "error HREFizing #{self}"
-    ''
-  end
 end

@@ -10,9 +10,11 @@ class WebResource
     rescue Exception => e
       puts e,e.class,e.message
     end
+
     def ln n
       FileUtils.ln   node.expand_path, n.node.expand_path
     end
+
     def ln_s n
       FileUtils.ln_s node.expand_path, n.node.expand_path
     end
@@ -20,6 +22,8 @@ class WebResource
     def readFile; File.open(localPath).read end
 
     def writeFile o; dir.mkdir; File.open(localPath,'w'){|f|f << o}; self end
+
+    def lines; e ? (open localPath).readlines.map(&:chomp) : [] end
 
     def touch
       dir.mkdir
@@ -239,4 +243,8 @@ class WebResource
                    :ln_s
                  end
   end
+end
+
+class String
+  def sh; Shellwords.escape self end
 end

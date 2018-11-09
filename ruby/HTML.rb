@@ -170,3 +170,32 @@ module Redcarpet
     end
   end
 end
+
+class String
+  # text -> HTML with (rel,href) tuples yielded to optional code-block
+  def hrefs &blk
+    # leading/trailing [<>()] stripped, trailing [,.] dropped
+    pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
+    pre.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + # pre-match
+      (link.empty? && '' ||
+       '<a class="link" href="' + link.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;') + '">' +
+       (resource = link.R
+        if blk
+          type = case link
+                 when /(gif|jpg|jpeg|jpg:large|png|webp)$/i
+                   R::Image
+                 when /(youtube.com|(mkv|mp4|webm)$)/i
+                   R::Video
+                 else
+                   R::Link
+                 end
+          yield type, resource
+        end
+        CGI.escapeHTML(resource.uri.sub /^http:../,'')) +
+       '</a>') +
+      (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match tail
+  rescue
+    puts "error HREFizing #{self}"
+    ''
+  end
+end

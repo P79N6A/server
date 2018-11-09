@@ -89,7 +89,6 @@ class WebResource
 
     # query Hash
     def q
-      # use memoized parse if available
       @r && @r['query'] || (HTTP.parseQs query)
     end
 
@@ -122,6 +121,9 @@ class WebResource
       else
         [404,{},[]]
       end}
+
+    '.conf/CDN'.R.lines.map{|host|
+      Host[host] = CDN}
 
   end
   include HTTP
