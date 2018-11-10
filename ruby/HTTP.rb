@@ -70,11 +70,11 @@ class WebResource
       else # produce entity
         # call entity-producer lambda
         body = lambda ? lambda.call : self
-        # dispatch file-references to Rack file-handler
+        # dispatch reference to Rack file-handler
         if body.class == WebResource
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
             [s,h.update(env[:Response]),b]} # attach headers to response and return
-        else # return static entity
+        else
           [(env[:Status]||200), env[:Response], [body]]
         end
       end
@@ -116,7 +116,7 @@ class WebResource
       case re.ext
       when 'css'
         CSS
-      when /^(jpg|png|webp)$/i
+      when /^(jpg|jpg:large|png|webp)$/i
         CachedImage[re]
       else
         [404,{},[]]
