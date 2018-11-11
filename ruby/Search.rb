@@ -47,7 +47,7 @@ class WebResource
         Host['connectivitycheck.gstatic.com'][re]
       when 'complete' # keystroke logger
         puts 'SEARCH ' + re.q['q'].to_s
-        [404,{},[]]
+        re.notfound
       when 'maps' # goto Maps lambda
         Host['maps.google.com'][re]
       when 'search' # goto DDG
@@ -58,7 +58,7 @@ class WebResource
               end
         [302,{'Location' => loc},[]]
       else
-        [404,{},[]]
+        re.notfound
       end}
 
     # redirect to open alternatives
