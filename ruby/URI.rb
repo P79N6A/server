@@ -14,7 +14,7 @@ end
 class WebResource < RDF::URI
   # constructor
   def self.[] u; WebResource.new u end
-  # cast to WebResource
+  # WebResource reference - already is in this case
   def R; self end
 
   PWD = Pathname.new File.expand_path '.'
@@ -58,6 +58,8 @@ class WebResource < RDF::URI
     Mtime    = Stat + 'mtime'
     Container = W3  + 'ns/ldp#Container'
     Contains  = W3  + 'ns/ldp#contains'
+
+    ImgExt = /^(jpg|jpg:large|png|webp)$/i
 
     def + u; R[to_s + u.to_s] end
     def match p; to_s.match p end

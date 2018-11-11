@@ -44,7 +44,7 @@ class WebResource
 
       if !container.exist?
         container.mkdir
-        puts "Image #{re.uri}"
+        puts " IMG #{re.uri}"
         open('https:' + re.uri) do |response|
           file.writeFile response.read
         end

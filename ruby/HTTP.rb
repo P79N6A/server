@@ -62,18 +62,18 @@ class WebResource
       filesResponse                                   # static files
     end
 
+    # conditional responder
     def entity env, lambda = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
-        # client has entity
+        # client has entity, return
         [304, {}, []]
       else # produce entity
-        # call entity-producer lambda
         body = lambda ? lambda.call : self
-        # dispatch reference to Rack file-handler
         if body.class == WebResource
+          # hand reference to file-handler
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]} # attach headers to response and return
+            [s,h.update(env[:Response]),b]} # attach headers and return
         else
           [(env[:Status]||200), env[:Response], [body]]
         end
@@ -116,7 +116,7 @@ class WebResource
       case re.ext
       when 'css'
         CSS
-      when /^(jpg|jpg:large|png|webp)$/i
+      when ImgExt
         CachedImage[re]
       else
         if re.parts[0] == 'image'

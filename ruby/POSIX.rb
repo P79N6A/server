@@ -199,11 +199,20 @@ class WebResource
     end
 
     def filesResponse set=nil
+      # find local nodes
       if !set || set.empty?
         set = selectNodes
         dateMeta
       end
-      return notfound if !set || set.empty?
+      # local-cache miss
+      if !set || set.empty?
+        if ext.match? ImgExt
+          return CachedImage[self]
+        else
+          return notfound
+        end
+      end
+
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
