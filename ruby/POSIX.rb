@@ -235,6 +235,28 @@ class WebResource
           end
         end}
     end
+
+    CacheFile = -> re {
+      hash = (re.host + re.path + re.qs).sha2
+      container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
+      ext = re.ext
+      ext = 'jpg' if !ext || ext.empty?
+      file = container + 'i.' + ext
+
+      if !container.exist?
+        container.mkdir
+        puts " GET #{re.uri}"
+        open('https:' + re.uri) do |response|
+          file.writeFile response.read
+        end
+      end
+
+      if file.exist?
+        file.env(re.env).fileResponse
+      else
+        [404,{},[]]
+      end}
+
   end
   module POSIX
     # hard-link capability test
