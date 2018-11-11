@@ -121,7 +121,7 @@ class WebResource
       when 'pdf'
         CacheFile[re]
       else
-        if re.parts[0] == 'image'
+        if %w{avatar image}.member? re.parts[0]
           CacheFile[re]
         else
           [404,{},[]]
