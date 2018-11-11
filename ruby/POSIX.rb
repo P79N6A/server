@@ -207,7 +207,7 @@ class WebResource
       # local-cache miss
       if !set || set.empty?
         if ext.match? ImgExt
-          return CachedImage[self]
+          return CacheFile[self]
         else
           return notfound
         end

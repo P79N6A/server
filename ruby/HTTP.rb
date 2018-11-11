@@ -117,12 +117,12 @@ class WebResource
       when 'css'
         CSS
       when ImgExt
-        CachedImage[re]
+        CacheFile[re]
       when 'pdf'
         CacheFile[re]
       else
         if re.parts[0] == 'image'
-          CachedImage[re]
+          CacheFile[re]
         else
           [404,{},[]]
         end

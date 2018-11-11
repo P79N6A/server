@@ -35,12 +35,10 @@ class WebResource
       loc = img.host ? ('https://' + img.host + img.path) : img.path
       [302,{'Location' => loc},[]]}
 
-    CachedImage = CacheFile
-
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?
         if 'i.imgur.com' == re.host
-          CachedImage[re]
+          CacheFile[re]
         else
           [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
         end
