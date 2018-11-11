@@ -38,11 +38,13 @@ class WebResource
     CachedImage = -> re {
       hash = (re.host + re.path + re.qs).sha2
       container = R['/.cache/img/' + hash[0..2] + '/' + hash[3..-1] + '/']
-      file = container + 'i.' + re.ext
+      ext = re.ext
+      ext = 'jpg' if !ext || ext.empty?
+      file = container + 'i.' + ext
 
       if !container.exist?
         container.mkdir
-        puts "CDN #{re.uri}"
+        puts "Image #{re.uri}"
         open('https:' + re.uri) do |response|
           file.writeFile response.read
         end

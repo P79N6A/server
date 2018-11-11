@@ -119,7 +119,11 @@ class WebResource
       when /^(jpg|jpg:large|png|webp)$/i
         CachedImage[re]
       else
-        [404,{},[]]
+        if re.parts[0] == 'image'
+          CachedImage[re]
+        else
+          [404,{},[]]
+        end
       end}
 
     '.conf/CDN'.R.lines.map{|host|
