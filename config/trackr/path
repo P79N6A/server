@@ -9,5 +9,5 @@ idsync
 /qp
 /stats
 /wp-rum
-([aA]nalytics|[tT]aboola|[tT]rack|/sw).*\.js
+([aA](d|nalytic)s|[tT]aboola|[tT]rack|/sw).*\.js
 \.gif
