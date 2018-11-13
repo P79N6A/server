@@ -25,7 +25,7 @@ class WebResource
                    ' '
                  end
       # logging
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + "\e[7m" + path + "\e[0m"
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + " \e[7m" + path + "\e[0m"
       # dispatch request
       R['//' + host + path].environment(env).send method
     rescue Exception => x
