@@ -94,9 +94,8 @@ class WebResource
     end
 
     def filesResponse set=nil
-      # find local nodes
       if !set || set.empty?
-        set = selectNodes
+        set = localNodes
         dateMeta
       end
       if !set || set.empty?

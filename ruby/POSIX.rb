@@ -106,7 +106,7 @@ class WebResource
     def sha2; to_s.sha2 end
 
     # WebResource -> file(s) mapping
-    def selectNodes
+    def localNodes
       (if directory?
        if q.has_key?('f') && path!='/' # FIND
          found = find q['f']
