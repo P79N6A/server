@@ -59,7 +59,7 @@ class WebResource < RDF::URI
     Container = W3  + 'ns/ldp#Container'
     Contains  = W3  + 'ns/ldp#contains'
 
-    ImgExt = /^(jpg|jpg:large|png|webp)$/i
+    ImgExt = /^(gif|jpg|jpg:large|png|webp)$/i
 
     def + u; R[to_s + u.to_s] end
     def match p; to_s.match p end
