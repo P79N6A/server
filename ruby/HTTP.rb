@@ -56,13 +56,11 @@ class WebResource
       @r[:links] = {}
       # response handler, first match finishes
       return fileResponse if node.file?               # static file
-      return Host[host][self] if Host[host]           # host match
-      return Host[subdomain][self] if Host[subdomain] # subdomain-wildcard match
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-segment
+      return Host[host][self] if Host[host]           # host mapping
+      return Host[subdomain][self] if Host[subdomain] # subdomain mapping
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # redirect to current time
 
       set = localNodes
-      dateMeta
-
       if !set || set.empty?
         case ext
         when 'css'
@@ -80,6 +78,7 @@ class WebResource
         end
       end
 
+      dateMeta
       filesResponse set
     end
 
@@ -115,6 +114,8 @@ class WebResource
     end
 
     def filesResponse set
+      return notfound if !set || set.empty?
+
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,

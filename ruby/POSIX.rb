@@ -130,8 +130,8 @@ class WebResource
         if match GlobChars
           files = glob
         else # default globs
-          files = (self + '.*').glob                # base+ext match
-          files = (self + '*').glob if files.empty? # substring match
+          files = (self + '.*').glob                # base & ext
+          files = (self + '*').glob if files.empty? # prefix
         end
         [self, files]
        end).justArray.flatten.compact.uniq.select &:exist?
