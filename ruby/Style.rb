@@ -20,7 +20,6 @@ class WebResource
       Label => :tag,
       Mtime => :time,
       RSS+'comments' => :comments,
-      SIOC+'ChatLog' => :comments,
       SIOC+'Discussion' => :comments,
       SIOC+'Feed' => :feed,
       SIOC+'MailMessage' => :envelope,

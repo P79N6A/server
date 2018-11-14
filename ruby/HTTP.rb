@@ -59,7 +59,28 @@ class WebResource
       return Host[host][self] if Host[host]           # host match
       return Host[subdomain][self] if Host[subdomain] # subdomain-wildcard match
       return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # dynamic redirect to current time-segment
-      filesResponse                                   # static files
+
+      set = localNodes
+      dateMeta
+
+      if !set || set.empty?
+        case ext
+        when 'css'
+          return CSS
+        when ImgExt
+          return cacheFile
+        when 'pdf'
+          return cacheFile
+        else
+          if %w{avatar image}.member? parts[0]
+            return cacheFile
+          else
+            return notfound
+          end
+        end
+      end
+
+      filesResponse set
     end
 
     # conditional responder
@@ -93,28 +114,7 @@ class WebResource
       end
     end
 
-    def filesResponse set=nil
-      if !set || set.empty?
-        set = localNodes
-        dateMeta
-      end
-      if !set || set.empty?
-        # no local nodes exist
-        case ext
-        when 'css'
-          return CSS
-        when ImgExt
-          return cacheFile
-        when 'pdf'
-          return cacheFile
-        else
-          if %w{avatar image}.member? parts[0]
-            return cacheFile
-          else
-            return notfound
-          end
-        end
-      end
+    def filesResponse set
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
@@ -123,7 +123,7 @@ class WebResource
                                         *set].sort.map{|r|[r,r.m]}, format].join.sha2})
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # no transcode - file as response body
+          set[0] # no transcode - on-file response body
         else # merge and/or transcode
           if format == 'text/html'
             ::Kernel.load HTML::SourceCode if ENV['DEV']
@@ -132,7 +132,8 @@ class WebResource
             renderFeed load set
           else # RDF
             g = RDF::Graph.new
-            set.map{|n| g.load n.toRDF.localPath, :base_uri => n.stripDoc }
+            set.map{|n|
+              g.load n.toRDF.localPath, :base_uri => n.stripDoc }
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}

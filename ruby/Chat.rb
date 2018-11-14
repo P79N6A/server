@@ -20,34 +20,18 @@ class WebResource
               Markup[Link][l,env]}]},
        "<br>\n"]}
 
-    Markup[SIOC+'ChatLog'] = Markup[Container]
-
   end
   module HTTP
 
     Host['twitter.com'] = Host['mobile.twitter.com'] = Host['www.twitter.com'] = -> re {
       if re.path == '/'
-        # show follow list
         graph = {}
-        # shuffle names to groups of 16
+        # shuffle names into groups of 16
         open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-          # account-group URL
           r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-          # add group to graph
           graph[r] = {'uri' => r , Type => R[Resource]}}
-        # return graph
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
-      elsif re.parts[0].match /^\d\d\d\d$/
-        # glob local datetime-index
-        glob = '*twitter.com*'
-        location = if re.basename == glob
-                     re
-                   else
-                     R[re.path + (re.path[-1] == '/' ? '' : '/') + glob].env re.env
-                   end
-        location.filesResponse
       else
-        # default caching and RDFizing passthrough
         re.filesResponse R[Twitter + re.path + re.qs].indexTweets
       end}
 
@@ -114,7 +98,6 @@ class WebResource
           yield s, Date, day+'T'+m[0]+':'+m[1]+':'+m[2] if day}}
       # logfile
       if linenum > 0
-        yield log, Type, R[SIOC+'ChatLog']
         yield log, Date, mtime.iso8601
         yield log, Title, basename.split('%23')[-1] # channel
         yield log, Size, linenum
