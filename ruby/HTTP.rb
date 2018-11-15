@@ -9,14 +9,15 @@ class WebResource
       return [202,{},[]] unless Methods.member? method
       # parse query
       env['query'] = query = parseQs env['QUERY_STRING']
-      # bind hostname via query or header
+      # hostname via query or header
       host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
-      # bind pathname
+      # raw pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
       # evaluate path-expression, preserving trailing-slash
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
-      # referrer
+
+      # logging
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -24,8 +25,8 @@ class WebResource
                  else
                    ' '
                  end
-      # logging
       puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + " \e[7m" + path + "\e[0m"
+
       # dispatch request
       R['//' + host + path].environment(env).send method
     rescue Exception => x
@@ -51,32 +52,49 @@ class WebResource
     def PUT;     [202,{},[]]  end
 
     def GET
-      # init response headers
+      # response headers
       @r[:Response] = {}
       @r[:links] = {}
       # response handler, first match finishes
-      return fileResponse if node.file?               # static file
-      return Host[host][self] if Host[host]           # host mapping
+      return fileResponse          if node.file?      # static file
+      return Host[host][self]      if Host[host]      # host mapping
       return Host[subdomain][self] if Host[subdomain] # subdomain mapping
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # redirect to current time
+      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # current time-dir
       set = localNodes
       if !set || set.empty?
         case ext
         when 'css'
           return CSS
-        when ImgExt
-          return cacheFile
-        when 'pdf'
-          return cacheFile
         else
-          if %w{avatar image}.member? parts[0]
-            return cacheFile
-          else
-            return notfound
-          end
+          return cacheFile
         end
       end
       filesResponse set
+    end
+
+    def cacheFile
+      hash = (host + path + qs).sha2
+      container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
+      extension = ext
+      extension = 'jpg' if !extension || extension.empty?
+      file = container + 'i.' + extension
+      if !container.exist?
+        container.mkdir
+        url = uri
+        if url[0] == '/'
+          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
+          url = scheme + ':' + url
+        end
+        puts " GET #{url}"
+        open(url) do |response|
+          file.writeFile response.read
+        end
+      end
+      if file.exist?
+        file.env(env).fileResponse
+      else
+        notfound
+      end
     end
 
     # conditional responder
@@ -136,31 +154,6 @@ class WebResource
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
-    end
-
-    def cacheFile
-      hash = (host + path + qs).sha2
-      container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
-      extension = ext
-      extension = 'jpg' if !extension || extension.empty?
-      file = container + 'i.' + extension
-      if !container.exist?
-        container.mkdir
-        url = uri
-        if url[0] == '/'
-          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
-          url = scheme + ':' + url
-        end
-        puts " GET #{url}"
-        open(url) do |response|
-          file.writeFile response.read
-        end
-      end
-      if file.exist?
-        file.env(env).fileResponse
-      else
-        notfound
-      end
     end
 
     def notfound
