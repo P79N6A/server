@@ -59,7 +59,6 @@ class WebResource
       return Host[host][self] if Host[host]           # host mapping
       return Host[subdomain][self] if Host[subdomain] # subdomain mapping
       return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # redirect to current time
-
       set = localNodes
       if !set || set.empty?
         case ext
@@ -77,8 +76,6 @@ class WebResource
           end
         end
       end
-
-      dateMeta
       filesResponse set
     end
 
@@ -86,8 +83,7 @@ class WebResource
     def entity env, lambda = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
-        # client has entity, return
-        [304, {}, []]
+        [304, {}, []] # client has entity, return
       else # produce entity
         body = lambda ? lambda.call : self
         if body.class == WebResource
@@ -115,13 +111,15 @@ class WebResource
 
     def filesResponse set
       return notfound if !set || set.empty?
-
+      # header
+      dateMeta
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
       @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
                             'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
                                         R['.conf/site.css'], # CSS, or doc changes
                                         *set].sort.map{|r|[r,r.m]}, format].join.sha2})
+      # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
           set[0] # no transcode - on-file response body
@@ -165,7 +163,10 @@ class WebResource
       end
     end
 
-    def notfound; [404,{'Content-Type' => 'text/html'},[htmlDocument]] end
+    def notfound
+      dateMeta
+      [404,{'Content-Type' => 'text/html'},[htmlDocument]]
+    end
 
     # query String
     def qs
