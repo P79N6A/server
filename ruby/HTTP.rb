@@ -7,13 +7,13 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [202,{},[]] unless Methods.member? method
-      # parse query
+      # parsed query
       env['query'] = query = parseQs env['QUERY_STRING']
-      # hostname via query or header
+      # hostname
       host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
       # raw pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-      # evaluate path-expression, preserve trailing-slash
+      # evaluated path-expression
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
@@ -27,7 +27,7 @@ class WebResource
                  end
       puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[32;1m" + host + " \e[7m" + path + "\e[0m"
 
-      # dispatch request
+      # call request method
       R['//' + host + path].environment(env).send method
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
@@ -55,18 +55,25 @@ class WebResource
       # response headers
       @r[:Response] = {}
       @r[:links] = {}
-      # response
-      return fileResponse          if node.file?       # local static file
-      return Host[host][self]      if Host[host]       # host mapping
-      return Host[subdomain][self] if Host[subdomain]  # subdomain mapping
+      # response, first match wins
+      return fileResponse          if node.file?       # local file
+      return Host[host][self]      if Host[host]       # host lambda
+      return Host[subdomain][self] if Host[subdomain]  # subdomain lambda
       return (chronoDir parts)     if chronoDir?       # time-dir
       ns = localNodes
       return (filesResponse ns)    if ns && !ns.empty? # local resource
-      return CSS if ext == 'css'                       # local CSS
-      return cacheFile                                 # remote resource
+      case ext
+      when 'css'
+        return CSS                                     # local CSS
+      when ImgExt
+        return cacheStatic                             # remote file
+      else
+        return cacheDynamic                            # remote resource
+      end
     end
 
-    def cacheFile
+    def cacheStatic
+      return notfound if localhost?
       hash = (host + path + qs).sha2
       container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
       extension = ext
@@ -89,6 +96,10 @@ class WebResource
       else
         notfound
       end
+    end
+
+    def cacheDynamic
+      notfound
     end
 
     # conditional responder
