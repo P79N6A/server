@@ -13,7 +13,7 @@ class WebResource
       host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
       # raw pathname
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-      # evaluate path-expression, preserving trailing-slash
+      # evaluate path-expression, preserve trailing-slash
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
@@ -55,21 +55,15 @@ class WebResource
       # response headers
       @r[:Response] = {}
       @r[:links] = {}
-      # response handler, first match finishes
-      return fileResponse          if node.file?      # static file
-      return Host[host][self]      if Host[host]      # host mapping
-      return Host[subdomain][self] if Host[subdomain] # subdomain mapping
-      return (chronoDir parts) if (parts[0]||'').match(/^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i) # current time-dir
-      set = localNodes
-      if !set || set.empty?
-        case ext
-        when 'css'
-          return CSS
-        else
-          return cacheFile
-        end
-      end
-      filesResponse set
+      # response
+      return fileResponse          if node.file?       # local static file
+      return Host[host][self]      if Host[host]       # host mapping
+      return Host[subdomain][self] if Host[subdomain]  # subdomain mapping
+      return (chronoDir parts)     if chronoDir?       # time-dir
+      ns = localNodes
+      return (filesResponse ns)    if ns && !ns.empty? # local resource
+      return CSS if ext == 'css'                       # local CSS
+      return cacheFile                                 # remote resource
     end
 
     def cacheFile

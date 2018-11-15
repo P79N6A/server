@@ -38,6 +38,10 @@ class WebResource
       @r[:links][:up] = dirname + (dirname == '/' ? '' : '/') + qs + '#r' + path.sha2 unless path=='/'
     end
 
+    def chronoDir?
+      (parts[0]||'').match /^(y(ear)?|m(onth)?|d(ay)?|h(our)?)$/i
+    end
+
     def chronoDir ps
       time = Time.now
       loc = time.strftime(case ps[0][0].downcase
