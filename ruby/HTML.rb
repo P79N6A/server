@@ -66,6 +66,9 @@ class WebResource
                              link[:up, '&#9650;'],
                              link[:prev, '&#9664;'],
                              link[:next, '&#9654;'],
+                             if path=='/' && env['SERVER_PORT']=='80'
+                               {_: :a, id: :link, href: 'https://'+host+path, c: '&#128274;'}
+                             end,
                              if graph.empty?
                                [{_: :h1, c: {_: :a, id: :link, href: 'https://'+host+path, c: 404}}, HTML.kv(HTML.urifyHash(@r),@r)]
                              else
