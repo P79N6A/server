@@ -74,15 +74,19 @@ class WebResource
 
     def cacheStatic
       return notfound if localhost?
+
+      # cache-item URI
       hash = (host + path + qs).sha2
       container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
-      extension = ext
-      extension = 'jpg' if !extension || extension.empty?
-      file = container + 'i.' + extension
+      type = ext
+      type = 'jpg' if !type || type.empty?
+      file = container + 'i.' + type
+
+      # fetch
       if !container.exist?
         container.mkdir
         url = uri
-        if url[0] == '/'
+        if url[0..1] == '//' # schemeless URI
           scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
           url = scheme + ':' + url
         end
@@ -91,6 +95,8 @@ class WebResource
           file.writeFile response.read
         end
       end
+
+      # deliver
       if file.exist?
         file.env(env).fileResponse
       else
