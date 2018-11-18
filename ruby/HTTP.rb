@@ -72,16 +72,15 @@ class WebResource
       end
     end
 
+    # static resource. no origin-check overhead, but only use for URIs specific to a version (hashed content)
     def cacheStatic
       return notfound if localhost?
-
-      # cache-item URI
+      # cache-URI
       hash = (host + path + qs).sha2
       container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
       type = ext
       type = 'jpg' if !type || type.empty?
       file = container + 'i.' + type
-
       # fetch
       if !container.exist?
         container.mkdir
@@ -95,7 +94,6 @@ class WebResource
           file.writeFile response.read
         end
       end
-
       # deliver
       if file.exist?
         file.env(env).fileResponse
@@ -104,6 +102,7 @@ class WebResource
       end
     end
 
+    # resource which can change at origin
     def cacheDynamic
       notfound
     end
