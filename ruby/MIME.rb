@@ -1,6 +1,7 @@
 # coding: utf-8
 class WebResource
   module MIME
+
     # name-prefix -> MIME
     MIMEprefix = {
       'authors' => 'text/plain',
@@ -65,7 +66,10 @@ class WebResource
       'yaml' => 'text/plain',
     }
 
-    # MIME -> RDF-emitter
+    # MIME -> name-suffix
+    MIMEext = MIMEsuffix.invert
+
+    # file MIME -> RDF emitter-method
     Triplr = {
       'application/config'   => [:triplrDataFile],
       'application/font'      => [:triplrFile],
@@ -135,7 +139,7 @@ class WebResource
       'text/x-tex'           => [:triplrTeX],
     }
 
-    # file -> MIME
+    # file -> MIME type via name-mapping
     def mime
       @mime ||= # memoize
         (name = path || ''
@@ -143,11 +147,11 @@ class WebResource
          suffix = ((File.extname name)[1..-1]||'').downcase
          if node.directory?
            'inode/directory'
-         elsif MIMEsuffix[suffix] # suffix mapping (native)
+         elsif MIMEsuffix[suffix] # suffix mapping
            MIMEsuffix[suffix]
          elsif MIMEprefix[prefix] # prefix mapping
            MIMEprefix[prefix]
-         elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack)
+         elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
            Rack::Mime::MIME_TYPES['.'+suffix]
          else
            puts "#{localPath} has unmapped MIME, sniffing content"
