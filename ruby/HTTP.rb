@@ -56,7 +56,7 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       # response, first match wins
-      return fileResponse          if node.file?       # local file
+      return fileResponse          if node.file?       # local static-file
       return Host[host][self]      if Host[host]       # host lambda
       return Host[subdomain][self] if Host[subdomain]  # subdomain lambda
       return (chronoDir parts)     if chronoDir?       # time-dir
@@ -66,7 +66,7 @@ class WebResource
       when 'css'
         return CSS                                     # local CSS
       when ImgExt
-        return cacheStatic                             # remote file
+        return cacheStatic                             # remote static-file
       else
         return cacheDynamic                            # remote resource
       end
