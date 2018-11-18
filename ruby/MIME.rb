@@ -162,7 +162,7 @@ class WebResource
     # file -> boolean
     def isRDF; %w{atom n3 owl rdf ttl}.member? ext end
 
-    # file -> RDF file
+    # file -> file
     def toRDF; isRDF ? self : transcode end
     def transcode
       return self if ext == 'e'
@@ -172,7 +172,7 @@ class WebResource
         tree = {}
         triplr = Triplr[mime]
         unless triplr
-          puts "#{uri}: triplr for #{mime} missing. file-meta only"
+          puts "#{uri}: triplr for #{mime} missing"
           triplr = :triplrFile
         end
         send(*triplr){|s,p,o|
