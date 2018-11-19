@@ -159,15 +159,18 @@ class WebResource
          end)
     end
 
-    # file -> boolean
+    # file -> bool
     def isRDF; %w{atom n3 owl rdf ttl}.member? ext end
 
     # file -> file
-    def toRDF; isRDF ? self : transcode end
+    def toRDF
+      isRDF ? self : transcode
+    end
+
     def transcode
       return self if ext == 'e'
       hash = node.stat.ino.to_s.sha2
-      doc = R['/.cache/'+hash[0..2]+'/'+hash[3..-1]+'.e']
+      doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e']
       unless doc.e && doc.m > m
         tree = {}
         triplr = Triplr[mime]
@@ -184,7 +187,7 @@ class WebResource
       doc
     end
 
-    # env -> MIMEs indexed on q-val
+    # env -> MIME(s) indexed on q-val
     def accept k = 'HTTP_ACCEPT'
       index = {}
       @r[k].do{|v|
