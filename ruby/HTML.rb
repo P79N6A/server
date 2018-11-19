@@ -116,10 +116,10 @@ class WebResource
           kv v, env
         end
       elsif 'uri' == k
-        v.R # resource link
+        v.R # resource reference
       elsif v.class == WebResource
-        v # resource link
-      else # no renderer found
+        v # resource reference
+      else # renderer undefined
         CGI.escapeHTML v.to_s
       end
     end

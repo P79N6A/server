@@ -1,6 +1,7 @@
 class WebResource
   module HTML
 
+    # default grouping. URI-indexed, no subcontainers
     Group['flat'] = -> graph { graph }
 
     # URI path to tree structure
@@ -15,7 +16,7 @@ class WebResource
          r.parts.map{|p|p.split '%23'}].flatten.map{|name|
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
-           # create named-node if missing, advance cursor
+           # create named-node (if missing), advance cursor
           cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
         if !r.fragment # document itself
           resource.map{|k,v|
@@ -32,7 +33,7 @@ class WebResource
       name = container.delete :name
       title = container.delete Title
       contents = container.delete(Contains).do{|cs|
-        cs.class == Hash ? cs.values : cs}.justArray #represented as single Object, Array of Objects, or URI-indexed Hash
+        cs.class == Hash ? cs.values : cs}.justArray # children representable as an Object, array of Object, or URI-indexed Hash
       uno = contents.size <= 1
       css = uno ? "background-color: #000" : "background-color: #{'#%06x' % (rand 16777216)}"
       {class: :container, style: css,
@@ -55,7 +56,7 @@ class WebResource
            "\n"]}}, "\n"]
     end
 
-    # [resA,resB,..] -> Markup
+    # [res0,res1,..,resN] -> Markup
     def self.tabular resources, env, head = true
       ks = resources.map(&:keys).flatten.uniq
       {_: :table, class: :table,
