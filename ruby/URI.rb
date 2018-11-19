@@ -19,8 +19,8 @@ class WebResource < RDF::URI
 
   PWD = Pathname.new File.expand_path '.'
 
+  #short names for common identifiers
   module URIs
-    #URI constants
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -107,7 +107,7 @@ class WebResource < RDF::URI
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 
-    # URI wrapped in URI
+    # unwrap URI wrapped in URI
     Unwrap = -> key {
       -> re {
         location = re.q[key.to_s.downcase]

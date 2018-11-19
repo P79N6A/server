@@ -124,7 +124,7 @@ class WebResource
       end
     end
 
-    # dirty HTML -> cleaned, reformatted HTML
+    # (dirty) HTML -> (cleaned, pretty printed) HTML
     def self.strip body, loseTags=%w{iframe script style}, keepAttr=%w{alt href id name rel src title type}
       html = Nokogiri::HTML.fragment body
       loseTags.map{|tag| html.css(tag).remove} if loseTags
@@ -196,7 +196,7 @@ class String
        '</a>') +
       (post.empty? && '' || post.hrefs(&blk)) # recursion on post-match tail
   rescue
-    puts "error HREFizing #{self}"
+    puts "failed to hypertextify #{self}"
     ''
   end
 end
