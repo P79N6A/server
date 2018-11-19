@@ -69,7 +69,7 @@ class WebResource
     # MIME -> name-suffix
     MIMEext = MIMEsuffix.invert
 
-    # file MIME -> RDF emitter-method
+    # MIME -> RDF emitter-method
     Triplr = {
       'application/config'   => [:triplrDataFile],
       'application/font'      => [:triplrFile],
@@ -202,13 +202,14 @@ class WebResource
     end
 
     # env -> MIME
-    def selectMIME default='text/html'
+    def selectMIME default = 'text/html'
       return 'application/atom+xml' if q.has_key?('feed')
       accept.sort.reverse.map{|q,formats| # sorted index, highest q-value first
         formats.map{|mime| # formats at q-value
           return default if mime == '*/*'
-          return mime if RDF::Writer.for(:content_type => mime) || %w{application/atom+xml text/html}.member?(mime)}} # terminate if serializable
-      default
+          return mime if RDF::Writer.for(:content_type => mime) ||          # RDF format
+                         %w{application/atom+xml text/html}.member?(mime)}} # supported non-RDF formats
+      default # HTML
     end
   end
 
@@ -216,6 +217,7 @@ class WebResource
 
   module HTTP
 
+    # file -> HTTP Response
     def filePreview
       p = join('.' + basename + '.jpg').R
       if !p.e
