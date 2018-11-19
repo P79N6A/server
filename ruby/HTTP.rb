@@ -76,8 +76,8 @@ class WebResource
     def cacheStatic
       return notfound if localhost?
       # cache-URI
-      hash = (host + path + qs).sha2
-      container = R['/.cache/' + hash[0..2] + '/' + hash[3..-1] + '/']
+      hash = (path + qs).sha2
+      container = R['/cache/Host/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
       type = ext
       type = 'jpg' if !type || type.empty?
       file = container + 'i.' + type

@@ -172,18 +172,20 @@ class WebResource
     end
   end
   module POSIX
-    # hard-link capability test
+    # fs-link capability test
     LinkMethod = begin
-                   file = '~/.cache/web/link'.R
-                   link = '~/.cache/web/link_'.R
-                   # reset src-link state
+                   file = 'cache/test/link'.R
+                   link = 'cache/test/link_'.R
+                   # reset src-state
                    file.touch unless file.exist?
-                   # reset dest-link state
+                   # reset dest-state
                    link.delete if link.exist?
                    # try link
                    file.ln link
+                   # hard-link succeeded, return
                    :ln
                  rescue Exception => e
+                   # symbolic-link fallback
                    :ln_s
                  end
   end

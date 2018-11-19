@@ -82,7 +82,7 @@ class WebResource < RDF::URI
       scheme = 'http' + (InsecureShorteners.member?(re.host) ? '' : 's') + '://'
       source = scheme + re.host + re.path
       dest = nil
-      cache = R['/.cache/' + re.host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
+      cache = R['/cache/URL/' + re.host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
       if cache.exist?
         dest = cache.readFile
       else

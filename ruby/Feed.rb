@@ -9,7 +9,7 @@ class WebResource
     def fetchFeed
       newPosts = []
       head = {}
-      cache = R['/.cache/'+uri.sha2+'/'] # storage
+      cache = R['/cache/Feed/'+uri.sha2+'/'] # storage
       etag = cache + 'etag'      # cache etag URI
       priorEtag = nil            # cache etag value
       mtime = cache + 'mtime'    # cache mtime URI
