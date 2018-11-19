@@ -41,10 +41,9 @@ class WebResource
             HTML.render({_: :pre,
                          style: 'white-space: pre-wrap',
                          c: readFile.do{|r|
-                           # transcode to UTF-8
                            enc ? r.force_encoding(enc).to_utf8 : r}.
-                           hrefs{|p,o| # hypertextify
-                           # yield detected links to caller
+                           hrefs{|p,o| # hypertextize
+                           # yield detected links to consumer
                            yield doc, p, o
                            yield o.uri, Type, R[Resource]
                          }})

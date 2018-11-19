@@ -143,21 +143,18 @@ class WebResource
       dateMeta
       format = selectMIME
       @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format,
-                            'ETag' => [[R[HTML::SourceCode], # cache-bust on renderer,
-                                        R['.conf/site.css'], # CSS, or doc changes
-                                        *set].sort.map{|r|[r,r.m]}, format].join.sha2})
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
       # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # no transcode - on-file response body
-        else # merge and/or transcode
+          set[0] # on-file response body
+        else
           if format == 'text/html'
             ::Kernel.load HTML::SourceCode if ENV['DEV']
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF
+          else # RDF format
             g = RDF::Graph.new
             set.map{|n|
               g.load n.toRDF.localPath, :base_uri => n.stripDoc }

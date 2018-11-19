@@ -160,14 +160,17 @@ class WebResource
     end
 
     # file -> bool
-    def isRDF; %w{atom n3 owl rdf ttl}.member? ext end
+    def isRDF # filename-extension matches RDF format
+      %w{atom n3 owl rdf ttl}.member? ext
+    end
 
     # file -> file
     def toRDF
-      isRDF ? self : transcode
+      isRDF ? self : rdfize
     end
 
-    def transcode
+    # file -> file
+    def rdfize
       return self if ext == 'e'
       hash = node.stat.ino.to_s.sha2
       doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e']

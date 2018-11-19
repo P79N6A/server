@@ -1,10 +1,11 @@
 class Hash
 
-  # cast to WebResource. reversible with Hash data preserved
+  # cast to WebResource
   def R
     WebResource.new(uri).data self
   end
 
+  # URI-field accessor
   def uri; self["uri"] end
 
 end
@@ -22,7 +23,7 @@ class WebResource
       content_encoding 'utf-8'
       reader { WebResource::JSON::Reader }
     end
-    # native JSON format is RDF
+    # native JSON-format reader
     class Reader < RDF::Reader
       format Format
       def initialize(input = $stdin, options = {}, &block)
@@ -56,7 +57,7 @@ class WebResource
     def load set # file-set argument
       g = {}                 # JSON tree
       graph = RDF::Graph.new # RDF graph
-      rdf,json = set.partition &:isRDF
+      rdf,non_rdf = set.partition &:isRDF
 
       # load RDF
       rdf.map{|n|
@@ -68,9 +69,9 @@ class WebResource
         g[s][p] ||= []
         g[s][p].push o unless g[s][p].member? o} # insert
 
-      # load JSON
-      json.map{|n|
-        n.transcode.do{|transcode|
+      # load non-RDF
+      non_rdf.map{|n|
+        n.rdfize.do{|transcode|
           ::JSON.parse(transcode.readFile).map{|s,re| # subject
             re.map{|p,o| # predicate object(s)
               o.justArray.map{|o| # each triple
