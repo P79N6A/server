@@ -26,8 +26,8 @@ iptables  -A OUTPUT -p udp --dport 443 -j DROP
 ip6tables -A OUTPUT -p udp --dport 443 -j DROP
 
 # transparent proxy
-iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid
-ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8000 -m owner ! --uid-owner $uid
+iptables  -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8082 -m owner ! --uid-owner $uid
+ip6tables -t nat -A OUTPUT -p tcp --dport  80 -j REDIRECT --to-ports 8082 -m owner ! --uid-owner $uid
 iptables  -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
 ip6tables -t nat -A OUTPUT -p tcp --dport 443 -j REDIRECT --to-ports 8081 -m owner ! --uid-owner $uid
 
@@ -44,6 +44,7 @@ sh $scripts/open_port  8000 # HTTP
 sh $scripts/open_port  8022 # SSH
 sh $scripts/open_port  8080 # HTTPS explicit proxy
 sh $scripts/open_port  8081 # HTTPS transparent proxy
+sh $scripts/open_port  8082 # HTTP  transparent proxy
 sh $scripts/open_port 60001 # Mosh
 sh $scripts/open_port 60002
 sh $scripts/open_port 60003
