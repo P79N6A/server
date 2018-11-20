@@ -62,6 +62,7 @@ class WebResource
       return (chronoDir parts)     if chronoDir?       # time-dir
       ns = localNodes
       return (filesResponse ns)    if ns && !ns.empty? # local resource
+      return notfound if localhost?                    # no local resource/ found
       case ext
       when 'css'
         return CSS                                     # local CSS
@@ -74,10 +75,9 @@ class WebResource
 
     # static resource. no origin-check overhead, but only use for URIs specific to a version (hashed content)
     def cacheStatic
-      return notfound if localhost?
       # cache-URI
       hash = (path + qs).sha2
-      container = R['/cache/Host/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
+      container = R['/cache/StaticResource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
       type = ext
       type = 'jpg' if !type || type.empty?
       file = container + 'i.' + type
@@ -102,9 +102,67 @@ class WebResource
       end
     end
 
-    # resource which can change at origin
+    # resource which may change at origin
     def cacheDynamic
-      notfound
+      # cache URI
+      hash = (path + qs).sha2
+      cache = R['/cache/Resource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
+
+      # metadata storage
+      head = {}               # HTTP header
+      etag = cache + 'etag'   # cached etag URI
+      priorEtag = nil         # cached etag value
+      mtime = cache + 'mtime' # cached mtime URI
+      priorMtime = nil        # cached mtime value
+      mime = cache + 'MIME'   # cached MIME
+      priorMIME = nil         # cached MIME value
+      curMIME = priorMIME
+      body = cache + 'body'   # cached body URI
+
+      # load metadata from previous response
+      if etag.e
+        priorEtag = etag.readFile
+        head["If-None-Match"] = priorEtag unless priorEtag.empty?
+      elsif mtime.e
+        priorMtime = mtime.readFile.to_time
+        head["If-Modified-Since"] = priorMtime.httpdate
+      end
+      priorMIME = mime.readFile if mime.e
+
+      # conditional request to origin
+      begin
+        url = uri
+        if url[0..1] == '//' # schemeless URI
+          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
+          url = scheme + ':' + url
+        end
+        puts " GET #{url}"
+        open(url, head) do |response|
+          curEtag = response.meta['etag']
+          curMIME = response.meta['content-type']
+          curMtime = response.last_modified || Time.now rescue Time.now
+          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # ETag changed
+          mime.writeFile curMIME if curMIME != priorMIME # MIME changed
+          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified changed
+          resp = response.read
+          unless body.e && body.readFile == resp
+            body.writeFile resp
+          end
+        end
+      rescue OpenURI::HTTPError => error
+        msg = error.message
+        puts [url,msg].join("\t") unless msg.match(/304/)
+      end unless priorMIME == 'text/javascript'
+
+      # deliver
+      if body.exist? && curMIME != 'text/javascript'
+        @r[:Response]['Content-Type'] = curMIME
+        body.env(env).fileResponse
+      else
+        notfound
+      end
+    rescue Exception => e
+      puts uri, e.class, e.message
     end
 
     # conditional responder
@@ -125,11 +183,9 @@ class WebResource
     end
 
     def fileResponse
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(mime) ? (mime+'; charset=utf-8') : mime,
-                            'ETag' => [m,size].join.sha2,
-                            'Access-Control-Allow-Origin' => '*'
-                           })
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if mime.match /^(audio|image|video)/
+      @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
+      @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match /^(audio|image|video)/
       if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
         filePreview
       else

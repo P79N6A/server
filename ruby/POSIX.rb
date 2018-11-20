@@ -107,6 +107,7 @@ class WebResource
 
     # WebResource -> file(s) mapping
     def localNodes
+      return [] if path == '/' && !localhost? 
       (if directory?
        if q.has_key?('f') && path!='/' # FIND
          found = find q['f']

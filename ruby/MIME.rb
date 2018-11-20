@@ -141,7 +141,7 @@ class WebResource
     }
 
     # file -> MIME type via name-mapping
-    def mime
+    def fileMIME
       @mime ||= # memoize
         (name = path || ''
          prefix = ((File.basename name).split('.')[0]||'').downcase
@@ -155,10 +155,11 @@ class WebResource
          elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
            Rack::Mime::MIME_TYPES['.'+suffix]
          else
-           puts "#{localPath} has unmapped MIME, sniffing content"
+           puts "WARNING undefined extension for #{localPath}, sniffing content"
            `file --mime-type -b #{Shellwords.escape localPath.to_s}`.chomp
          end)
     end
+    alias_method :mime, :fileMIME
 
     # file -> bool
     def isRDF # filename-extension matches RDF format
