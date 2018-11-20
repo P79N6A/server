@@ -3,7 +3,10 @@
 <meta type="copyright" content="Copyright (C) 1996-2018 The Squid Software Foundation and contributors">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style type="text/css">
-body {
+  a {color: #cff;
+     font-weight: bold; font-family: hack; font-size: .8em;
+     text-decoration: none; margin: .2em}
+  body {border: .08em solid #ccc; margin: 0;
 background: repeating-linear-gradient(
   -45deg,
   #000000,
