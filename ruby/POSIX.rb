@@ -150,6 +150,7 @@ class WebResource
   include POSIX
 
   module Webize
+
     # file -> RDF
     def triplrFile
       s = path
@@ -171,8 +172,53 @@ class WebResource
         yield s, Mtime, mt.to_i
         yield s, Date, mt.iso8601}
     end
+
+  end
+  module HTTP
+
+    # file -> HTTP Response
+    def fileResponse
+      @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
+      @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match /^(audio|image|video)/
+      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
+        filePreview
+      else
+        entity @r
+      end
+    end
+
+    # files -> HTTP Response
+    def filesResponse set
+      return notfound if !set || set.empty?
+
+      # header
+      dateMeta
+      format = selectMIME
+      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+
+      # body
+      entity @r, ->{
+        if set.size == 1 && set[0].mime == format
+          set[0] # on-file response body
+        else
+          if format == 'text/html'
+            ::Kernel.load HTML::SourceCode if ENV['DEV']
+            htmlDocument load set
+          elsif format == 'application/atom+xml'
+            renderFeed load set
+          else # RDF format
+            g = RDF::Graph.new
+            set.map{|n|
+              g.load n.toRDF.localPath, :base_uri => n.stripDoc }
+            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+          end
+        end}
+    end
   end
   module POSIX
+
     # fs-link capability test
     LinkMethod = begin
                    file = 'cache/test/link'.R

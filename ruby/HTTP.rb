@@ -64,8 +64,6 @@ class WebResource
       return (filesResponse ns)    if ns && !ns.empty? # local resource
       return notfound if localhost?                    # no local resource found
       case ext
-      when 'css'
-        return CSS                                     # local CSS
       when 'js'
         return notfound                                # local JS
       when ImgExt
@@ -73,94 +71,6 @@ class WebResource
       else
         return cacheDynamic                            # remote resource
       end
-    end
-
-    # static resource. no origin-check overhead, but only use for URIs specific to a version
-    def cacheStatic
-      # cache-URI
-      hash = (path + qs).sha2
-      container = R['/cache/StaticResource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
-      type = ext
-      type = 'jpg' if !type || type.empty?
-      file = container + 'i.' + type
-      # fetch
-      if !container.exist?
-        container.mkdir
-        url = uri
-        if url[0..1] == '//' # schemeless URI
-          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
-          url = scheme + ':' + url
-        end
-        puts " GET #{url}"
-        open(url) do |response|
-          file.writeFile response.read
-        end
-      end
-      # deliver
-      if file.exist?
-        file.env(env).fileResponse
-      else
-        notfound
-      end
-    end
-
-    # resource from remote origin
-    def cacheDynamic
-      # cache URI
-      hash = (path + qs).sha2
-      cache = R['/cache/Resource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
-
-      # metadata storage
-      head = {}               # HTTP header
-      etag  = cache + 'etag'  # cached etag URI
-      mime  = cache + 'MIME'  # cached MIME URI
-      mtime = cache + 'mtime' # cached mtime URI
-      body = cache + 'body'   # cached body URI
-
-      # load metadata from previous response
-      priorEtag  = nil # cached etag value
-      priorMIME  = nil # cached MIME value
-      priorMtime = nil # cached mtime value
-      if etag.e
-        priorEtag = etag.readFile
-        head["If-None-Match"] = priorEtag unless priorEtag.empty?
-      elsif mtime.e
-        priorMtime = mtime.readFile.to_time
-        head["If-Modified-Since"] = priorMtime.httpdate
-      end
-      priorMIME = curMIME = mime.readFile if mime.e
-
-      # cache update
-      begin
-        url = uri # locator
-        url = 'https:' + url if url[0..1] == '//' # prepend scheme
-        open(url, head) do |response|
-          puts " GET #{url}"
-          curEtag = response.meta['etag']
-          curMIME = response.meta['content-type']
-          curMtime = response.last_modified || Time.now rescue Time.now
-          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
-          mime.writeFile curMIME if curMIME != priorMIME # update MIME
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # update timestamp
-          resp = response.read
-          unless body.e && body.readFile == resp
-            body.writeFile resp
-          end
-        end
-      rescue OpenURI::HTTPError => error
-        msg = error.message
-        puts [url,msg].join("\t") unless msg.match(/304/)
-      end
-
-      # deliver
-      if body.exist?
-        @r[:Response]['Content-Type'] = curMIME
-        body.env(env).fileResponse
-      else
-        notfound
-      end
-    rescue Exception => e
-      puts uri, e.class, e.message
     end
 
     # conditional responder
@@ -178,43 +88,6 @@ class WebResource
           [(env[:Status]||200), env[:Response], [body]]
         end
       end
-    end
-
-    def fileResponse
-      @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
-      @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match /^(audio|image|video)/
-      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
-        filePreview
-      else
-        entity @r
-      end
-    end
-
-    def filesResponse set
-      return notfound if !set || set.empty?
-      # header
-      dateMeta
-      format = selectMIME
-      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
-      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
-      # body
-      entity @r, ->{
-        if set.size == 1 && set[0].mime == format
-          set[0] # on-file response body
-        else
-          if format == 'text/html'
-            ::Kernel.load HTML::SourceCode if ENV['DEV']
-            htmlDocument load set
-          elsif format == 'application/atom+xml'
-            renderFeed load set
-          else # RDF format
-            g = RDF::Graph.new
-            set.map{|n|
-              g.load n.toRDF.localPath, :base_uri => n.stripDoc }
-            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
-          end
-        end}
     end
 
     def notfound
