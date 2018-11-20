@@ -66,7 +66,7 @@ class WebResource
       case ext
       when 'js'
         return notfound                                # local JS
-      when ImgExt
+      when /^(jpg|jpg:large|png|webp)$/i
         return cacheStatic                             # remote static-file
       else
         return cacheDynamic                            # remote resource

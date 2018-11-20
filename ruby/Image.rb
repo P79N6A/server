@@ -3,8 +3,6 @@ class WebResource
   module URIs
     Instagram = 'https://www.instagram.com/'
     YouTube = 'http://www.youtube.com/xml/schemas/2015#'
-
-    ImgExt = /^(gif|jpg|jpg:large|png|webp)$/i
   end
 
   # TODO Dedupe video embeds within response representation

@@ -1,7 +1,7 @@
 class WebResource
   module HTTP
 
-    # static resource, cached once. no origin-check overhead. URIs specific to a version
+    # resource cached once. no origin-check overhead, for URIs specific to a version
     def cacheStatic
       # cache-URI
       hash = (path + qs).sha2
