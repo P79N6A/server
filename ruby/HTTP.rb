@@ -62,10 +62,12 @@ class WebResource
       return (chronoDir parts)     if chronoDir?       # time-dir
       ns = localNodes
       return (filesResponse ns)    if ns && !ns.empty? # local resource
-      return notfound if localhost?                    # no local resource/ found
+      return notfound if localhost?                    # no local resource found
       case ext
       when 'css'
         return CSS                                     # local CSS
+      when 'js'
+        return notfound                                # local JS
       when ImgExt
         return cacheStatic                             # remote static-file
       else
@@ -73,7 +75,7 @@ class WebResource
       end
     end
 
-    # static resource. no origin-check overhead, but only use for URIs specific to a version (hashed content)
+    # static resource. no origin-check overhead, but only use for URIs specific to a version
     def cacheStatic
       # cache-URI
       hash = (path + qs).sha2
@@ -102,7 +104,7 @@ class WebResource
       end
     end
 
-    # resource which may change at origin
+    # resource from remote origin
     def cacheDynamic
       # cache URI
       hash = (path + qs).sha2
@@ -110,16 +112,15 @@ class WebResource
 
       # metadata storage
       head = {}               # HTTP header
-      etag = cache + 'etag'   # cached etag URI
-      priorEtag = nil         # cached etag value
+      etag  = cache + 'etag'  # cached etag URI
+      mime  = cache + 'MIME'  # cached MIME URI
       mtime = cache + 'mtime' # cached mtime URI
-      priorMtime = nil        # cached mtime value
-      mime = cache + 'MIME'   # cached MIME
-      priorMIME = nil         # cached MIME value
-      curMIME = priorMIME
       body = cache + 'body'   # cached body URI
 
       # load metadata from previous response
+      priorEtag  = nil # cached etag value
+      priorMIME  = nil # cached MIME value
+      priorMtime = nil # cached mtime value
       if etag.e
         priorEtag = etag.readFile
         head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -127,23 +128,20 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      priorMIME = mime.readFile if mime.e
+      priorMIME = curMIME = mime.readFile if mime.e
 
-      # conditional request to origin
+      # cache update
       begin
-        url = uri
-        if url[0..1] == '//' # schemeless URI
-          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
-          url = scheme + ':' + url
-        end
-        puts " GET #{url}"
+        url = uri # locator
+        url = 'https:' + url if url[0..1] == '//' # prepend scheme
         open(url, head) do |response|
+          puts " GET #{url}"
           curEtag = response.meta['etag']
           curMIME = response.meta['content-type']
           curMtime = response.last_modified || Time.now rescue Time.now
-          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # ETag changed
-          mime.writeFile curMIME if curMIME != priorMIME # MIME changed
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified changed
+          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
+          mime.writeFile curMIME if curMIME != priorMIME # update MIME
+          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # update timestamp
           resp = response.read
           unless body.e && body.readFile == resp
             body.writeFile resp
@@ -152,10 +150,10 @@ class WebResource
       rescue OpenURI::HTTPError => error
         msg = error.message
         puts [url,msg].join("\t") unless msg.match(/304/)
-      end unless priorMIME == 'text/javascript'
+      end
 
       # deliver
-      if body.exist? && curMIME != 'text/javascript'
+      if body.exist?
         @r[:Response]['Content-Type'] = curMIME
         body.env(env).fileResponse
       else
