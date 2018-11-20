@@ -35,15 +35,14 @@ class WebResource
       # cache URI
       hash = (path + qs).sha2
       cache = R['/cache/Resource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
-
-      # metadata storage
+      # storage URIs
       head = {}               # HTTP header
       etag  = cache + 'etag'  # cached etag URI
       mime  = cache + 'MIME'  # cached MIME URI
       mtime = cache + 'mtime' # cached mtime URI
       body = cache + 'body'   # cached body URI
 
-      # load metadata from previous response
+      # metadata from previous response
       priorEtag  = nil # cached etag value
       priorMIME  = nil # cached MIME value
       priorMtime = nil # cached mtime value
@@ -56,7 +55,7 @@ class WebResource
       end
       priorMIME = curMIME = mime.readFile if mime.e
 
-      # cache update
+      # update
       begin
         url = uri # locator
         url = 'http' + (q.has_key?('80') ? '' : 's') + ':' + url if url[0..1] == '//' # prepend scheme
