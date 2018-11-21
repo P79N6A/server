@@ -31,34 +31,42 @@ class WebResource
 
     # Graph -> HTML
     def htmlDocument graph = {}
-      @r ||= {} # HEAD
-      title = graph[path+'#this'].do{|r| r[Title].justArray[0]} ||                     # explicit title
-              [*path.split('/'),q['q'] ,q['f']].map{|e|e && URI.unescape(e)}.join(' ') # path + keywords
 
       # HEAD links
+      @r ||= {}
       @r[:links] ||= {}
       @r[:images] ||= {}
       @r[:colors] ||= {}
 
+      # title
+      title = graph[path+'#this'].do{|r|
+        r[Title].justArray[0]} || # title in RDF
+              [*path.split('/'), q['q'], q['f']].
+                map{|e|
+        e && URI.unescape(e)}.join(' ') # path + keyword derived title
+
       # filter graph w/ HTML result
       htmlGrep graph, q['q'] if q['q']
 
-      # name -> CSS tag
+      # name -> CSS
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
       cssFiles = %w{site icons code}
 
-      # HEAD links -> HTML
-      link = -> name,label {@r[:links][name].do{|uri|[uri.R.data({id: name, label: label}),"\n"]}}
+      # header (k,v) -> HTML
+      link = -> key, displayname {
+        @r[:links][key].do{|uri|
+          [uri.R.data({id: key, label: displayname}),
+           "\n"]}}
 
-      # HTML <- Markup
+      # Markup -> HTML
       HTML.render ["<!DOCTYPE html>\n\n",
                    {_: :html,
                     c: ["\n\n",
                         {_: :head,
                          c: [{_: :meta, charset: 'utf-8'},
                              {_: :title, c: title},
-                             {_: :link, rel: :icon, href: '/.conf/icon.png'},
-                             *@r[:links].do{|links| links.map{|type,uri|
+                             *@r[:links].do{|links|
+                               links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}
                             ].map{|e|['  ',e,"\n"]}}, "\n\n",
                         {_: :body,
