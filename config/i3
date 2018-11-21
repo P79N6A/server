@@ -4,7 +4,8 @@ set $mod Mod1
 # is used in the bar {} block below.
 font pango:Hack 8
 floating_modifier $mod
-
+bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 1%+
+bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 1%-
 # start a terminal
 bindsym $mod+Return exec termite
 
