@@ -106,12 +106,12 @@ class WebResource
     # typed value -> Markup
     def self.value k, v, env
       if Abstract == k
-        v # already HTML
+        v # HTML content
       elsif Content == k
-        v # already HTML
-      elsif Markup[k] # predicate mapping
+        v # HTML content
+      elsif Markup[k] # predicate-type keyed
         Markup[k][v,env]
-      elsif v.class == Hash # object mapping
+      elsif v.class == Hash # object-type keyed
         resource = v.R
         types = resource.types
         if types.member? InstantMessage
@@ -123,10 +123,10 @@ class WebResource
         else
           kv v, env
         end
-      elsif 'uri' == k
-        v.R # resource reference
+      elsif k == 'uri'
+        v.R # reference
       elsif v.class == WebResource
-        v # resource reference
+        v   # reference
       else # renderer undefined
         CGI.escapeHTML v.to_s
       end
@@ -181,7 +181,7 @@ module Redcarpet
 end
 
 class String
-  # text -> HTML with (rel,href) tuples yielded to optional code-block
+  # text -> HTML. yield (rel,href) tuples to code-block
   def hrefs &blk
     # leading/trailing [<>()] stripped, trailing [,.] dropped
     pre, link, post = self.partition(/(https?:\/\/(\([^)>\s]*\)|[,.]\S|[^\s),.”\'\"<>\]])+)/)
