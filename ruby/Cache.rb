@@ -1,6 +1,6 @@
 class WebResource
   module HTTP
-
+    JSpath = %w{wp-content}
     # resource cached once. use URI specific to a version
     def cacheStatic
       # cache-URI

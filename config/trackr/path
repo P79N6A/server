@@ -8,6 +8,7 @@ idsync
 /pixel
 /ptracking
 /qp
+/service_ajax
 /stats
 /wp-rum
 ([aA](d|nalytic)s|[bB]id|[gG]eo|[tT]aboola|[tT]rack|/sw).*\.js

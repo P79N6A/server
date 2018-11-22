@@ -56,21 +56,29 @@ class WebResource
       @r[:Response] = {}
       @r[:links] = {}
       # response, first match wins
-      return fileResponse          if node.file?       # local static-file
-      return Host[host][self]      if Host[host]       # host lambda
-      return Host[subdomain][self] if Host[subdomain]  # subdomain lambda
-      return (chronoDir parts)     if chronoDir?       # time-dir
-      ns = localNodes
-      return (filesResponse ns)    if ns && !ns.empty? # local resource
-      return notfound if localhost?                    # no local resource found
+
+      # local resources
+      return fileResponse          if node.file?      # local static-file
+      return Host[host][self]      if Host[host]      # host lambda
+      return Host[subdomain][self] if Host[subdomain] # subdomain lambda
+      return (chronoDir parts)     if chronoDir?      # time-dir
+      refs = localNodes
+      return (files refs) if refs && !refs.empty?     # local resource
+      return notfound if localhost?                   # no local resource found
+
+      # remote resources
       case ext
       when 'js'
-        return notfound                                # local JS
+        if JSpath.member? parts[0]
+          return cacheDynamic                          # allow remote JS
+        else
+          return notfound                              # deny remote JS
+        end
       when /^(jpg|jpg:large|png|webp)$/i
         return cacheStatic                             # remote static-file
-      else
-        return cacheDynamic                            # remote resource
       end
+
+      cacheDynamic                                     # remote resource
     end
 
     # conditional responder
