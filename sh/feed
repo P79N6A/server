@@ -4,5 +4,5 @@ while true
 do
     r .conf/feeds.u fetchFeeds
     date
-    sleep 16h
+    sleep 8h
 done
