@@ -189,7 +189,7 @@ class WebResource
     end
 
     # files -> HTTP Response
-    def filesResponse set
+    def files set
       return notfound if !set || set.empty?
 
       # header

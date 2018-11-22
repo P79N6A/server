@@ -32,7 +32,7 @@ class WebResource
           graph[r] = {'uri' => r , Type => R[Resource]}}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       else
-        re.filesResponse R[Twitter + re.path + re.qs].indexTweets
+        re.files R[Twitter + re.path + re.qs].indexTweets
       end}
 
   end
