@@ -38,7 +38,7 @@ class WebResource
     Host['connectivitycheck.gstatic.com'] = -> re {
       [204,{'Content-Length' => 0},[]]}
 
-    Host['google.com'] = Host['www.google.com'] = -> re {
+    Host['google.com'] = Host['goo.gl'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
       when 'gen_204'
