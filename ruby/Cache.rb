@@ -12,7 +12,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
-      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. given the vastness of the web the chance of two users stumbling across the same file at the same time seems exceedingly "rare"
+      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. given the vastness of the web the chance of two users stumbling across the same file at the same time seems exceedingly "rare", at least when the proxy is on localhost and only has one user. so the container is the lockfile that prevents multiple concurrent origin fetches 
       if !container.exist?
         container.mkdir
         url = uri
@@ -61,6 +61,7 @@ class WebResource
       # update
       begin
         url = uri # locator
+        # prefer HTTPS with explicit HTTP via ?80 query
         url = 'http' + (q.has_key?('80') ? '' : 's') + ':' + url if url[0..1] == '//' # prepend scheme
         open(url, head) do |response|
           puts " GET #{url}"
