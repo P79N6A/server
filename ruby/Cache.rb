@@ -1,6 +1,6 @@
 class WebResource
   module HTTP
-    JSpath = %w{wp-content}
+    JSpath = %w{ajax cdn-cgi wp-content}
     # static-resource cache:
     # note: no origin roundtrip on cache hits, but updates require a URI change. recommended for hashed-content derived identifiers
     def cacheStatic
