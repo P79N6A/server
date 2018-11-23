@@ -1,7 +1,8 @@
 class WebResource
   module HTTP
     JSpath = %w{wp-content}
-    # resource cached once. use URI specific to a version
+    # static-resource cache:
+    # note: lightweight and origin-roundtrip-latency-free on cache hits, but updates require a URI change. recommended for hashed-content derived identifiers only
     def cacheStatic
       # storage URI
       hash = (path + qs).sha2
@@ -11,6 +12,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
+      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. for multiuser scenarios you probably want Squid or Varnish or something. collisions seem exceedingly "rare"  tho
       if !container.exist?
         container.mkdir
         url = uri
@@ -32,7 +34,7 @@ class WebResource
       end
     end
 
-    # cached resource of remote origin
+    # cache resource of remote origin
     def cacheDynamic
       # storage URIs
       hash = (path + qs).sha2
