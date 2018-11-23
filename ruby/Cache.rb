@@ -2,7 +2,7 @@ class WebResource
   module HTTP
     JSpath = %w{wp-content}
     # static-resource cache:
-    # note: lightweight and origin-roundtrip-latency-free on cache hits, but updates require a URI change. recommended for hashed-content derived identifiers only
+    # note: no origin roundtrip on cache hits, but updates require a URI change. recommended for hashed-content derived identifiers
     def cacheStatic
       # storage URI
       hash = (path + qs).sha2
@@ -12,7 +12,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
-      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. for multiuser scenarios you probably want Squid or Varnish or something. collisions seem exceedingly "rare"  tho
+      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. given the vastness of the web the chance of two users stumbling across the same file at the same time seems exceedingly "rare"
       if !container.exist?
         container.mkdir
         url = uri
@@ -68,8 +68,8 @@ class WebResource
           curMIME = response.meta['content-type']
           curMtime = response.last_modified || Time.now rescue Time.now
           etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
-          mime.writeFile curMIME if curMIME != priorMIME # update MIME
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # update timestamp
+          mime.writeFile curMIME if curMIME != priorMIME                               # update MIME
+          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime                   # update timestamp
           resp = response.read
           unless body.e && body.readFile == resp
             body.writeFile resp
