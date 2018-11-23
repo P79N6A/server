@@ -1,8 +1,11 @@
 class WebResource
   module HTTP
+    # patterns to allow javascript caching
+    JShost = %w{static.squarespace.com}
     JSpath = %w{ajax cdn-cgi wp-content}
-    # static-resource cache:
-    # note: no origin roundtrip on cache hits, but updates require a URI change. recommended for hashed-content derived identifiers
+
+    # static-resource cache
+    # no origin-check, new version gets new URI (for hash identifiers or managing invalidation/GC yourself)
     def cacheStatic
       # storage URI
       hash = (path + qs).sha2
@@ -12,8 +15,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
-      # note: duplicate GETs during an origin fetch will 404 when container exists but file doesn't. given the vastness of the web the chance of two users stumbling across the same file at the same time seems exceedingly "rare", at least when the proxy is on localhost and only has one user. so the container is the lockfile that prevents multiple concurrent origin fetches 
-      if !container.exist?
+      if !container.exist? # container existence prevents multiple concurrent fetches 
         container.mkdir
         url = uri
         if url[0..1] == '//' # schemeless URI
@@ -34,7 +36,7 @@ class WebResource
       end
     end
 
-    # cache resource of remote origin
+    # cache resource
     def cacheDynamic
       # storage URIs
       hash = (path + qs).sha2
@@ -61,7 +63,7 @@ class WebResource
       # update
       begin
         url = uri # locator
-        # prefer HTTPS with explicit HTTP via ?80 query
+        # HTTPS. activate HTTP by adding 80 to querystring # TODO inject some scheme hints at the proxy
         url = 'http' + (q.has_key?('80') ? '' : 's') + ':' + url if url[0..1] == '//' # prepend scheme
         open(url, head) do |response|
           puts " GET #{url}"

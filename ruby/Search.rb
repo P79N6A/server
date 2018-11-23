@@ -30,14 +30,11 @@ class WebResource
 
   end
   module HTTP
-
+    ## Google
     # lookup app in FDroid store, if not there it's probably closed-source
-    Host['play.google.com'] = -> re {
-      [302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
-
-    Host['connectivitycheck.gstatic.com'] = -> re {
-      [204,{'Content-Length' => 0},[]]}
-
+    Host['play.google.com'] = -> re {[302,{'Location' => "https://f-droid.org/en/packages/#{re.q['id']}/"},[]]}
+    # 204 handler
+    Host['connectivitycheck.gstatic.com'] = Host['clients1.google.com'] = -> re {[204,{'Content-Length' => 0},[]]}
     Host['google.com'] = Host['goo.gl'] = Host['www.google.com'] = -> re {
       product = re.parts[0]
       case product
@@ -46,11 +43,11 @@ class WebResource
       when 'generate_204'
         Host['connectivitycheck.gstatic.com'][re]
       when 'complete' # keystroke logger
-        puts 'SEARCH ' + re.q['q'].to_s
+        puts 'key ' + re.q['q'].to_s
         re.notfound
-      when 'maps' # goto Maps lambda
+      when 'maps'
         Host['maps.google.com'][re]
-      when 'search' # goto DDG
+      when 'search'
         loc = if re.q.has_key? 'q'
                 "https://duckduckgo.com/?q=#{URI.escape re.q['q']}"
               else
@@ -60,7 +57,6 @@ class WebResource
       else
         re.notfound
       end}
-
     # redirect to open alternatives
     Host['maps.google.com'] = -> re {
       loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)

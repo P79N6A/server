@@ -55,7 +55,6 @@ class WebResource
       # response headers
       @r[:Response] = {}
       @r[:links] = {}
-      # response, first match wins
 
       # local resources
       return fileResponse          if node.file?      # local static-file
@@ -68,16 +67,15 @@ class WebResource
 
       # remote resources
       case ext
+      when /^(jpg|jpg:large|png|webp)$/i
+        return cacheStatic                             # remote static-file
       when 'js'
-        if JSpath.member? parts[0]
+        if (JShost.member? host) || (JSpath.member? parts[0])
           return cacheDynamic                          # allow remote JS
         else
           return notfound                              # deny remote JS
         end
-      when /^(jpg|jpg:large|png|webp)$/i
-        return cacheStatic                             # remote static-file
       end
-
       cacheDynamic                                     # remote resource
     end
 
