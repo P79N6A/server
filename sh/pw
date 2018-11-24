@@ -11,7 +11,7 @@ uid=$(id -u)
 su -c "sh $app/sh/routes $uid $app/sh"
 
 # local daemon
-tmux send-keys -t web:0 'unicorn -N -l 0.0.0.0:80 -l [::1]:80 -l 0.0.0.0:8000 -l [::1]:8000 .conf/rack.ru' C-m
+tmux send-keys -t web:0 'unicorn -N -l 127.0.0.1:80 -l 127.0.0.1:8000 -l [::1]:80 -l [::1]:8000 .conf/rack.ru' C-m
 
 # HTTPS frontend
 squid -f $app/config/squid.conf
@@ -20,5 +20,5 @@ tmux new-window -t web:1 -d $app/sh/access_log
 # data sync
 tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
 
-# control
+# controlling terminal
 tmux attach-session -t web
