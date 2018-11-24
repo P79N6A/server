@@ -19,8 +19,11 @@ class WebResource < RDF::URI
 
   PWD = Pathname.new File.expand_path '.'
 
-  #short names for common identifiers
   module URIs
+    InsecureDomains = %w{amfone.net}
+    InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
+
+    # shortname for common URI prefixes
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'
     Purl = 'http://purl.org/'
@@ -100,7 +103,6 @@ class WebResource < RDF::URI
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
-    InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
       Host[host] = Short}
 

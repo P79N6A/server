@@ -38,6 +38,13 @@ class WebResource
 
     # cache resource
     def cacheDynamic
+      # locator
+      url = uri # HTTPS default, TODO scheme hints at HTTPS termination point
+      if url[0..1] == '//' # prepend scheme
+        scheme = ((q.has_key? '80') || (InsecureDomains.member? host)) ? '' : 's'
+        url = 'http' + scheme + ':' + url
+      end
+
       # storage URIs
       hash = (path + qs).sha2
       cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
@@ -46,8 +53,8 @@ class WebResource
       mtime = cache + 'mtime' # cached mtime URI
       body = cache + 'body'   # cached body URI
 
-      # metadata from previous response
-      head = {} # HTTP header storage
+      # metadata
+      head = {} # header storage
       priorEtag  = nil # cached etag value
       priorMIME  = nil # cached MIME value
       priorMtime = nil # cached mtime value
@@ -62,9 +69,6 @@ class WebResource
 
       # update
       begin
-        url = uri # locator
-        # HTTPS. switch to HTTP with ?80 querystring. TODO preserve scheme hints at HTTPS termination point
-        url = 'http' + (q.has_key?('80') ? '' : 's') + ':' + url if url[0..1] == '//' # prepend scheme
         puts " GET #{url}"
         open(url, head) do |response|
           curEtag = response.meta['etag']
@@ -91,7 +95,7 @@ class WebResource
         notfound
       end
     rescue Exception => e
-      puts uri, e.class, e.message
+      puts url, e.class, e.message
     end
 
   end
