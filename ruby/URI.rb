@@ -65,8 +65,7 @@ class WebResource < RDF::URI
       host.split('.')[1..-1].unshift('').join '.'
     end
     def localhost?
-      host == 'localhost' ||
-        host == 'l'
+      %w{l [::1] 127.0.0.1 localhost}.member? @r['SERVER_NAME']
     end
   end
   include URIs
