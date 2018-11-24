@@ -63,10 +63,10 @@ class WebResource
       # update
       begin
         url = uri # locator
-        # HTTPS. activate HTTP by adding 80 to querystring # TODO inject some scheme hints at the proxy
+        # HTTPS. switch to HTTP with ?80 querystring. TODO preserve scheme hints at HTTPS termination point
         url = 'http' + (q.has_key?('80') ? '' : 's') + ':' + url if url[0..1] == '//' # prepend scheme
+        puts " GET #{url}"
         open(url, head) do |response|
-          puts " GET #{url}"
           curEtag = response.meta['etag']
           curMIME = response.meta['content-type']
           curMtime = response.last_modified || Time.now rescue Time.now
