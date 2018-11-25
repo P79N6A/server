@@ -38,12 +38,14 @@ class WebResource
 
     # cache resource
     def cacheDynamic
-      # locator
-      url = uri # HTTPS is default. TODO tag request-scheme in metadata at frontend HTTP/HTTPS termination point
-      if url[0..1] == '//' # free scheme
-        scheme = ((q.has_key? '80') || (InsecureDomains.member? host)) ? '' : 's'
-        url = 'http' + scheme + ':' + url # prepend scheme
+      # remote-resource locator
+      url = uri + qs
+      if url[0..1] == '//' # free scheme?
+        s = (InsecureDomains.member? host) ? '' : 's'
+        url = 'http' + s + ':' + url # bind scheme
       end
+      # remote-resource reference w/ metadata
+      source = url.R.env env
 
       # storage URIs
       hash = (path + qs).sha2
@@ -54,7 +56,7 @@ class WebResource
       body = cache + 'body'   # cached body URI
 
       # metadata
-      head = {} # header storage
+      head = {} # header fields
       priorEtag  = nil # cached etag value
       priorMIME  = nil # cached MIME value
       priorMtime = nil # cached mtime value
@@ -67,24 +69,30 @@ class WebResource
       end
       priorMIME = curMIME = mime.readFile if mime.e
 
-      # update
-      begin
+      # fetch
+      fetch = -> url {
         puts " GET #{url}"
-        open(url, head) do |response|
-          curEtag = response.meta['etag']
-          curMIME = response.meta['content-type']
-          curMtime = response.last_modified || Time.now rescue Time.now
-          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
-          mime.writeFile curMIME if curMIME != priorMIME                               # update MIME
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime                   # update timestamp
-          resp = response.read
-          unless body.e && body.readFile == resp
-            body.writeFile resp
+        begin
+          open(url, head) do |response|
+            curEtag = response.meta['etag']
+            curMIME = response.meta['content-type']
+            curMtime = response.last_modified || Time.now rescue Time.now
+            etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
+            mime.writeFile curMIME if curMIME != priorMIME                               # update MIME
+            mtime.writeFile curMtime.iso8601 if curMtime != priorMtime                   # update timestamp
+            resp = response.read
+            unless body.e && body.readFile == resp
+              body.writeFile resp
+            end
           end
-        end
-      rescue OpenURI::HTTPError => error
-        msg = error.message
-        puts [url,msg].join("\t") unless msg.match(/304/)
+        rescue OpenURI::HTTPError => error
+          puts " 304 #{url}" if error.message.match(/304/)
+        end}
+
+      begin # prefer HTTPS
+        fetch[source.uri]
+      rescue Errno::ECONNREFUSED # try HTTP
+        fetch['http://' + source.host + source.path + source.qs] unless source.scheme == 'http'
       end
 
       # deliver
@@ -95,7 +103,7 @@ class WebResource
         notfound
       end
     rescue Exception => e
-      puts url, e.class, e.message
+      puts url, e.class, e.message, e.backtrace
     end
 
   end

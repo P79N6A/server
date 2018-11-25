@@ -101,17 +101,7 @@ class WebResource
       [404,{'Content-Type' => 'text/html'},[htmlDocument]]
     end
 
-    # query String
-    def qs
-      @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || ''
-    end
-
-    # query Hash
-    def q
-      @r && @r['query'] || (HTTP.parseQs query)
-    end
-
-    # query String -> query Hash
+    # String -> Hash
     def HTTP.parseQs qs
       if qs
         h = {}
@@ -124,11 +114,21 @@ class WebResource
       end
     end
 
-    # query Hash -> query String
+    # Hash -> String
     def HTTP.qs h
       '?' + h.map{|k,v|
         k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
       }.intersperse("&").join('')
+    end
+
+    # env -> String
+    def qs
+      @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || ''
+    end
+
+    # (env || URI) -> Hash
+    def q
+      @r && @r['query'] || (HTTP.parseQs query)
     end
 
   end
