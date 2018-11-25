@@ -60,7 +60,7 @@ class WebResource
       return fileResponse          if node.file?      # local static-file
       return Host[host][self]      if Host[host]      # host lambda
       return Host[subdomain][self] if Host[subdomain] # subdomain lambda
-      return (chronoDir parts)     if chronoDir?      # time-dir
+      return (chronoDir parts)     if chronoDir?      # time-slice container
       refs = localNodes
       return (files refs) if refs && !refs.empty?     # local resource
       return notfound if localhost?                   # no local resource found
@@ -71,9 +71,9 @@ class WebResource
         return cacheStatic                             # remote static-file
       when 'js'
         if (JShost.member? host) || (JSpath.member? parts[0])
-          return cacheDynamic                          # allow remote JS
+          return cacheDynamic                          # allowed remote script
         else
-          return notfound                              # deny remote JS
+          return notfound                              # denied remote script
         end
       end
       cacheDynamic                                     # remote resource
@@ -83,13 +83,13 @@ class WebResource
     def entity env, lambda = nil
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
-        [304, {}, []] # client has entity, return
+        [304, {}, []] # client has entity, exit
       else # produce entity
         body = lambda ? lambda.call : self
         if body.class == WebResource
-          # hand reference to file-handler
+          # hand reference to file handler
           (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
-            [s,h.update(env[:Response]),b]} # attach headers and return
+            [s,h.update(env[:Response]),b]} # attach metadata and return
         else
           [(env[:Status]||200), env[:Response], [body]]
         end

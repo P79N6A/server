@@ -4,7 +4,7 @@ class WebResource
     # default grouping. URI-indexed, no subcontainers
     Group['flat'] = -> graph { graph }
 
-    # URI path to tree structure
+    # URI path -> tree
     Group['tree'] = -> graph {
       tree = {}
       # select resource(s)

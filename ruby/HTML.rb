@@ -45,9 +45,6 @@ class WebResource
                 map{|e|
         e && URI.unescape(e)}.join(' ') # path + keyword derived title
 
-      # filter graph w/ HTML result
-      htmlGrep graph, q['q'] if q['q']
-
       # name -> CSS
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
       cssFiles = %w{site icons code}
@@ -57,6 +54,9 @@ class WebResource
         @r[:links][key].do{|uri|
           [uri.R.data({id: key, label: displayname}),
            "\n"]}}
+
+      # filtered graph -> HTML
+      htmlGrep graph, q['q'] if q['q']
 
       # Markup -> HTML
       HTML.render ["<!DOCTYPE html>\n\n",
