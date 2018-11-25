@@ -4,8 +4,8 @@ class WebResource
     JShost = %w{static.squarespace.com}
     JSpath = %w{ajax cdn-cgi wp-content}
 
-    # static-resource cache
-    # no origin-check, new version gets new URI (for hash identifiers or managing invalidation/GC yourself)
+    # static-resource
+    # no updates, new version gets new URI (for hash-identifier derived URIs)
     def cacheStatic
       # storage URI
       hash = (path + qs).sha2
@@ -15,7 +15,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
-      if !container.exist? # container existence prevents multiple concurrent fetches for a URI
+      if !container.exist? # container existence prevents multiple concurrent fetches
         container.mkdir
         url = uri
         if url[0..1] == '//' # schemeless URI
@@ -39,10 +39,10 @@ class WebResource
     # cache resource
     def cacheDynamic
       # locator
-      url = uri # HTTPS default, TODO scheme hints at HTTPS termination point
-      if url[0..1] == '//' # prepend scheme
+      url = uri # HTTPS is default. TODO tag request-scheme in metadata at frontend HTTP/HTTPS termination point
+      if url[0..1] == '//' # free scheme
         scheme = ((q.has_key? '80') || (InsecureDomains.member? host)) ? '' : 's'
-        url = 'http' + scheme + ':' + url
+        url = 'http' + scheme + ':' + url # prepend scheme
       end
 
       # storage URIs

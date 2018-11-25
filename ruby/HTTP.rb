@@ -62,7 +62,7 @@ class WebResource
       return Host[subdomain][self] if Host[subdomain] # subdomain lambda
       return (chronoDir parts)     if chronoDir?      # time-slice container
       refs = localNodes
-      return (files refs) if refs && !refs.empty?     # local resource
+      return (files refs) if refs && !refs.empty?     # local resource(s)
       return notfound if localhost?                   # no local resource found
 
       # remote resources
@@ -76,7 +76,7 @@ class WebResource
           return notfound                              # denied remote script
         end
       end
-      cacheDynamic                                     # remote resource
+      cacheDynamic                                     # remote resource(s)
     end
 
     # conditional responder
