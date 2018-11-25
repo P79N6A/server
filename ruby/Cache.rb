@@ -15,7 +15,7 @@ class WebResource
       file = container + 'i.' + type
 
       # fetch
-      if !container.exist? # container existence prevents multiple concurrent fetches 
+      if !container.exist? # container existence prevents multiple concurrent fetches for a URI
         container.mkdir
         url = uri
         if url[0..1] == '//' # schemeless URI
