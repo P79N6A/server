@@ -21,11 +21,11 @@ class WebResource
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
-                   " \e[32;1m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                   (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
                  else
-                   ' '
+                   ''
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m" + referrer + "\e[36;1m" + host + " \e[7m" + path + "\e[0m"
+      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m " + referrer + "\e[36;1m" + host + " \e[7m" + path + "\e[0m"
 
       # call request method
       R['//' + host + path].environment(env).send method
@@ -57,7 +57,7 @@ class WebResource
       @r[:links] = {}
 
       # local resources
-      return favicon if path == '/favicon.ico'
+      return favicon               if path == '/favicon.ico' # host icon
       return fileResponse          if node.file?      # local static-file
       return Host[host][self]      if Host[host]      # host lambda
       return Host[subdomain][self] if Host[subdomain] # subdomain lambda
