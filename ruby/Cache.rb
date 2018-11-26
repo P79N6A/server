@@ -70,6 +70,7 @@ class WebResource
       priorMIME = curMIME = mime.readFile if mime.e
 
       # fetch
+
       fetch = -> url {
         puts " GET #{url}"
         begin
@@ -89,10 +90,19 @@ class WebResource
           puts " 304 #{url}" if error.message.match(/304/)
         end}
 
-      begin # prefer HTTPS
+      begin
+        # prefer HTTPS
         fetch[source.uri]
-      rescue Errno::ECONNREFUSED # try HTTP
-        fetch['http://' + source.host + source.path + source.qs] unless source.scheme == 'http'
+      rescue Exception => e
+        # try HTTP
+        httpURL = 'http://' + source.host + source.path + source.qs
+        case e.class
+        when Errno::ECONNREFUSED
+          fetch[httpURL] unless source.scheme == 'http'
+        when OpenSSL::SSL::SSLError
+          fetch[httpURL]
+        end
+
       end
 
       # deliver
