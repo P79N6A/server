@@ -38,7 +38,7 @@ class WebResource
         # children representable as an Object, array of Object, or URI-indexed table
         cs.class == Hash ? cs.values : cs}.justArray
 
-      {class: :container, style: "border: 1px solid #{color}",
+      {class: :container, style: "background: repeating-linear-gradient( -45deg, #000000, #000000 .92em, #{color} .92em, #{color} 1em ); border: 1px solid #{color}",
        c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (name ? ("<span class=name style='background-color: #{color}'>"+(CGI.escapeHTML name) + "</span>") : ''),
            contents.map{|c|
              HTML.value(nil,c,env)},
