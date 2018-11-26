@@ -15,7 +15,7 @@ a.creator, td.k > a {text-decoration: none}
 a.link {background-color: #bbb; color: #000; text-decoration: none}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
 .container > .name {color: black; border-radius: 0 0 .2em 0}
-.post {max-width:80ex;background-color:#000;color:#fff}
+.post {max-width:80ex;background-color:#000;color:#fff; border-color: #555; border-width: 0 0 0 0px; border-style: solid; }
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 img {max-width: 100%}
