@@ -1,7 +1,7 @@
 class WebResource
   module HTTP
     # patterns to allow javascript caching
-    JShost = %w{static.squarespace.com}
+    JShost = %w{riot.im static.squarespace.com}
     JSpath = %w{ajax cdn-cgi wp-content}
 
     # static-resource
