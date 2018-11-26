@@ -59,7 +59,7 @@ class WebResource
 
     def self.colorize k, bg = true
       return '' if !k || k.empty? || k.match(/^[0-9]+$/)
-      "#{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
+      "#{bg ? 'color' : 'background-color'}: black; #{bg ? 'background-' : ''}color: #{'#%06x' % (rand 16777216)}"
     end
     def self.colorizeBG k; colorize k end
     def self.colorizeFG k; colorize k, false end

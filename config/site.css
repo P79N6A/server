@@ -7,11 +7,12 @@ body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff
 #down {margin-top:.3em}
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
-a    {text-decoration: none; font-weight: bold; background-color: white; color: black; overflow: hidden}
+a {font-weight: bold}
 a,p {max-width: 78ex}
-a.title {font-size:1.08em; background-color: #fff; color: #000}
-a.date {float: right; font-weight: normal; font-size:.8em; background-color: #000; color:#888}
-a.link {background-color: #bbb; color: #000}
+a.title {font-size:1.08em; text-decoration: none; background-color: #fff; color: #000}
+a.date {float: right; font-weight: normal; font-size:.8em; background-color: #000; color:#888; text-decoration: none}
+a.creator {text-decoration: none}
+a.link {background-color: #bbb; color: #000; text-decoration: none}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
 .post {max-width:80ex}
 table, div, pre, p, a {display: inline-block}
@@ -22,4 +23,3 @@ pre {white-space: pre-wrap}
 p {margin:.08em; padding:.08em; border: .08em dotted  #888; border-radius: .08em}
 p, span.text {background-color: #000; color: #fff}
 :target, :target * {background-color: #8f0 !important; color: #000 !important}
-
