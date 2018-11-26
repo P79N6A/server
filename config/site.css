@@ -7,15 +7,15 @@ body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff
 #down {margin-top:.3em}
 #prev {left: 0; top: 0}
 #next {right: 0; top: 0}
-a {overflow: hidden}
+a {overflow: hidden; background-color: #000; color: #fff}
 a,p {max-width: 78ex}
 a.title {font-size:1.08em; text-decoration: none; background-color: #fff; color: #000}
 a.date {float: right; font-weight: normal; font-size:.8em; background-color: #000; color:#888; text-decoration: none}
-a.creator {text-decoration: none}
+a.creator, td.k > a {text-decoration: none}
 a.link {background-color: #bbb; color: #000; text-decoration: none}
 .bold {font-weight: bold; font-size: 1.1em; margin-left: .1em}
 .container > .name {color: black; border-radius: 0 0 .2em 0}
-.post {max-width:80ex}
+.post {max-width:80ex;background-color:#000;color:#fff}
 table, div, pre, p, a {display: inline-block}
 table {border-spacing: 0}
 img {max-width: 100%}
@@ -23,4 +23,4 @@ img.thumb {max-width: 28em}
 pre {white-space: pre-wrap}
 p {margin:.1em; padding:.1em; border: 1px solid #333}
 p, span.text {background-color: #000; color: #fff}
-:target, :target * {background-color: #8f0 !important; color: #000 !important}
+:target, :target * {background-color: #fff !important; color: #000 !important}

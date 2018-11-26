@@ -85,6 +85,10 @@ header, nav, footer {display: none}
         [301, {'Location' => font, 'Access-Control-Allow-Origin' => '*'}, []]
       end}
 
+    def favicon
+      '/.conf/icon.png'.R.env(env).fileResponse
+    end
+
     %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
       Host[host] = Font}
   end
