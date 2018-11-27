@@ -38,7 +38,7 @@ class WebResource
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?
         if 'i.imgur.com' == re.host
-          re.cacheStatic
+          re.cache
         else
           [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
         end

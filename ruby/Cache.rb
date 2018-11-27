@@ -4,49 +4,17 @@ class WebResource
     JShost = %w{riot.im static.squarespace.com}
     JSpath = %w{ajax cdn-cgi includes wp-content}
 
-    # resource with no updates or changes. new versions get new (usually hash/UUID-derived) identity
-    def cacheStatic
-      # storage URI
-      hash = (path + qs).sha2
-      container = R['/cache/StaticResource/' + host + '/' + hash[0..2] + '/' + hash[3..-1] + '/']
-      type = ext
-      type = 'jpg' if !type || type.empty?
-      file = container + 'i.' + type
-
-      # fetch
-      if !container.exist? # container existence prevents multiple concurrent fetches
-        container.mkdir
-        url = uri
-        if url[0..1] == '//' # schemeless URI
-          scheme = env['SERVER_PORT'] == 80 ? 'http' : 'https'
-          url = scheme + ':' + url
-        end
-        puts " GET #{url}"
-        open(url) do |response|
-          file.writeFile response.read
-        end
-      end
-
-      # deliver
-      if file.exist?
-        file.env(env).fileResponse
-      else
-        notfound
-      end
-    end
-
-    # web resource which may change over time
-    def cacheDynamic
-      # remote-resource locator
+    def cache
+      # remote-resource location
       url = uri + qs
       if url[0..1] == '//' # free scheme?
         s = (InsecureDomains.member? host) ? '' : 's'
         url = 'http' + s + ':' + url # bind scheme
       end
-      # remote-resource reference
+      # remote-resource handle
       source = url.R.env env
 
-      # storage URIs
+      # storage
       hash = (path + qs).sha2
       cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
       etag  = cache + 'etag'  # cached etag URI
@@ -54,11 +22,11 @@ class WebResource
       mtime = cache + 'mtime' # cached mtime URI
       body = cache + 'body'   # cached body URI
 
-      # metadata
-      head = {} # header fields
-      priorEtag  = nil # cached etag value
-      priorMIME  = nil # cached MIME value
-      priorMtime = nil # cached mtime value
+      # load metadata
+      head = {} # header storage
+      priorEtag  = nil # cached etag
+      priorMIME  = nil # cached MIME
+      priorMtime = nil # cached mtime
       if etag.e
         priorEtag = etag.readFile
         head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -66,7 +34,9 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      priorMIME = curMIME = mime.readFile if mime.e
+      if mime.e
+        priorMIME = curMIME = mime.readFile
+      end
 
       # fetch from remote
       fetch = -> url {

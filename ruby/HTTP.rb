@@ -57,7 +57,7 @@ class WebResource
       @r[:links] = {}
 
       # local resources
-      return favicon               if path == '/favicon.ico' # host icon
+      return favicon               if path == '/favicon.ico' # site icon
       return fileResponse          if node.file?      # local static-file
       return Host[host][self]      if Host[host]      # host lambda
       return Host[subdomain][self] if Host[subdomain] # subdomain lambda
@@ -68,16 +68,14 @@ class WebResource
 
       # remote resources
       case ext
-      when /^(jpg|jpg:large|png|webp)$/i
-        return cacheStatic                             # remote static-file
       when 'js'
         if (JShost.member? host) || (JSpath.member? parts[0])
-          return cacheDynamic                          # allowed remote script
+          return cache                                # allowed remote script
         else
-          return notfound                              # denied remote script
+          return notfound                             # denied remote script
         end
       end
-      cacheDynamic                                     # remote resource(s)
+      cache                                           # remote resource(s)
     end
 
     # conditional responder
