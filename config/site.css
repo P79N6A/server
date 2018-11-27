@@ -23,15 +23,20 @@ img.thumb {max-width: 28em}
 pre {white-space: pre-wrap}
 p {margin:.1em; padding:.1em; border: 1px solid #333}
 p, span.text {background-color: #000; color: #fff}
-:target, :target * {background-color: #fff;color: #000; border-width: 1px; border-style: solid; 
-    animation: pulse 3.14s linear infinite;}
+:target, :target * {animation: pulse 3.14s linear infinite}
 
 @-webkit-keyframes pulse {
-    0% {border-color: #f00}
-    16.6% {border-color: #f0f}
-    33.3% {border-color: #00f}
-    50% {border-color: #0ff}
-    66.6% {border-color: #0f0}
-    83.3% {border-color: #ff0}
-    100% {border-color: #f00}
+    0% {background: repeating-linear-gradient(0deg, #fff, #fff .916em, #f00 .916em, #f00 1em)}
+    8.3% {background: repeating-linear-gradient(30deg, #fff, #fff .833em, #f08 .833em, #f08 1em)}
+    16.6% {background: repeating-linear-gradient(60deg, #fff, #fff .75em, #f0f .75em, #f0f 1em)}
+    25% {background: repeating-linear-gradient(90deg, #fff, #fff .66em, #80f .66em, #80f 1em)}
+    33.3% {background: repeating-linear-gradient(120deg, #fff, #fff .583em, #00f .583em, #00f 1em)}
+    41.6% {background: repeating-linear-gradient(150deg, #fff, #fff .5em, #08f .5em, #08f 1em)}
+    50% {background: repeating-linear-gradient(180deg, #fff, #fff .416em, #0ff .416em, #0ff 1em)}
+    58.3% {background: repeating-linear-gradient(210deg, #fff, #fff .33em, #0f8 .33em, #0f8 1em)}
+    66.6% {background: repeating-linear-gradient(240deg, #fff, #fff .25em, #0f0 .25em, #0f0 1em)}
+    75% {background: repeating-linear-gradient(270deg, #fff, #fff .166em, #8f0 .166em, #8f0 1em)}
+    83.3% {background: repeating-linear-gradient(300deg, #fff, #fff .083em, #ff0 .083em, #ff0 1em)}
+    91.6% {background: repeating-linear-gradient(330deg, #fff, #fff 0em, #f80 0em, #f80 1em)}
+    100% {background: repeating-linear-gradient(360deg, #000000, #000000 .916em, #f00 .916em, #f00 1em)}
 }

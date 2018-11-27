@@ -2,7 +2,7 @@ class WebResource
   module HTTP
     # patterns to allow javascript caching
     JShost = %w{riot.im static.squarespace.com}
-    JSpath = %w{ajax cdn-cgi wp-content}
+    JSpath = %w{ajax cdn-cgi includes wp-content}
 
     # static-resource
     # no updates, new version gets new URI (for hash-identifier derived URIs)
@@ -102,7 +102,6 @@ class WebResource
         when OpenSSL::SSL::SSLError
           fetch[httpURL]
         end
-
       end
 
       # deliver
