@@ -125,7 +125,7 @@ class WebResource
       @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || ''
     end
 
-    # (env || URI) -> Hash
+    # URI -> Hash
     def q
       @r && @r['query'] || (HTTP.parseQs query)
     end
