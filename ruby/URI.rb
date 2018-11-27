@@ -140,7 +140,7 @@ class WebResource < RDF::URI
     Markup[Link] = -> ref, env=nil {
       u = ref.to_s
       [{_: :a, class: :link, title: u, id: 'l'+rand.to_s.sha2,
-        href: u, c: u.sub(/^https?.../,'')[0..41]}," \n"]}
+        href: u, c: u.sub(/^https?.../,'')[0..127]}," \n"]}
 
   end
   module Webize

@@ -8,7 +8,7 @@ class WebResource
     Group['tree'] = -> graph {
       tree = {}
 
-      # for each document-graph
+      # for each graph-node
       (graph.class==Array ? graph : graph.values).map{|resource|
         cursor = tree
         r = resource.R
@@ -21,7 +21,7 @@ class WebResource
            # advance cursor to node, creating as needed
           cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
 
-        # place data in named-graph node
+        # place data in named-graph
         if !r.fragment # graph document
           resource.map{|k,v|
             cursor[k] = cursor[k].justArray.concat v.justArray}
