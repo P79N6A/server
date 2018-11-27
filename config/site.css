@@ -1,5 +1,5 @@
 * {vertical-align:top}
-body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff; animation: pulse 96s linear infinite}
+body {font-family: Hack; margin: 0 2em 0 2em; background-color:#000; color: #fff;}
 #up,#down,#prev,#next {font-size: 2.33em; background-color:#000; color: #fff; text-decoration: none}
 #up,#down {display:block;}
 #prev,#next {position: fixed; height: 100%; padding-top: .89em}
@@ -24,7 +24,7 @@ pre {white-space: pre-wrap}
 p {margin:.1em; padding:.1em; border: 1px solid #333}
 p, span.text {background-color: #000; color: #fff}
 :target, :target * {background-color:#0f0 !important; color: #000 !important}
-
+.spinner {animation: pulse 3.14s linear infinite}
 @-webkit-keyframes pulse {
     0% {background: repeating-linear-gradient(0deg, #000, #000 .916em, #f00 .916em, #f00 1em)}
     8.3% {background: repeating-linear-gradient(30deg, #000, #000 .833em, #f08 .833em, #f08 1em)}
