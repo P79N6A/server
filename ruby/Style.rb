@@ -75,22 +75,8 @@ svg {max-width:18ex}
 header, nav, footer {display: none}
 "]]
 
-    Font = -> re {
-      font = '/.conf/font.woff'
-      if re.path == font
-        re.fileResponse
-      elsif re.path == '/css'
-        CSS
-      else
-        [301, {'Location' => font, 'Access-Control-Allow-Origin' => '*'}, []]
-      end}
-
     def favicon
       '/.conf/icon.png'.R.env(env).fileResponse
     end
-
-    %w{fonts.googleapis.com fonts.gstatic.com use.typekit.net}.map{|host|
-      Host[host] = Font}
   end
-
 end

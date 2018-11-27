@@ -63,7 +63,8 @@ class WebResource
         end}
 
       # conditional update
-      if priorMIME && priorMIME.match?(MediaMIME)
+      if priorMIME && (priorMIME.match?(MediaMIME) ||
+                       %w{application/octet-stream text/css}.member?(priorMIME))
 #        puts "mediafile HIT"
       else
         begin # HTTPS
