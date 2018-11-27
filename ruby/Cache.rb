@@ -27,6 +27,9 @@ class WebResource
       priorEtag  = nil # cached etag
       priorMIME  = nil # cached MIME
       priorMtime = nil # cached mtime
+      if mime.e
+        priorMIME = curMIME = mime.readFile
+      end
       if etag.e
         priorEtag = etag.readFile
         head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -34,11 +37,7 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      if mime.e
-        priorMIME = curMIME = mime.readFile
-      end
 
-      # fetch from remote
       fetch = -> url {
         puts " GET #{url}"
         begin
@@ -63,11 +62,16 @@ class WebResource
           end
         end}
 
-      begin # HTTPS
-        fetch[source.uri]
-      rescue # HTTP
-        if source.scheme != 'http'
-          fetch['http://' + source.host + source.path + source.qs]
+      # conditional update
+      if priorMIME && priorMIME.match?(MediaMIME)
+#        puts "mediafile HIT"
+      else
+        begin # HTTPS
+          fetch[source.uri]
+        rescue # HTTP
+          if source.scheme != 'http'
+            fetch['http://' + source.host + source.path + source.qs]
+          end
         end
       end
 

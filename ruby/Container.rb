@@ -4,28 +4,33 @@ class WebResource
     # default grouping. URI-indexed, no subcontainers
     Group['flat'] = -> graph { graph }
 
-    # URI path -> tree
+    # build tree from URI path component
     Group['tree'] = -> graph {
       tree = {}
-      # select resource(s)
+
+      # for each document-graph
       (graph.class==Array ? graph : graph.values).map{|resource|
         cursor = tree
         r = resource.R
-        # traverse to document-graph
-        [r.host ? r.host.split('.').reverse : '',
+
+        # locate document-graph
+        [r.host || '',
          r.parts.map{|p|p.split '%23'}].flatten.map{|name|
           cursor[Type] ||= R[Container]
           cursor[Contains] ||= {}
-           # create named-node (if missing), advance cursor
+           # advance cursor to node, creating as needed
           cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
-        if !r.fragment # document itself
+
+        # place data in named-graph node
+        if !r.fragment # graph document
           resource.map{|k,v|
             cursor[k] = cursor[k].justArray.concat v.justArray}
-        else # resource local data
+        else # graph-contained resource
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
-        end
-      }; tree }
+        end}
+
+      tree }
 
     Markup[Container] = -> container , env {
 

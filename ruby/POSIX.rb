@@ -175,12 +175,13 @@ class WebResource
 
   end
   module HTTP
+    include MIME
 
     # file -> HTTP Response
     def fileResponse
       @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
       @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
-      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match /^(audio|image|video)/
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match MediaMIME
       if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
         filePreview
       else
