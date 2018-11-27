@@ -35,7 +35,7 @@ class WebResource
       end
     end
 
-    # resource which can change over time at but its identifier stays the same
+    # web resource which may change over time
     def cacheDynamic
       # remote-resource locator
       url = uri + qs
@@ -68,8 +68,7 @@ class WebResource
       end
       priorMIME = curMIME = mime.readFile if mime.e
 
-      # fetch
-
+      # fetch from remote
       fetch = -> url {
         puts " GET #{url}"
         begin
@@ -86,20 +85,19 @@ class WebResource
             end
           end
         rescue OpenURI::HTTPError => error
-          puts " 304 #{url}" if error.message.match(/304/)
+          case error.message
+          when /304/
+            puts " 304 #{url}"
+          else
+            puts error.message
+          end
         end}
 
-      begin
-        # prefer HTTPS
+      begin # HTTPS
         fetch[source.uri]
-      rescue Exception => e
-        # try HTTP
-        httpURL = 'http://' + source.host + source.path + source.qs
-        case e.class
-        when Errno::ECONNREFUSED
-          fetch[httpURL] unless source.scheme == 'http'
-        when OpenSSL::SSL::SSLError
-          fetch[httpURL]
+      rescue # HTTP
+        if source.scheme != 'http'
+          fetch['http://' + source.host + source.path + source.qs]
         end
       end
 
