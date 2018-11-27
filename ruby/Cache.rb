@@ -65,12 +65,13 @@ class WebResource
       # conditional update
       if priorMIME && (priorMIME.match?(MediaMIME) ||
                        %w{application/octet-stream text/css}.member?(priorMIME))
-#        puts "mediafile HIT"
+       # mediafile HIT
       else
         begin # HTTPS
           fetch[source.uri]
-        rescue # HTTP
+        rescue
           if source.scheme != 'http'
+            # HTTP fallback
             fetch['http://' + source.host + source.path + source.qs]
           end
         end
@@ -83,9 +84,6 @@ class WebResource
       else
         notfound
       end
-    rescue Exception => e
-      puts url, e.class, e.message, e.backtrace
     end
-
   end
 end
