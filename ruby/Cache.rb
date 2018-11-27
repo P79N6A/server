@@ -4,8 +4,7 @@ class WebResource
     JShost = %w{riot.im static.squarespace.com}
     JSpath = %w{ajax cdn-cgi includes wp-content}
 
-    # static-resource
-    # no updates, new version gets new URI (for hash-identifier derived URIs)
+    # resource with no updates or changes. new versions get new (usually hash/UUID-derived) identity
     def cacheStatic
       # storage URI
       hash = (path + qs).sha2
@@ -36,7 +35,7 @@ class WebResource
       end
     end
 
-    # cache resource
+    # resource which can change over time at but its identifier stays the same
     def cacheDynamic
       # remote-resource locator
       url = uri + qs
@@ -44,7 +43,7 @@ class WebResource
         s = (InsecureDomains.member? host) ? '' : 's'
         url = 'http' + s + ':' + url # bind scheme
       end
-      # remote-resource reference w/ metadata
+      # remote-resource reference
       source = url.R.env env
 
       # storage URIs
