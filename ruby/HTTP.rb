@@ -64,17 +64,7 @@ class WebResource
       return (chronoDir parts)     if chronoDir?      # time-slice container
       refs = localNodes
       return (files refs) if refs && !refs.empty?     # local resource(s)
-      return notfound if localhost?                   # no local resource found
-
-      # remote resources
-      case ext
-      when 'js'
-        if (JShost.member? host) || (JSpath.member? parts[0])
-          return cache                                # allowed remote script
-        else
-          return notfound                             # denied remote script
-        end
-      end
+      return notfound if localhost?                   # no local resource
       cache                                           # remote resource(s)
     end
 

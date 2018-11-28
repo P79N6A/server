@@ -20,7 +20,6 @@ class WebResource < RDF::URI
   PWD = Pathname.new File.expand_path '.'
 
   module URIs
-    InsecureDomains = %w{amfone.net city-data.com mw.logbook.am www.vintagesynth.com}
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
 
     # shortname for common URI prefixes

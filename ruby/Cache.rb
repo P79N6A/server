@@ -1,16 +1,10 @@
 class WebResource
   module HTTP
-    # patterns to allow javascript caching
-    JShost = %w{riot.im static.squarespace.com}
-    JSpath = %w{ajax cdn-cgi includes wp-content}
 
     def cache
-      # remote-resource location
-      url = uri + qs
-      if url[0..1] == '//' # free scheme?
-        s = (InsecureDomains.member? host) ? '' : 's'
-        url = 'http' + s + ':' + url # bind scheme
-      end
+      # remote-resource reference
+      url = uri + qs # locator
+      url = 'https:' + url if url[0..1] == '//' # free scheme?
       # remote-resource handle
       source = url.R.env env
 
