@@ -104,9 +104,9 @@ class WebResource
         end}
 
       # conditional update
-      if priorMIME && (priorMIME.match?(MediaMIME) ||
+      if priorMIME && (priorMIME.match?(MediaMIME) || priorMIME.match?(/javascript/) ||
                        %w{application/octet-stream text/css}.member?(priorMIME))
-       # mediafile HIT
+        puts " HIT #{uri}"
       else
         begin # HTTPS
           fetch[url]
