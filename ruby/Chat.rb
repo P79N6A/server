@@ -21,21 +21,6 @@ class WebResource
        "<br>\n"]}
 
   end
-  module HTTP
-
-    Host['twitter.com'] = Host['mobile.twitter.com'] = Host['www.twitter.com'] = -> re {
-      if re.path == '/'
-        graph = {}
-        # shuffle names into groups of 16
-        open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-          r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-          graph[r] = {'uri' => r , Type => R[Resource]}}
-        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
-      else
-        re.files R[Twitter + re.path + re.qs].indexTweets
-      end}
-
-  end
   module Webize
 
     def fetchTweets

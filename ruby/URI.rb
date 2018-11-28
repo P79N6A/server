@@ -102,18 +102,11 @@ class WebResource < RDF::URI
       [200, {'Content-Type' => 'text/html'},
        [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
 
-    %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
-      Host[host] = Short}
-
     # unwrap URI wrapped in URI
     Unwrap = -> key {
       -> re {
         location = re.q[key.to_s.downcase]
         location ? [302,{'Location' => location},[]] : [404,{},[]]}}
-
-    Host['exit.sc']             = Unwrap[:url]
-    Host['lookup.t-mobile.com'] = Unwrap[:origURL]
-    Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
 
   end
   module HTML

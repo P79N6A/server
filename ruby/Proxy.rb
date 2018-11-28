@@ -1,6 +1,55 @@
 class WebResource
   module HTTP
 
+    # URL shorteners
+    %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
+      Host[host] = Short}
+    Host['exit.sc']             = Unwrap[:url]
+    Host['lookup.t-mobile.com'] = Unwrap[:origURL]
+    Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
+
+    # Connectivity test
+    Host['connectivitycheck.gstatic.com'] = Host['clients1.google.com'] = -> re {[204,{'Content-Length' => 0},[]]}
+
+    Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
+
+    Host['twitter.com'] = Host['mobile.twitter.com'] = Host['www.twitter.com'] = -> re {
+      if re.path == '/'
+        graph = {}
+        # shuffle names into groups of 16
+        open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+          r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+          graph[r] = {'uri' => r , Type => R[Resource]}}
+        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
+      else
+        re.files R[Twitter + re.path + re.qs].indexTweets
+      end}
+
+    # Image hosts
+    Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
+    Host['imgur.com'] = Host['*.imgur.com'] = -> re {
+      if !re.ext.empty?
+        if 'i.imgur.com' == re.host
+          re.cache
+        else
+          [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
+        end
+      else
+        WrappedImage[re]
+      end}
+    Host['instagram.com'] = Host['.instagram.com'] = -> re {
+      if re.parts[0] == 'p'
+        WrappedImage[re]
+      else
+        graph = {}
+        open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
+          unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
+            graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
+          end}
+        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
+      end}
+    Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
+
     def cache
       url     = 'https://' + host + path + qs
       urlHTTP = 'http://'  + host + path + qs
@@ -28,6 +77,7 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
+      head['User-Agent'] = env['HTTP_USER_AGENT']
 
       fetch = -> url {
         puts " GET #{url}"

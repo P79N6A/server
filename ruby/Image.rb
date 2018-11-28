@@ -25,9 +25,6 @@ class WebResource
   end
 
   module HTTP
-    # image hosts
-
-    Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
 
     #direct to unwrapped image file
     WrappedImage = -> re {
@@ -35,30 +32,6 @@ class WebResource
       loc = img.host ? ('https://' + img.host + img.path) : img.path
       [302,{'Location' => loc},[]]}
 
-    Host['imgur.com'] = Host['*.imgur.com'] = -> re {
-      if !re.ext.empty?
-        if 'i.imgur.com' == re.host
-          re.cache
-        else
-          [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
-        end
-      else
-        WrappedImage[re]
-      end}
-
-    Host['instagram.com'] = Host['.instagram.com'] = -> re {
-      if re.parts[0] == 'p'
-        WrappedImage[re]
-      else
-        graph = {}
-        open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
-          unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
-            graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
-          end}
-        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
-      end}
-
-    Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
   end
 
   module HTML

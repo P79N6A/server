@@ -348,10 +348,6 @@ class WebResource
     end
   end
   include Feed
-  module HTTP
-    Host['reddit.com'] = Host['.reddit.com'] = -> re {
-      re.files R['https://www.reddit.com'+re.path+'.rss'].fetchFeed}
-  end
   module Webize
     def triplrOPML
       # doc
