@@ -92,6 +92,16 @@ class WebResource
       [404,{'Content-Type' => 'text/html'},[htmlDocument]]
     end
 
+    # environment -> Hash
+    def q
+      @r['query'] ||= HTTP.parseQs qs[1..-1]
+    end
+
+    # environment -> String
+    def qs
+      '?' + (@r['QUERY_STRING']||'')
+    end
+
     # String -> Hash
     def HTTP.parseQs qs
       if qs
@@ -110,16 +120,6 @@ class WebResource
       '?' + h.map{|k,v|
         k.to_s + '=' + (v ? (CGI.escape [*v][0].to_s) : '')
       }.intersperse("&").join('')
-    end
-
-    # environment -> String
-    def qs
-      '?' + (@r['QUERY_STRING']||'')
-    end
-
-    # environment -> Hash
-    def q
-      @r['query'] ||= HTTP.parseQs qs[1..-1]
     end
 
   end
