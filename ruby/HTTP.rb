@@ -7,17 +7,19 @@ class WebResource
     def self.call env
       method = env['REQUEST_METHOD']
       return [202,{},[]] unless Methods.member? method
-      # parsed query
-      env['query'] = query = parseQs env['QUERY_STRING']
-      # hostname
+
+      # bind hostname
+      query = parseQs env['QUERY_STRING']
       host = query['host'] || query['site'] || env['HTTP_HOST'] || 'localhost'
-      # raw pathname
+
+      # clean path name
       rawpath = env['REQUEST_PATH'].utf8.gsub /[\/]+/, '/'
-      # evaluated path-expression
+
+      # evaluate path expression
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
-      # logging
+      # log
       referer = env['HTTP_REFERER']
       referrer = if referer
                    r = referer.R
@@ -110,14 +112,14 @@ class WebResource
       }.intersperse("&").join('')
     end
 
-    # env -> String
+    # environment -> String
     def qs
-      @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty? && ('?'+@r['QUERY_STRING']) || ''
+      '?' + (@r['QUERY_STRING']||'')
     end
 
-    # URI -> Hash
+    # environment -> Hash
     def q
-      @r && @r['query'] || (HTTP.parseQs query)
+      @r['query'] ||= HTTP.parseQs qs[1..-1]
     end
 
   end

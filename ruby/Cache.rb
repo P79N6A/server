@@ -2,11 +2,8 @@ class WebResource
   module HTTP
 
     def cache
-      # remote-resource reference
-      url = uri + qs # locator
-      url = 'https:' + url if url[0..1] == '//' # free scheme?
-      # remote-resource handle
-      source = url.R.env env
+      url     = 'https://' + host + path + qs
+      urlHTTP = 'http://'  + host + path + qs
 
       # storage
       hash = (path + qs).sha2
@@ -62,9 +59,9 @@ class WebResource
        # mediafile HIT
       else
         begin # HTTPS
-          fetch[source.uri]
+          fetch[url]
         rescue # HTTP
-          fetch['http://' + source.host + source.path + source.qs]
+          fetch[urlHTTP]
         end
       end
 
