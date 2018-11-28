@@ -8,7 +8,6 @@ class WebResource
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
     Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
     Host['.google.com'] = -> re {re.notfound}
-    Host['connectivitycheck.gstatic.com'] = Host['clients1.google.com'] = -> re {[204,{'Content-Length' => 0},[]]}
     Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
     Path['twitter'] = -> re {
       graph = {} # shuffle names into groups of 16
