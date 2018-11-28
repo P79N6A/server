@@ -7,25 +7,16 @@ class WebResource
     Host['exit.sc']             = Unwrap[:url]
     Host['lookup.t-mobile.com'] = Unwrap[:origURL]
     Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
-
     Host['.google.com'] = -> re {re.notfound}
     Host['connectivitycheck.gstatic.com'] = Host['clients1.google.com'] = -> re {[204,{'Content-Length' => 0},[]]}
-
     Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
-
-    Host['twitter.com'] = Host['.twitter.com'] = -> re {
-      if re.path == '/'
-        graph = {}
-        # shuffle names into groups of 16
-        open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-          r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-          graph[r] = {'uri' => r , Type => R[Resource]}}
-        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
-      else
-        re.files R[Twitter + re.path + re.qs].indexTweets
-      end}
-
-    # Image hosts
+    Path['twitter'] = -> re {
+      graph = {} # shuffle names into groups of 16
+      open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
+        r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
+        graph[r] = {'uri' => r , Type => R[Resource]}}
+      [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]}
+#        re.files R[Twitter + re.path + re.qs].indexTweets
     Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?

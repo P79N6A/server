@@ -75,6 +75,7 @@ class WebResource < RDF::URI
   module HTTP
     # host to lambda mapping
     Host = {}
+    Path = {}
 
     # URL on file at third-party
     Short = -> re {
