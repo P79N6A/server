@@ -1,0 +1,3 @@
+#!/bin/sh
+su -c '/home/ix/src/pw/sh/open_port 8601'
+mplayer http://173.193.219.163:8601/

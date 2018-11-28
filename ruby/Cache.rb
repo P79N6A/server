@@ -63,11 +63,8 @@ class WebResource
       else
         begin # HTTPS
           fetch[source.uri]
-        rescue
-          if source.scheme != 'http'
-            # HTTP fallback
-            fetch['http://' + source.host + source.path + source.qs]
-          end
+        rescue # HTTP
+          fetch['http://' + source.host + source.path + source.qs]
         end
       end
 
