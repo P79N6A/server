@@ -1,21 +1,14 @@
 class WebResource
   module HTTP
 
-    # URL shorteners
-    %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|
-      Host[host] = Short}
-    Host['exit.sc']             = Unwrap[:url]
-    Host['lookup.t-mobile.com'] = Unwrap[:origURL]
-    Host['l.instagram.com']     = Host['images.duckduckgo.com'] = Host['proxy.duckduckgo.com'] = Unwrap[:u]
+    %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
     Host['.google.com'] = -> re {re.notfound}
     Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
-    Path['twitter'] = -> re {
-      graph = {} # shuffle names into groups of 16
+    Path['twitter'] = -> re { graph = {} # shuffle names into groups of 16
       open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
         graph[r] = {'uri' => r, Link => r.R, Type => R[Resource]}}
       [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]}
-    Host['snag.gy'] = -> re {[302,{'Location' => '//i.snag.gy'+re.path},[]]}
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?
         if 'i.imgur.com' == re.host
@@ -37,7 +30,6 @@ class WebResource
           end}
         [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
       end}
-    Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
 
     def cache
       url     = 'https://' + host + path + qs
