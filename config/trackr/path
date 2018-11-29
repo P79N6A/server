@@ -1,4 +1,5 @@
 _204
+[Aa]nalytics
 idsync
 /ad[s_]
 /ajax/bz
@@ -15,4 +16,4 @@ idsync
 /stats
 /tbproxy
 /wp-rum
-([aA]nalytics|[bB]id|[tT]aboola|[tT]rack|/sw).*\.js
+([bB]id|[tT]aboola|[tT]rack|/sw).*\.js
