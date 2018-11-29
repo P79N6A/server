@@ -98,7 +98,7 @@ class WebResource
           when /304/
             puts " 304 #{url}"
           else
-            puts e.class, e.message
+            puts [url, e.class, e.message].join ' '
             raise
           end
         end}
