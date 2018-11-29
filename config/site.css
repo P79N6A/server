@@ -21,7 +21,7 @@ table {border-spacing: 0}
 img {max-width: 100%}
 img.thumb {max-width: 28em}
 pre {white-space: pre-wrap}
-p {margin:.1em; padding:.1em; border: 1px solid #333}
+p {border: 1px solid #333}
 p, span.text {background-color: #000; color: #fff}
 :target, :target * {background-color:#0f0 !important; color: #000 !important}
 .spinner {animation: pulse 3.14s linear infinite}
