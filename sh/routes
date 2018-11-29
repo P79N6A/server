@@ -1,9 +1,8 @@
 #!/bin/sh
 uid=$1
 scripts=$2
-# setcap 'cap_net_bind_service=+ep' `realpath /usr/bin/ruby`
-
-# default policy
+# defaults
+echo 1 > /proc/sys/net/ipv4/ip_forward
 iptables  -P INPUT DROP
 ip6tables -P INPUT DROP
 iptables  -P OUTPUT DROP
