@@ -2,8 +2,19 @@ class WebResource
   module HTTP
 
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
-    Host['.google.com'] = -> re {re.notfound}
     Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
+    Path['search'] = -> r {[302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (r.q['q']||'')}"},[]]}
+    Path['maps'] = -> re {
+      loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+              lat = ll[1]
+              lng = ll[2]
+              "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
+            elsif re.q.has_key? 'q'
+              "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
+            else
+              'https://www.openstreetmap.org/'
+            end
+      [302,{'Location' => loc},[]]}
     Path['twitter'] = -> re { graph = {} # shuffle names into groups of 16
       open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join

@@ -13,6 +13,6 @@ idsync
 /service_ajax
 /stats
 /wp-rum
-([aA](d|nalytic)s|[bB]id|[gG]eo|[tT]aboola|[tT]rack|/sw).*\.js
-\.gif
+([aA](d|nalytic)s|[bB]id|[tT]aboola|[tT]rack|/sw).*\.js
+
 
