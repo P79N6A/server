@@ -42,7 +42,7 @@ class WebResource
       end
       newPosts
     rescue Exception => e
-      puts uri, e.class, e.message, e.backtrace
+      puts uri, e.class, e.message#, e.backtrace
     end
     alias_method :getFeed, :fetchFeed
 
