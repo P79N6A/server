@@ -41,7 +41,7 @@ class WebResource
         @r = env
         self
       else
-        @r
+        @r || {}
       end
     end
     alias_method :env, :environment
