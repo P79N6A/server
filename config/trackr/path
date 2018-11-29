@@ -3,6 +3,7 @@ idsync
 /ad[s_]
 /ajax/bz
 /complete
+/cse
 /get_endscreen
 /get_midroll_info
 /log_event
