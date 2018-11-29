@@ -12,6 +12,7 @@ idsync
 /qp
 /service_ajax
 /stats
+/tbproxy
 /wp-rum
 ([aA](d|nalytic)s|[bB]id|[tT]aboola|[tT]rack|/sw).*\.js
 

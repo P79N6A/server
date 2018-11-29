@@ -92,7 +92,7 @@ class WebResource
           when /304/
             puts " 304 #{url}"
           else
-            puts error.message
+            raise
           end
         end}
 
