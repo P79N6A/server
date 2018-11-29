@@ -2,6 +2,7 @@
 \.ads\.
 ^ads\.
 ^analytics\.
+^beacons\.
 ^cookiesync\.
 ^dsp\.
 ^geo\.
