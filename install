@@ -26,6 +26,6 @@ gem install bundler
 bundle install
 
 ## init file layout
-mkdir ~/web
+mkdir -p ~/web/log
 cd ~/web
 ln -s ../src/pw/config/ .conf
