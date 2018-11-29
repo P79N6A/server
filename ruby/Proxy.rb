@@ -2,11 +2,7 @@ class WebResource
   module HTTP
 
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
-
     Host['reddit.com'] = Host['.reddit.com'] = -> r { r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed }
-
-    Path['search'] = -> r {[302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (r.q['q']||'')}"},[]]}
-
     Path['maps'] = -> re {
       loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
               lat = ll[1]
@@ -18,13 +14,6 @@ class WebResource
               'https://www.openstreetmap.org/'
             end
       [302,{'Location' => loc},[]]}
-
-    Path['twitter'] = -> re { graph = {} # shuffle names into groups of 16
-      open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
-        r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
-        graph[r] = {'uri' => r, Link => r.R, Type => R[Resource]}}
-      [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]}
-
     Host['imgur.com'] = Host['*.imgur.com'] = -> re {
       if !re.ext.empty?
         if 'i.imgur.com' == re.host
@@ -35,7 +24,6 @@ class WebResource
       else
         WrappedImage[re]
       end}
-
     Host['instagram.com'] = Host['.instagram.com'] = -> re {
       if re.parts[0] == 'p'
         WrappedImage[re]
