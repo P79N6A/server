@@ -22,6 +22,7 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
+      head['User-Agent'] = env['HTTP_USER_AGENT']
       begin
         open(uri, head) do |response|
           curEtag = response.meta['etag']

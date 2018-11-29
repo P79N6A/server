@@ -3,7 +3,7 @@ class WebResource
 
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
 
-    Host['reddit.com'] = Host['.reddit.com'] = -> re { re.files R['https://www.reddit.com' + re.path + '.rss'].fetchFeed }
+    Host['reddit.com'] = Host['.reddit.com'] = -> r { r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed }
 
     Path['search'] = -> r {[302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (r.q['q']||'')}"},[]]}
 
