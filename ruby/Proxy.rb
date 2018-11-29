@@ -3,31 +3,20 @@ class WebResource
 
     %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
     Host['reddit.com'] = Host['.reddit.com'] = -> r { r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed }
-    Path['maps'] = -> re {
-      loc = if ll = re.path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
-              lat = ll[1]
-              lng = ll[2]
-              "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lng}"
-            elsif re.q.has_key? 'q'
-              "https://www.openstreetmap.org/search?query=#{URI.escape re.q['q']}"
-            else
-              'https://www.openstreetmap.org/'
-            end
-      [302,{'Location' => loc},[]]}
-    Host['imgur.com'] = Host['*.imgur.com'] = -> re {
-      if !re.ext.empty?
-        if 'i.imgur.com' == re.host
-          re.cache
-        else
+    Host['imgur.com'] = Host['.imgur.com'] = -> re {
+      if !re.ext.empty? # filename extension in URI
+        if 'i.imgur.com' == re.host # at image host
+          re.cache # cached image
+        else # redirect to image host
           [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
         end
-      else
+      else # find image URI
         WrappedImage[re]
       end}
     Host['instagram.com'] = Host['.instagram.com'] = -> re {
       if re.parts[0] == 'p'
-        WrappedImage[re]
-      else
+        WrappedImage[re] # find image URI
+      else # find image URIs
         graph = {}
         open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
           unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
