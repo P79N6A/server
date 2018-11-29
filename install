@@ -24,3 +24,8 @@ cd ruby
 ruby install
 gem install bundler
 bundle install
+
+## init file layout
+mkdir ~/web
+cd ~/web
+ln -s ../src/pw/config/ .conf
