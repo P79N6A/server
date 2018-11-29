@@ -72,9 +72,9 @@ class WebResource
       head['User-Agent'] = env['HTTP_USER_AGENT']
 
       fetch = -> url {
-        puts " GET #{url}"
         begin
           open(url, head) do |response|
+            puts " GET #{url}"
             curEtag = response.meta['etag']
             curMIME = response.meta['content-type']
             curMtime = response.last_modified || Time.now rescue Time.now
@@ -99,7 +99,7 @@ class WebResource
       # conditional update
       if priorMIME && (priorMIME.match?(MediaMIME) || priorMIME.match?(/javascript/) ||
                        %w{application/octet-stream text/css}.member?(priorMIME))
-        puts " HIT #{uri}"
+        #puts " HIT #{uri}"
       else
         begin # HTTPS
           fetch[url]

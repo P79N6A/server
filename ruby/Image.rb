@@ -61,7 +61,7 @@ class WebResource
       else
         env[:images][video.uri] = true
         if video.match /youtu/
-          id = video.q['v'] || video.parts[-1]
+          id = (HTTP.parseQs video.query)['v'] || video.parts[-1]
           {_: :iframe, width: 560, height: 315, src: "https://www.youtube.com/embed/#{id}", frameborder: 0, gesture: "media", allow: "encrypted-media", allowfullscreen: :true}
         else
           {class: :video,

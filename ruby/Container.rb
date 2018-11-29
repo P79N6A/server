@@ -73,7 +73,7 @@ class WebResource
              c: ks.map{|k|
                {_: :td, c: Markup[Type][k.R]}}} if head),
            resources.sort_by{|r|
-             (case env['query']['sort']
+             (case env.q['sort']
               when 'date'
                 r[Date].justArray[0]
               else

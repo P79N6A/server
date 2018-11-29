@@ -95,7 +95,7 @@ class WebResource
 
     # environment -> Hash
     def q
-      @r['query'] ||= HTTP.parseQs qs[1..-1]
+      @q ||= HTTP.parseQs qs[1..-1]
     end
 
     # environment -> String
