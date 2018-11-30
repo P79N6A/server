@@ -3,6 +3,7 @@
 ^ads\.
 ^analytics\.
 ^beacons
+^clients.*google
 ^cookiesync\.
 ^dsp\.
 ^geo\.

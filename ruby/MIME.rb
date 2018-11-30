@@ -140,7 +140,7 @@ class WebResource
       'text/x-tex'           => [:triplrTeX],
     }
 
-    MediaMIME = /^(audio|font|image|video)/
+    MediaMIME = /(audio|font|image|video)/
 
     # file -> MIME type via name-mapping
     def fileMIME
