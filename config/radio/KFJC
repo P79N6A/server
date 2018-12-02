@@ -1,3 +1,2 @@
 #!/bin/sh
-su -c '/home/ix/src/pw/sh/open_port 8976'
-mplayer http://netcast.kfjc.org:8976/
+mpv http://netcast.kfjc.org:8976/

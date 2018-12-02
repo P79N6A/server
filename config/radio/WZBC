@@ -1,3 +1,2 @@
 #!/bin/sh
-su -c '/home/ix/src/pw/sh/open_port 4860'
-mplayer http://amber.streamguys.com:4860/
+mpv http://amber.streamguys.com:4860/

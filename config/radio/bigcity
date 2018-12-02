@@ -1,3 +1,2 @@
 #!/bin/sh
-su -c '/home/ix/src/pw/sh/open_port 9154'
-mplayer http://38.96.148.254:9154
+mpv http://38.96.148.254:9154

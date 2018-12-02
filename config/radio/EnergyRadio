@@ -1,3 +1,2 @@
 #!/bin/sh
-su -c '/home/ix/src/pw/sh/open_port 6362'
-mplayer http://162.244.81.33:6362/
+mpv http://162.244.81.33:6362/

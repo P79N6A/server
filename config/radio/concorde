@@ -1,4 +1,3 @@
 #!/bin/sh
-su -c '/home/ix/src/pw/sh/open_port 8170'
-mplayer http://s9.voscast.com:8170
+mpv http://s9.voscast.com:8170
 
