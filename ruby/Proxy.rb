@@ -1,30 +1,5 @@
 class WebResource
   module HTTP
-
-    %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}.map{|host|Host[host] = Short}
-    Host['reddit.com'] = Host['.reddit.com'] = -> r { r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed }
-    Host['imgur.com'] = Host['.imgur.com'] = -> re {
-      if !re.ext.empty? # filename extension in URI
-        if 'i.imgur.com' == re.host # at image host
-          re.cache # cached image
-        else # redirect to image host
-          [301,{'Location' => 'https://i.imgur.com' + re.path},[]]
-        end
-      else # find image URI
-        WrappedImage[re]
-      end}
-    Host['instagram.com'] = Host['.instagram.com'] = -> re {
-      if re.parts[0] == 'p'
-        WrappedImage[re] # find image URI
-      else # find image URIs
-        graph = {}
-        open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
-          unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
-            graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
-          end}
-        [200,{'Content-Type' => 'text/html'},[re.htmlDocument(graph)]]
-      end}
-
     def cache
       url     = 'https://' + host + path + qs
       urlHTTP = 'http://'  + host + path + qs
@@ -67,6 +42,7 @@ class WebResource
             resp = response.read
             unless body.e && body.readFile == resp
 #        re.files R[Twitter + re.path + re.qs].indexTweets
+#r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed
               body.writeFile resp
             end
           end

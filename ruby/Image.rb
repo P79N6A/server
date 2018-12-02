@@ -35,6 +35,11 @@ class WebResource
   end
 
   module HTML
+ #IG        graph = {}
+ #       open('https://'+re.host+re.path).read.scan(/https:\/\/.*?jpg/){|f|
+ #         unless f.match(/\/[sp]\d\d\dx\d\d\d\//)
+ #           graph[f] = {'uri' => f, Type => R[Image], Image => f.R}
+ #         end}
 
     Markup[Image] = -> image,env {
       if image.respond_to? :uri

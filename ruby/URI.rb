@@ -20,8 +20,8 @@ class WebResource < RDF::URI
   PWD = Pathname.new File.expand_path '.'
 
   module URIs
+    Shortener = %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
-
     # shortname for common URI prefixes
     W3 = 'http://www.w3.org/'
     OA = 'https://www.w3.org/ns/oa#'

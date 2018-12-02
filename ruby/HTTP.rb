@@ -60,15 +60,14 @@ class WebResource
 
       # local resources
       return favicon               if path == '/favicon.ico' # site icon
-      return fileResponse          if node.file?      # local static-file
-      return Host[host][self]      if Host[host]      # host lambda
-      return Host[subdomain][self] if Host[subdomain] # subdomain lambda
-      return Path[parts[0]][self]  if Path[parts[0]]  # path-name lambda
-      return (chronoDir parts)     if chronoDir?      # time-slice container
+      return fileResponse          if node.file?     # local static-file
+      return Short[self]   if Shortener.member? host # URL expansion
+      return Path[parts[0]][self]  if Path[parts[0]] # path lambda
+      return (chronoDir parts)     if chronoDir?     # time-slice container
       refs = localNodes
-      return (files refs) if refs && !refs.empty?     # local resource(s)
-      return notfound if localhost?                   # no local resource
-      cache                                           # remote resource(s)
+      return (files refs) if refs && !refs.empty?    # local resource(s)
+      return notfound if localhost?                  # no local resource
+      cache                                          # remote resource(s)
     end
 
     # conditional responder
