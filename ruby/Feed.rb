@@ -5,46 +5,9 @@ class WebResource
     include URIs
 
     def feeds; puts (nokogiri.css '[rel=alternate]').map{|u|join u.attr :href}.uniq end
-    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:fetchFeed) end
-    def fetchFeed
-      newPosts = []
-      head = {}
-      cache = R['/cache/Feed/'+uri.sha2+'/'] # storage
-      etag = cache + 'etag'      # cache etag URI
-      priorEtag = nil            # cache etag value
-      mtime = cache + 'mtime'    # cache mtime URI
-      priorMtime = nil           # cache mtime value
-      body = cache + 'body.atom' # cache body URI
-      if etag.e
-        priorEtag = etag.readFile
-        head["If-None-Match"] = priorEtag unless priorEtag.empty?
-      elsif mtime.e
-        priorMtime = mtime.readFile.to_time
-        head["If-Modified-Since"] = priorMtime.httpdate
-      end
-      head['User-Agent'] = env['HTTP_USER_AGENT']
-      begin
-        open(uri, head) do |response|
-          curEtag = response.meta['etag']
-          curMtime = response.last_modified || Time.now rescue Time.now
-          etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # ETag
-          mtime.writeFile curMtime.iso8601 if curMtime != priorMtime # Last-Modified
-          resp = response.read
-          unless body.e && body.readFile == resp
-            # cache and index new posts
-            body.writeFile resp
-            newPosts.concat ('file:'+body.localPath).R.indexFeed(:format => :feed, :base_uri => uri)
-          end
-        end
-      rescue OpenURI::HTTPError => error
-        msg = error.message
-        puts [uri,msg].join("\t") unless msg.match(/304/)
-      end
-      newPosts
-    rescue Exception => e
-      puts uri, e.class, e.message#, e.backtrace
-    end
-    alias_method :getFeed, :fetchFeed
+    alias_method   :getFeed, :cache
+    alias_method :fetchFeed, :cache
+    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:cache) end
 
     def indexFeed options = {}
       newPosts = []
