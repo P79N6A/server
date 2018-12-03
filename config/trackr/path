@@ -15,4 +15,4 @@ idsync
 /stats
 /tbproxy
 /wp-rum
-([bB]id|[tT]aboola|[tT]rack|/sw).*\.js
+(ad[s_\-]|[bB]id|[tT]aboola|[tT]rack|/sw).*\.js
