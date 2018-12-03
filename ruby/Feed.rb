@@ -5,9 +5,6 @@ class WebResource
     include URIs
 
     def feeds; puts (nokogiri.css '[rel=alternate]').map{|u|join u.attr :href}.uniq end
-    alias_method   :getFeed, :cache
-    alias_method :fetchFeed, :cache
-    def fetchFeeds; open(localPath).readlines.map(&:chomp).map(&:R).map(&:cache) end
 
     def indexFeed options = {}
       newPosts = []

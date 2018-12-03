@@ -109,6 +109,10 @@ class WebResource < RDF::URI
         location = re.q[key.to_s.downcase]
         location ? [302,{'Location' => location},[]] : [404,{},[]]}}
 
+    def multiFetch resources=nil
+      (resources || open(localPath).readlines.map(&:chomp).map(&:R)).map &:cache
+    end
+
   end
   module HTML
     include URIs

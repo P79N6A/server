@@ -1,3 +1,6 @@
 #!/usr/bin/env ruby
 require 'ww'
-ARGV[0].R.send *ARGV[1..-1]
+if ARGV.size >= 2
+  resource = ARGV[1].R
+  resource.send ARGV[0] if resource.respond_to? ARGV[0]
+end
