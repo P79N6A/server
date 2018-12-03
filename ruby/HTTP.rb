@@ -27,10 +27,11 @@ class WebResource
                  else
                    ''
                  end
-      puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[0m " + referrer + "\e[36;1m" + host + " \e[7m" + path + "\e[0m"
 
       # call request method
-      R['//' + host + path].environment(env).send method
+      R['//' + host + path].environment(env).send(method).do{|status,head,body|
+        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[30;1m "  + status.to_s + "\e[0m " + referrer + "\e[36;1m" + host + " \e[7m" + path + "\e[0m"
+        [status,head,body]}
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
        method=='HEAD' ? [] : [[x.class,x.message,x.backtrace].join("\n")]]
@@ -54,20 +55,18 @@ class WebResource
     def PUT;     [202,{},[]]  end
 
     def GET
-      # response headers
-      @r[:Response] = {}
+      @r[:Response] = {} # headers
       @r[:links] = {}
-
-      # local resources
       return favicon               if path == '/favicon.ico' # site icon
       return fileResponse          if node.file?     # local static-file
       return Short[self]   if Shortener.member? host # URL expansion
       return Path[parts[0]][self]  if Path[parts[0]] # path lambda
+      return track                 if track?         # tracker tracker
       return (chronoDir parts)     if chronoDir?     # time-slice container
-      refs = localNodes
-      return (files refs) if refs && !refs.empty?    # local resource(s)
+      refs = localNodes                              # local resource(s)
+      return (files refs) if refs && !refs.empty?
       return notfound if localhost?                  # no local resource
-      cache                                          # remote resource(s)
+      fetch                                          # remote resource(s)
     end
 
     # conditional responder
@@ -88,7 +87,7 @@ class WebResource
     end
 
     def notfound
-      dateMeta
+      dateMeta # page hints, something adjacent may exist
       [404,{'Content-Type' => 'text/html'},[htmlDocument]]
     end
 

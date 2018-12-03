@@ -1,6 +1,7 @@
 class WebResource
   module HTTP
-    def cache
+
+    def fetch
       url     = 'https://' + host + path + qs
       urlHTTP = 'http://'  + host + path + qs
 
@@ -77,5 +78,12 @@ class WebResource
         notfound
       end
     end
+
+    def multiFetch resources=nil
+      (resources || open(localPath).readlines.map(&:chomp).map(&:R)).map &:fetch
+    end
+
+    alias_method :cache, :fetch
+
   end
 end
