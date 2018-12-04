@@ -5,7 +5,6 @@
 ^beacon
 ^cookie
 ^dsp\.
-^geo
 ^meter
 ^metric
 ^pixel
