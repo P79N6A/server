@@ -85,5 +85,8 @@ class WebResource
 
     alias_method :cache, :fetch
 
+    def track
+      [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+    end
   end
 end
