@@ -41,7 +41,7 @@ class WebResource
                    else
                      ''
                    end
-        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[" + color + ";1m "  + status.to_s + "\e[0m " + referrer + "\e[" + color + ";1mhttps://" + host + "\e[7m" + path + "\e[0m"
+        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[" + color + ";1m "  + status.to_s + "\e[0m " + referrer + "\e[" + color + ";1m\e[7mhttps://" + host + "\e[0m\e["+color+";1m" + path + "\e[0m"
         [status,head,body]}
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
