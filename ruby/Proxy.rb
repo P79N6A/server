@@ -86,7 +86,21 @@ class WebResource
     alias_method :cache, :fetch
 
     def track
-      [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+      case host
+      when 'www.google.com'
+        case parts[0]
+        when 'complete'
+          puts qs
+          [200, {'Content-Length' => 0}, []]
+        when 'maps'
+        when 'search'
+          [302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (q['q']||'')}"},[]]
+        else
+          [200, {'Content-Length' => 0}, []]
+        end
+      else
+        [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+      end
     end
   end
 end
