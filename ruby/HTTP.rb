@@ -70,7 +70,7 @@ class WebResource
       @r[:links] = {}
       return favicon               if path == '/favicon.ico' # site icon
       return fileResponse          if node.file?     # local static-file
-      return Short[self]   if Shortener.member? host # URL expansion
+      return expand_URL            if shortURL? # URL expansion
       return Path[parts[0]][self]  if Path[parts[0]] # path lambda
       return track                 if track?         # tracker tracker
       return (chronoDir parts)     if chronoDir?     # time-slice container

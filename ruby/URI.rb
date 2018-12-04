@@ -20,11 +20,14 @@ class WebResource < RDF::URI
   PWD = Pathname.new File.expand_path '.'
 
   module URIs
-    Shortener = %w{t.co bhne.ws bit.ly buff.ly bos.gl w.bos.gl dlvr.it ift.tt cfl.re nyti.ms t.umblr.com ti.me tinyurl.com trib.al ow.ly n.pr a.co youtu.be}
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
 
     def track?
       env.has_key? 'HTTP_TRACK'
+    end
+
+    def shortURL?
+      env.has_key? 'HTTP_SHORTURL'
     end
 
     # shortnames for common URI prefixes
@@ -83,11 +86,11 @@ class WebResource < RDF::URI
     Path = {}
 
     # URL on file at third-party
-    Short = -> re {
-      scheme = 'http' + (InsecureShorteners.member?(re.host) ? '' : 's') + '://'
-      source = scheme + re.host + re.path
+    def expand_URL
+      scheme = 'http' + (InsecureShorteners.member?(host) ? '' : 's') + '://'
+      source = scheme + host + path
       dest = nil
-      cache = R['/cache/URL/' + re.host + (re.path[0..2] || '') + '/' + (re.path[3..-1] || '') + '.u']
+      cache = R['/cache/URL/' + host + (path[0..2] || '') + '/' + (path[3..-1] || '') + '.u']
       if cache.exist?
         dest = cache.readFile
       else
@@ -105,8 +108,8 @@ class WebResource < RDF::URI
         end
         cache.writeFile dest if dest
       end
-      [200, {'Content-Type' => 'text/html'},
-       [re.htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]}
+      [200, {'Content-Type' => 'text/html'}, [htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]
+    end
 
     # unwrap URI wrapped in URI
     Unwrap = -> key {
