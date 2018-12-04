@@ -22,10 +22,10 @@ class WebResource
           cursor = cursor[Contains][name] ||= {name: name, Type => R[Container]}}
 
         # place data in named-graph
-        if !r.fragment # graph document
+        if !r.fragment # graph-document itself
           resource.map{|k,v|
             cursor[k] = cursor[k].justArray.concat v.justArray}
-        else # graph-contained resource
+        else # graph-doc contained resource
           cursor[Contains] ||= {}
           cursor[Contains][r.fragment] = resource
         end}

@@ -85,8 +85,8 @@ class WebResource < RDF::URI
     Host = {}
     Path = {}
 
-    # URL on file at third-party
-    def expand_URL
+    # expand URL on file at third-party server
+    def shortURL
       scheme = 'http' + (InsecureShorteners.member?(host) ? '' : 's') + '://'
       source = scheme + host + path
       dest = nil
@@ -110,13 +110,6 @@ class WebResource < RDF::URI
       end
       [200, {'Content-Type' => 'text/html'}, [htmlDocument({source => {'dest' => dest ? dest.R : nil}})]]
     end
-
-    # unwrap URI wrapped in URI
-    Unwrap = -> key {
-      -> re {
-        location = re.q[key.to_s.downcase]
-        location ? [302,{'Location' => location},[]] : [404,{},[]]}}
-
   end
   module HTML
     include URIs

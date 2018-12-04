@@ -66,15 +66,6 @@ class WebResource
 
   end
   module HTTP
-
-    CSS = [200, {'Content-Type' => 'text/css'},["
-* {background-color: #000; color: #fff; font-family: sans-serif}
-div,p,span,td {background-color: #000 !important; color: #fff !important}
-a {text-decoration:none; font-weight: bold; color: #0f0 !important}
-svg {max-width:18ex}
-header, nav, footer {display: none}
-"]]
-
     def favicon
       '/.conf/icon.png'.R.env(env).fileResponse
     end

@@ -69,11 +69,11 @@ class WebResource
       @r[:Response] = {} # headers
       @r[:links] = {}
       return favicon               if path == '/favicon.ico' # site icon
-      return fileResponse          if node.file?     # local static-file
-      return expand_URL            if shortURL? # URL expansion
-      return Path[parts[0]][self]  if Path[parts[0]] # path lambda
-      return track                 if track?         # tracker tracker
+      return fileResponse          if node.file?     # static-file
+      return shortURL              if shortURL?      # remote URL-expansion
+      return track                 if track?         # activity tracker
       return (chronoDir parts)     if chronoDir?     # time-slice container
+      return Path[path][self]      if Path[path]     # path lambda
       refs = localNodes                              # local resource(s)
       return (files refs) if refs && !refs.empty?
       return notfound if localhost?                  # no local resource
