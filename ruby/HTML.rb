@@ -69,7 +69,7 @@ class WebResource
                                links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}
                             ].map{|e|['  ',e,"\n"]}}, "\n\n",
-                        {_: :body,
+                        {_: :body, style: track? ? 'background-color: red' : '',
                          c: ["\n",
                              link[:up, '&#9650;'],
                              link[:prev, '&#9664;'],

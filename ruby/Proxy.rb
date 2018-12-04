@@ -99,7 +99,16 @@ class WebResource
           [200, {'Content-Length' => 0}, []]
         end
       else
-        [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+        case ext
+        when 'css'
+          [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
+        when 'gif'
+          favicon
+        when 'js'
+          [200, {'Content-Type' => 'application/javascript'}, ["console.log('hello #{host}#{path}');"]]
+        else
+          [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+        end
       end
     end
   end
