@@ -90,7 +90,7 @@ class WebResource
       when 'www.google.com'
         case parts[0]
         when 'complete'
-          puts qs
+          puts q['q']
           [200, {'Content-Length' => 0}, []]
         when 'maps'
         when 'search'
