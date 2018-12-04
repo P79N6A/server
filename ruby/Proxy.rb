@@ -88,16 +88,7 @@ class WebResource
     def track
       case host
       when /google.com$/
-        case parts[0]
-        when 'complete'
-          puts q['q']
-          [200, {'Content-Length' => 0}, []]
-        when 'maps'
-        when 'search'
-          [302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (q['q']||'')}"},[]]
-        else
-          [200, {'Content-Length' => 0}, []]
-        end
+        google
       else
         case ext
         when 'css'
@@ -109,6 +100,28 @@ class WebResource
         else
           [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
         end
+      end
+    end
+
+    def google
+      case parts[0]
+      when 'complete'
+        puts q['q']
+        [200, {'Content-Length' => 0}, []]
+      when 'maps'
+        (if ll = path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+         lat = ll[1] ; lon = ll[2]
+         "https://tools.wmflabs.org/geohack/geohack.php?params=#{lat};#{lon}"
+        elsif q.has_key? 'q'
+          "https://www.openstreetmap.org/search?query=#{URI.escape q['q']}"
+        else
+          'https://www.openstreetmap.org/'
+         end).do{|loc|
+          [302,{'Location' => loc},[]]}
+      when 'search'
+        [302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (q['q']||'')}"},[]]
+      else
+        [200, {'Content-Length' => 0}, []]
       end
     end
   end

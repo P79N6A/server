@@ -22,7 +22,7 @@ class WebResource
 
   end
   module HTTP
-    Path['twitter'] = -> re { graph = {} # shuffle names into groups of 16
+    Path['/twitter'] = -> re { graph = {} # shuffle names into groups of 16
       open('.conf/twitter.com.bu'.R.localPath).readlines.map(&:chomp).shuffle.each_slice(16){|s|
         r = Twitter + '/search?f=tweets&vertical=default&q=' + s.map{|u|'from:'+u.chomp}.intersperse('+OR+').join
         graph[r] = {'uri' => r, Link => r.R, Type => R[Resource]}}
