@@ -19,18 +19,29 @@ class WebResource
       path = Pathname.new(rawpath).expand_path.to_s
       path += '/' if path[-1] != '/' && rawpath[-1] == '/'
 
-      # log
-      referer = env['HTTP_REFERER']
-      referrer = if referer
-                   r = referer.R
-                   (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
-                 else
-                   ''
-                 end
+      # instantiate resource
+      resource = R['//' + host + path].environment env
 
       # call request method
-      R['//' + host + path].environment(env).send(method).do{|status,head,body|
-        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[30;1m "  + status.to_s + "\e[0m " + referrer + "\e[36;1m" + host + " \e[7m" + path + "\e[0m"
+      resource.send(method).do{|status,head,body|
+        # log response
+        color = if resource.track?
+                  '31' # red
+                elsif status==200
+                  '32' # green
+                elsif status==304
+                  '37' # white
+                else
+                  '30' # gray
+                end
+        referer = env['HTTP_REFERER']
+        referrer = if referer
+                     r = referer.R
+                     (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                   else
+                     ''
+                   end
+        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[" + color + ";1m "  + status.to_s + "\e[0m " + referrer + "\e[" + color + ";1mhttps://" + host + "\e[7m" + path + "\e[0m"
         [status,head,body]}
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},
