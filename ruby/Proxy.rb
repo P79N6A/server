@@ -87,7 +87,7 @@ class WebResource
 
     def track
       case host
-      when 'www.google.com'
+      when /google.com$/
         case parts[0]
         when 'complete'
           puts q['q']

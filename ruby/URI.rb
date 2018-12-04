@@ -23,7 +23,8 @@ class WebResource < RDF::URI
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
 
     def track?
-      env.has_key? 'HTTP_TRACK'
+      # TODO parse/handle dstdomain directives if request-tagging frontend not in use
+      (env.has_key? 'HTTP_TRACK') || host.match(/google.com$/)
     end
 
     def shortURL?
