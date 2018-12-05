@@ -37,11 +37,11 @@ class WebResource
         referer = env['HTTP_REFERER']
         referrer = if referer
                      r = referer.R
-                     (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                     "\e[30;1;7m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
                    else
                      ''
                    end
-        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[" + color + ";1m "  + status.to_s + "\e[0m " + referrer + "\e[" + color + ";1m\e[7mhttps://" + host + "\e[0m\e["+color+";1m" + path + "\e[0m"
+        puts "\e[7m" + (method == 'GET' ? ' ' : '') + method + "\e[" + color + ";1m "  + status.to_s + "\e[0m " + referrer + "\e[" + color + ";1;7mhttps://" + host + "\e[0m\e["+color+";1m" + path + "\e[0m"
         [status,head,body]}
     rescue Exception => x
       [500,{'Content-Type'=>'text/plain'},

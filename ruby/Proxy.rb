@@ -2,7 +2,8 @@ class WebResource
   module HTTP
 
     def fetch
-      url     = 'https://' + host + path + qs
+      format = host.match?(/reddit.com$/) ? '.rss' : ''
+      url     = 'https://' + host + path + format +  qs
       urlHTTP = 'http://'  + host + path + qs
 
       # storage
