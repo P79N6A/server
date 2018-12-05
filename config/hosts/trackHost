@@ -2,6 +2,7 @@
 ^ads\.
 \.ads\.
 ^analytic
+^banners\.
 ^beacon
 ^cookie
 ^dsp\.
@@ -10,9 +11,11 @@
 ^pixel
 ^public-api\.
 ^r-login\.
+^servedby\.
 ^stats
 ^sync
 ^tag
 ^talk
 ^track
+tracker
 ^user

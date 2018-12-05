@@ -108,8 +108,8 @@ class WebResource
           [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
         when 'gif'
           favicon
-        when 'jpg'
-          cache
+#        when 'jpg'
+#          cache
         when 'js'
           [200, {'Content-Type' => 'application/javascript'}, []]
         when 'png'
