@@ -97,7 +97,9 @@ class WebResource
         when 'gif'
           favicon
         when 'js'
-          [200, {'Content-Type' => 'application/javascript'}, ["console.log('hello #{host}#{path}');"]]
+          [200, {'Content-Type' => 'application/javascript'}, []]
+        when 'png'
+          cache
         else
           [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
         end
