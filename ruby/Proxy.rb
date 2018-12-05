@@ -8,25 +8,26 @@ class WebResource
 
       # storage
       hash = (path + qs).sha2
+      updates = []
       cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
       etag  = cache + 'etag'  # etag URI
-      mime  = cache + 'MIME'  # MIME URI  TODO use extensions 
-      mtime = cache + 'mtime' # mtime URI TODO use fs mtime
+      mime  = cache + 'MIME'  # MIME URI   TODO use file-extension on body-file
+      mtime = cache + 'mtime' # mtime URI  TODO use fs mtime
       body = cache + 'body'   # body URI
 
       # metadata
       head = {} # header storage
       head['User-Agent'] = env['HTTP_USER_AGENT']
-      priorEtag  = nil # cached-entity "tag" (version identifier)
-      priorMIME  = nil # cached-entity MIME
-      priorMtime = nil # cached-entity mtime
-      priorMIME = curMIME = mime.readFile if mime.e
-      if etag.e
-        priorEtag = etag.readFile
-        head["If-None-Match"] = priorEtag unless priorEtag.empty?
+      _eTag  = nil    # cached-entity "tag" (version identifier)
+      _mimeType = nil # cached-entity MIME
+      _modified = nil # cached-entity mtime
+      _mimeType = mimeType = mime.readFile if mime.e
+      if etag.e # prefer ETag if one exists
+        _eTag = etag.readFile
+        head["If-None-Match"] = _eTag unless _eTag.empty?
       elsif mtime.e
-        priorMtime = mtime.readFile.to_time
-        head["If-Modified-Since"] = priorMtime.httpdate
+        _modified = mtime.readFile.to_time
+        head["If-Modified-Since"] = _modified.httpdate
       end
 
       # fetcher lambda
@@ -34,19 +35,23 @@ class WebResource
         begin
           open(url, head) do |response|
             puts " GET #{url}"
-            curEtag = response.meta['etag']
-            curMIME = response.meta['content-type']
-            curMtime = response.last_modified || Time.now rescue Time.now
-            etag.writeFile curEtag if curEtag && !curEtag.empty? && curEtag != priorEtag # update ETag
-            mime.writeFile curMIME if curMIME != priorMIME                               # update MIME
-            mtime.writeFile curMtime.iso8601 if curMtime != priorMtime                   # update timestamp
+            eTag = response.meta['etag']
+            mimeType = response.meta['content-type']
+            modified = response.last_modified || Time.now rescue Time.now
+            etag.writeFile eTag if eTag && !eTag.empty? && eTag != _eTag # update ETag
+            mime.writeFile mimeType if mimeType != _mimeType             # update MIME
+            mtime.writeFile modified.iso8601 if modified != _modified    # update timestamp
             resp = response.read
             unless body.e && body.readFile == resp
-#        re.files R[Twitter + re.path + re.qs].indexTweets
+              # updated content
+              #        re.files R[Twitter + re.path + re.qs].indexTweets
 #r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed
-# newPosts.concat ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
               body.writeFile resp
-            end
+              case mimeType
+              when 'application/rss+xml'
+                updates.concat ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
+              end
+             end
           end
         rescue OpenURI::HTTPError => e
           case e.message
@@ -59,9 +64,8 @@ class WebResource
         end}
 
       # conditional update
-      if priorMIME && (priorMIME.match?(MediaMIME) || priorMIME.match?(/javascript/) ||
-                       %w{application/octet-stream text/css}.member?(priorMIME))
-        #puts " HIT #{uri}"
+      if _mimeType && (_mimeType.match?(MediaMIME) || _mimeType.match?(/javascript/) ||  %w{application/octet-stream text/css}.member?(_mimeType))
+        #puts "HIT #{uri}"
       else
         begin # HTTPS
           fetch[url]
@@ -71,8 +75,14 @@ class WebResource
       end
 
       # deliver
-      if body.exist?
-        @r[:Response]['Content-Type'] = curMIME
+      if mimeType == 'application/rss+xml'
+        if updates.empty?
+          notfound # TODO return old content or pointers to browsing it
+        else
+          files updates
+        end
+      elsif body.exist?
+        @r[:Response]['Content-Type'] = mimeType
         body.env(env).fileResponse
       else
         notfound
