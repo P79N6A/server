@@ -44,13 +44,16 @@ class WebResource
             resp = response.read
             unless body.e && body.readFile == resp
               # updated content
-              #        re.files R[Twitter + re.path + re.qs].indexTweets
-#r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed
               body.writeFile resp
-              case mimeType
-              when 'application/rss+xml'
-                updates.concat ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
-              end
+              puts "UPDATE #{uri} #{mimeType}"
+              updates.concat case mimeType
+                             when 'application/rss+xml'
+                               ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
+                             when 'text/html'
+                               rdfHTML
+                             else
+                               []
+                             end
              end
           end
         rescue OpenURI::HTTPError => e
