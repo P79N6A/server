@@ -45,7 +45,7 @@ class WebResource
             unless body.e && body.readFile == resp
 #        re.files R[Twitter + re.path + re.qs].indexTweets
 #r.files R['https://www.reddit.com' + r.path + '.rss'].env(r.env).fetchFeed
-# newPosts.concat ('file:'+body.localPath).R.indexFeed(:format => :feed, :base_uri => uri)
+# newPosts.concat ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
               body.writeFile resp
             end
           end
