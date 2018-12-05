@@ -15,7 +15,7 @@ class WebResource
           slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
           doc =  R["/#{time}#{slug}.ttl"]
 
-          unless doc.e # TODO timestamp-check for updates
+          unless doc.e # TODO timestamp-check and archival for updates without a URI change
             doc.dir.mkdir
             resource = doc.stripDoc
             graph << RDF::Statement.new(graph.name, R[Cache], resource)
