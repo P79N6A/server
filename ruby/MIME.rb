@@ -142,9 +142,15 @@ class WebResource
 
     MediaMIME = /(audio|font|image|video)/
 
-    # file -> MIME type via name-mapping
-    def fileMIME
-      @mime ||= # memoize
+    # set MIME type
+    def setMIME m
+      @mime = m
+      self
+    end
+
+    # get MIME type, prefer memo setting with filename and file-sniffing defaults
+    def getMIME
+      @mime ||= # memoized
         (name = path || ''
          prefix = ((File.basename name).split('.')[0]||'').downcase
          suffix = ((File.extname name)[1..-1]||'').downcase
@@ -161,11 +167,11 @@ class WebResource
            `file --mime-type -b #{Shellwords.escape localPath.to_s}`.chomp
          end)
     end
-    alias_method :mime, :fileMIME
+    alias_method :mime, :getMIME
 
     # file -> bool
-    def isRDF # filename-extension matches RDF format
-      %w{atom n3 owl rdf ttl}.member? ext
+    def isRDF
+      %w{atom n3 owl rdf ttl}.member? ext # name-extension matches RDF format
     end
 
     # file -> file
@@ -194,25 +200,28 @@ class WebResource
       doc
     end
 
-    # env -> MIME(s) indexed on q-val
+    # environment -> MIME(s)
     def accept k = 'HTTP_ACCEPT'
       index = {}
       @r[k].do{|v|
-        (v.split /,/).map{|e| # (MIME,q) tuples
-          format, q = e.split /;/ # this pair
-          i = q && q.split(/=/)[1].to_f || 1.0 # q or default
-          index[i]||=[]; index[i].push format.strip}} # index q-val
+        (v.split /,/).map{|e|  # split to (MIME,q) pairs
+          format, q = e.split /;/ # split (MIME,q) pair
+          i = q && q.split(/=/)[1].to_f || 1.0 # find q-value
+          index[i] ||= []
+          index[i].push format.strip}} # index on q-value
       index
     end
 
-    # env -> MIME
+    # environment -> MIME
     def selectMIME default = 'text/html'
       return 'application/atom+xml' if q.has_key?('feed')
-      accept.sort.reverse.map{|q,formats| # sorted index, highest q-value first
-        formats.map{|mime| # formats at q-value
-          return default if mime == '*/*'
+
+      # preference map
+      accept.sort.reverse.map{|q,formats| # index on ordered q-value
+        formats.map{|mime|
+          return default if mime == '*/*' # wildcard
           return mime if RDF::Writer.for(:content_type => mime) ||          # RDF format
-                         %w{application/atom+xml text/html}.member?(mime)}} # supported non-RDF formats
+                         %w{application/atom+xml text/html}.member?(mime)}} # non-RDF
       default # HTML
     end
   end

@@ -102,6 +102,10 @@ class WebResource
       [404,{'Content-Type' => 'text/html'},[htmlDocument]]
     end
 
+    def deny
+      R['.conf/squid/ERR_ACCESS_DENIED'].env(env).setMIME('text/html').fileResponse
+    end
+
     # environment -> Hash
     def q
       @q ||= HTTP.parseQs qs[1..-1]

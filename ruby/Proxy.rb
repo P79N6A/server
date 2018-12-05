@@ -101,7 +101,7 @@ class WebResource
         when 'png'
           cache
         else
-          [200, {'Content-Type' => 'text/html'}, [htmlDocument]]
+          deny
         end
       end
     end
@@ -124,7 +124,7 @@ class WebResource
       when 'search'
         [302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (q['q']||'')}"},[]]
       else
-        [200, {'Content-Length' => 0}, []]
+        deny
       end
     end
   end

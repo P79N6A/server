@@ -202,14 +202,13 @@ class WebResource
       # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # on-file response body
-        else
+          set[0] # response body is file content, return
+        else # merge and transcode
           if format == 'text/html'
-            ::Kernel.load HTML::SourceCode if ENV['DEV']
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF format
+          else # RDF formats
             g = RDF::Graph.new
             set.map{|n|
               g.load n.toRDF.localPath, :base_uri => n.stripDoc }

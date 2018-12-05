@@ -1,8 +1,6 @@
 # coding: utf-8
 class WebResource
   module HTML
-    SourceCode ||= Pathname.new(__FILE__).relative_path_from PWD
-
     # Markup -> HTML
     def self.render x
       case x
