@@ -9,19 +9,18 @@ class WebResource
       # storage
       hash = (path + qs).sha2
       cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
-      etag  = cache + 'etag'  # cached etag URI
-      mime  = cache + 'MIME'  # cached MIME URI
-      mtime = cache + 'mtime' # cached mtime URI
-      body = cache + 'body'   # cached body URI
+      etag  = cache + 'etag'  # etag URI
+      mime  = cache + 'MIME'  # MIME URI  TODO use extensions 
+      mtime = cache + 'mtime' # mtime URI TODO use fs mtime
+      body = cache + 'body'   # body URI
 
-      # load metadata
+      # metadata
       head = {} # header storage
-      priorEtag  = nil # cached etag
-      priorMIME  = nil # cached MIME
-      priorMtime = nil # cached mtime
-      if mime.e
-        priorMIME = curMIME = mime.readFile
-      end
+      head['User-Agent'] = env['HTTP_USER_AGENT']
+      priorEtag  = nil # cached-entity "tag" (version identifier)
+      priorMIME  = nil # cached-entity MIME
+      priorMtime = nil # cached-entity mtime
+      priorMIME = curMIME = mime.readFile if mime.e
       if etag.e
         priorEtag = etag.readFile
         head["If-None-Match"] = priorEtag unless priorEtag.empty?
@@ -29,8 +28,8 @@ class WebResource
         priorMtime = mtime.readFile.to_time
         head["If-Modified-Since"] = priorMtime.httpdate
       end
-      head['User-Agent'] = env['HTTP_USER_AGENT']
 
+      # fetcher lambda
       fetch = -> url {
         begin
           open(url, head) do |response|
@@ -96,6 +95,8 @@ class WebResource
           [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
         when 'gif'
           favicon
+        when 'jpg'
+          cache
         when 'js'
           [200, {'Content-Type' => 'application/javascript'}, []]
         when 'png'
