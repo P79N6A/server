@@ -37,7 +37,7 @@ class WebResource
         referer = env['HTTP_REFERER']
         referrer = if referer
                      r = referer.R
-                     "\e[30;1;7m" + (r.host || '') + "\e[2m" + (r.path || '') + "\e[0m -> "
+                     "\e[37;7m" + (r.host || '') + "\e[0m" + (r.path || '') + "\e[0m -> "
                    else
                      ''
                    end
