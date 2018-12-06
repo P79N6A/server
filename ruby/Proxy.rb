@@ -2,6 +2,7 @@ class WebResource
   module HTTP
 
     def fetch
+      # URL
       format = host.match?(/reddit.com$/) ? '.rss' : ''
       url     = 'https://' + host + path + format +  qs
       urlHTTP = 'http://'  + host + path + qs
@@ -34,7 +35,6 @@ class WebResource
       fetch = -> url {
         begin
           open(url, head) do |response|
-            puts " GET #{url}"
             eTag = response.meta['etag']
             mimeType = response.meta['content-type']
             modified = response.last_modified || Time.now rescue Time.now
@@ -45,12 +45,21 @@ class WebResource
             unless body.e && body.readFile == resp
               # updated content
               body.writeFile resp
-              puts "UPDATE #{uri} #{mimeType}"
+              puts "#{mimeType} :: #{url}"
               updates.concat case mimeType
-                             when 'application/rss+xml'
-                               ('file:'+body.localPath).R.indexRDF(:format => :feed, :base_uri => uri)
-                             when 'text/html'
-                               rdfHTML
+                             when /^application\/atom/
+                               body.indexFeed
+                             when /^application\/rss/
+                               body.indexFeed
+                             when /^text\/html/
+                               if FeedURI[uri]
+                                 puts "WARNING feed #{uri} served with incorrect MIME text/html"
+                                 body.indexFeed
+                               else
+                                 body.indexHTML
+                               end
+                             when /^text\/xml/
+                               body.indexFeed
                              else
                                []
                              end
@@ -66,7 +75,7 @@ class WebResource
           end
         end}
 
-      # conditional update
+      # update cache
       if _mimeType && (_mimeType.match?(MediaMIME) || _mimeType.match?(/javascript/) ||  %w{application/octet-stream text/css}.member?(_mimeType))
         #puts "HIT #{uri}"
       else
@@ -77,18 +86,18 @@ class WebResource
         end
       end
 
-      # deliver
-      if mimeType == 'application/rss+xml'
-        if updates.empty?
-          notfound # TODO return old content or pointers to browsing it
-        else
+      # response
+      if @r
+        if !updates.empty?
           files updates
+        elsif body.exist?
+          @r[:Response]['Content-Type'] = mimeType
+          body.env(env).fileResponse
+        else
+          notfound
         end
-      elsif body.exist?
-        @r[:Response]['Content-Type'] = mimeType
-        body.env(env).fileResponse
       else
-        notfound
+        self
       end
     end
 

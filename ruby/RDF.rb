@@ -29,5 +29,13 @@ class WebResource
     rescue Exception => e
       puts uri, e.class, e.message
     end
+
+    def indexFeed
+      ('file:' + localPath).R.indexRDF(:format => :feed, :base_uri => uri)
+    end
+
+    def indexHTML
+    end
+
   end
 end

@@ -113,7 +113,7 @@ class WebResource
 
     # environment -> String
     def qs
-      '?' + (@r['QUERY_STRING']||'')
+      '?' + ((@r||{})['QUERY_STRING'] || '')
     end
 
     # String -> Hash
