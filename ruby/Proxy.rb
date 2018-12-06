@@ -153,5 +153,9 @@ class WebResource
         deny
       end
     end
+
+    # remove duckduckgo proxy
+    Path['/iu/'] = -> re {[302,{'Location' => re.q['u']},[]]}
+
   end
 end
