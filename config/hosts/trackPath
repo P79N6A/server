@@ -7,7 +7,6 @@ idsync
 /cse
 /get_endscreen
 /get_midroll_info
-/graphql/
 /id(\?|$)
 /log_event
 /pagead
