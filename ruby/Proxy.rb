@@ -51,9 +51,10 @@ class WebResource
                                body.indexFeed
                              when /^application\/rss/
                                body.indexFeed
+                             when /^application\/xml/
+                               body.indexFeed
                              when /^text\/html/
                                if FeedURI[uri]
-                                 puts "WARNING feed #{uri} served with incorrect MIME text/html"
                                  body.indexFeed
                                else
                                  body.indexHTML
@@ -87,7 +88,7 @@ class WebResource
       end
 
       # response
-      if @r
+      if @r # HTTP context
         if !updates.empty?
           files updates
         elsif body.exist?
@@ -99,6 +100,8 @@ class WebResource
       else
         self
       end
+    rescue
+      @r ? notfound : self
     end
 
     def multiFetch resources=nil
