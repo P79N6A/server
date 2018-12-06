@@ -54,7 +54,7 @@ class WebResource
                              when /^application\/xml/
                                body.indexFeed
                              when /^text\/html/
-                               if FeedURI[uri]
+                               if FeedURI[uri] # add to <config/feeds.u> to override defective MIME header 
                                  body.indexFeed
                                else
                                  body.indexHTML
