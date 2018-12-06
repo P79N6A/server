@@ -35,6 +35,7 @@ class WebResource
     end
 
     def indexHTML
+       []
     end
 
   end
