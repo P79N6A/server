@@ -103,6 +103,7 @@ class WebResource
     end
 
     def deny
+#      puts "DENY #{uri} #{env['HTTP_TRACK']}"
       R['.conf/squid/ERR_ACCESS_DENIED'].env(env).setMIME('text/html').fileResponse
     end
 
