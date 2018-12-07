@@ -1,4 +1,4 @@
 #!/bin/sh
 esc=$(printf '\033')
 tail -f log/access.log | grep -v '\(DENIED\|/50[03] \)' |
-    sed -e "s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\(https*://[^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*|\1$esc[34;7m\2$esc[0m $esc[7m\3$esc[0m $esc[35;7m\4$esc[0m \5 $esc[2m\6$esc[0m $esc[1m\7$esc[0m|"
+    sed -e "s|\([^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*[^[:space:]]*[[:space:]]*\)\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\(https*://[^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*\([^[:space:]]*\)[[:space:]]*|\1$esc[35;7m\2$esc[0m $esc[7m\3$esc[0m $esc[35;7m\4$esc[0m \5 $esc[2m\6$esc[0m $esc[1m\7$esc[0m|"

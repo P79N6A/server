@@ -22,7 +22,7 @@ class WebResource < RDF::URI
   module URIs
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
     FeedURI={}
-    open('.conf/feeds.u').readlines.map(&:chomp).map{|feedURI| FeedURI[feedURI] = true}
+    open('.conf/feeds.u').readlines.map(&:chomp).map{|feedURI| FeedURI[feedURI] = true} rescue nil
 
     def track?
       # TODO parse/handle dstdomain directives if request-tagging frontend not in use
