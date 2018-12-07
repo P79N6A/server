@@ -155,7 +155,8 @@ class WebResource
     end
 
     # remove duckduckgo proxy
-    Path['/iu/'] = -> re {[302,{'Location' => re.q['u']},[]]}
+    Path['/iu/']  = -> re {[302,{'Location' => re.q['u']},[]]}
+    Path['/iur/'] = -> re {[302,{'Location' => re.q['image_host']},[]]}
 
   end
 end

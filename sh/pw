@@ -18,8 +18,6 @@ squid -f $app/config/squid.conf
 tmux new-window -t web:1 -d $app/sh/access_log
 
 # data sync
-tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
-
-
+#tmux new-window -t web:2 -d watch -n 28888 rsync -av $DATAPEER:web/`date +%Y/%m` ~/web/`date +%Y`
 
 tmux attach-session -t web
