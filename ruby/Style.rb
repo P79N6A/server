@@ -66,8 +66,14 @@ class WebResource
 
   end
   module HTTP
+
+    # return site-icon
     def favicon
       '/.conf/icon.png'.R.env(env).fileResponse
     end
+
+    # register favicon handler at default location
+    Path['/favicon.ico'] = -> r {r.favicon}
+
   end
 end

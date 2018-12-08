@@ -68,8 +68,8 @@ class WebResource
     def GET
       @r[:Response] = {} # headers
       @r[:links] = {}
+      return Host[host][self]      if Host[host]     # host lambda
       return Path[path][self]      if Path[path]     # path lambda
-      return favicon               if path == '/favicon.ico' # site icon
       return fileResponse          if node.file?     # static-file
       return shortURL              if shortURL?      # remote URL-expansion
       return track                 if track?         # activity tracker

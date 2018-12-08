@@ -84,7 +84,6 @@ class WebResource < RDF::URI
   include URIs
 
   module HTTP
-    # host to lambda mapping
     Host = {}
     Path = {}
 
