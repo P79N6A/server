@@ -45,7 +45,6 @@ class WebResource
             unless body.e && body.readFile == resp
               # updated content
               body.writeFile resp
-              puts "#{mimeType} :: #{url}"
               updates.concat case mimeType
                              when /^application\/atom/
                                body.indexFeed
