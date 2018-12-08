@@ -1,5 +1,6 @@
 class WebResource
   module HTTP
+
     def track
       case host
       when /google.com$/
@@ -8,14 +9,8 @@ class WebResource
         case ext
         when 'css'
           [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
-        when 'gif'
-          favicon
-#        when 'jpg'
-#          cache
         when 'js'
           [200, {'Content-Type' => 'application/javascript'}, []]
-        when 'png'
-          cache
         else
           deny
         end

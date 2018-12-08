@@ -65,12 +65,12 @@ class WebResource
                              end
              end
           end
+        # 304 isn't an error, toss it
         rescue OpenURI::HTTPError => e
           case e.message
           when /304/
-            puts " 304 #{url}"
+#            puts " 304 #{url}"
           else
-            puts [url, e.class, e.message].join ' '
             raise
           end
         end}
