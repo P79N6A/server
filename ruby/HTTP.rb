@@ -103,7 +103,6 @@ class WebResource
     end
 
     def deny
-#      puts "DENY #{uri} #{env['HTTP_TRACK']}"
       R['.conf/squid/ERR_ACCESS_DENIED'].env(env).setMIME('text/html').fileResponse
     end
 
@@ -114,7 +113,11 @@ class WebResource
 
     # environment -> String
     def qs
-      '?' + ((@r||{})['QUERY_STRING'] || '')
+      if @r && @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty?
+        '?' + @r['QUERY_STRING']
+      else
+        ''
+      end
     end
 
     # String -> Hash
