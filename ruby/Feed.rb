@@ -287,7 +287,17 @@ class WebResource
     end
   end
   include Feed
+
+  module HTTP
+
+    Path['feeds'] = -> r {
+
+    }
+
+  end
+
   module Webize
+
     def triplrOPML
       # doc
       base = stripDoc
@@ -296,8 +306,9 @@ class WebResource
       # feeds
       Nokogiri::HTML.fragment(readFile).css('outline[type="rss"]').map{|t|
         s = t.attr 'xmlurl'
-        yield s, Type, R[SIOC+'Feed']
-      }
+        yield s, Type, R[SIOC+'Feed']}
     end
+
   end
+
 end

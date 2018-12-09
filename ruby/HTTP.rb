@@ -66,18 +66,21 @@ class WebResource
     def PUT;     [202,{},[]]  end
 
     def GET
-      @r[:Response] = {} # headers
+      # header table
+      @r[:Response] = {}
+      # document-level references to other documents: pagination, parent/child etc
       @r[:links] = {}
-      return Host[host][self]      if Host[host]     # host lambda
-      return Path[path][self]      if Path[path]     # path lambda
-      return fileResponse          if node.file?     # static-file
-      return shortURL              if shortURL?      # remote URL-expansion
-      return track                 if track?         # activity tracker
-      return (chronoDir parts)     if chronoDir?     # time-slice container
-      refs = localNodes                              # local resource(s)
+
+      return Path[path][self]      if Path[path] # path lambda defined across all hosts
+      return Host[host][self]      if Host[host] # host lambda
+      return fileResponse          if node.file? # static resource
+      return shortURL              if shortURL?  # URL-expansion
+      return track                 if track?     # activity tracker
+      return (chronoDir parts)     if chronoDir? # time-slice container
+      refs = localNodes                          # local resource(s)
       return (files refs) if refs && !refs.empty?
-      return notfound if localhost?                  # no local resource
-      fetch                                          # remote resource(s)
+      return notfound if localhost?
+      fetch                                      # remote resource(s)
     end
 
     # conditional responder
