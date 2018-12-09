@@ -9,6 +9,7 @@
 ^location\.
 ^meter
 ^metric
+^mc\.
 ^mms\.
 ^pixel
 ^public-api\.
@@ -19,5 +20,5 @@
 ^tag
 ^talk
 ^track
-tracker
+track(er|ing)
 ^user
