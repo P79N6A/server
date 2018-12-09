@@ -1,8 +1,10 @@
 .akamaized.net
+.bing.net
 .bostonglobe.com
 .cbsi.com
 .cdninstagram.com
 .cloudflare.com
+.disqus.com
 .drudgereport.com
 .ebaystatic.com
 .facebook.com
@@ -21,6 +23,7 @@
 localhost
 .o0bg.com
 .mixcloud.com
+.rawgit.com
 .redd.it
 .reddit.com
 .redditmedia.com
