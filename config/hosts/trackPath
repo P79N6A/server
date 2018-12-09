@@ -3,6 +3,8 @@
 idsync
 /ad[s_]
 /ajax/bz
+/beacon
+/collector
 /complete/search
 /cse
 /get_endscreen
@@ -16,4 +18,4 @@ idsync
 /stats
 /tbproxy
 /wp-rum
-(ad[s_\-]|[bB]id|[tT]aboola|[tT]rack|/sw).*\.js
+(ad[s_\-]|[bB]id|[tT](aboola|argeting|rack)|/sw).*\.js

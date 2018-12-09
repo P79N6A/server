@@ -6,8 +6,10 @@
 ^beacon
 ^cookie
 ^dsp\.
+^location\.
 ^meter
 ^metric
+^mms\.
 ^pixel
 ^public-api\.
 ^r-login\.
