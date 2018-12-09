@@ -26,11 +26,13 @@ class WebResource
 
   module HTTP
 
-    #direct to unwrapped image file
-    WrappedImage = -> re {
+    UnwrapImage = -> re {
       img = R['https://'+re.host+re.path].nokogiri.css('[property="og:image"]').attr('content').to_s.R
       loc = img.host ? ('https://' + img.host + img.path) : img.path
       [302,{'Location' => loc},[]]}
+
+    # no origin-lookup required, this wins over default shortURL handler via host-lambda precedence
+    Host['y2u.be'] = Host['youtu.be'] = -> re {[302,{'Location' => 'https://www.youtube.com/watch?v=' + re.path[1..-1]},[]]}
 
   end
 
