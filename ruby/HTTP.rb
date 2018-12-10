@@ -1,7 +1,7 @@
 # coding: utf-8
 class WebResource
   module HTTP
-    Methods = %w{HEAD GET OPTIONS}
+    Methods = %w{GET HEAD OPTIONS POST}
     include URIs
 
     def self.call env
@@ -62,7 +62,6 @@ class WebResource
      self.GET.do{| s, h, b|
                  [ s, h, []]} end
     def OPTIONS; [200,{},[]]  end
-    def POST;    [202,{},[]]  end
     def PUT;     [202,{},[]]  end
 
     def GET
@@ -81,6 +80,11 @@ class WebResource
       return (files refs) if refs && !refs.empty?
       return notfound if localhost?
       fetch                                      # remote resource(s)
+    end
+
+    def POST
+      return Receive[path][self] if Receive[path]
+      [202,{},[]]
     end
 
     # conditional responder

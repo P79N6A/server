@@ -31,7 +31,12 @@ class WebResource
   end
   module HTTP
 
-    POST['/graphql'] = -> r {}
+    Receive['/graphql'] = -> r {
+      r.env.map{|k,v|
+        puts "#{k}\t #{v}"
+      }
+      [202,{},[]]
+    }
 
   end
   module HTML

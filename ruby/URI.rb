@@ -88,7 +88,7 @@ class WebResource < RDF::URI
     Host = {}
     Path = {}
     #POST handlers (path mapping)
-    POST = {}
+    Receive = {}
 
     # expand URL on file at third-party server
     def shortURL
