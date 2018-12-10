@@ -5,6 +5,7 @@ class WebResource
     include URIs
 
     def self.call env
+      #env.map{|k,v|puts "#{k}\t #{v}"}
       method = env['REQUEST_METHOD']
       return [202,{},[]] unless Methods.member? method
 

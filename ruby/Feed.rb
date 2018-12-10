@@ -291,7 +291,7 @@ class WebResource
   module HTTP
 
     Path['feeds'] = -> r {
-
+      '.conf/feeds.u'.R.readlines.map(&:chomp).map(&:R)
     }
 
   end

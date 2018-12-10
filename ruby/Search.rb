@@ -31,10 +31,8 @@ class WebResource
   end
   module HTTP
 
-    Receive['/graphql'] = -> r {
-      r.env.map{|k,v|
-        puts "#{k}\t #{v}"
-      }
+    Receive['/graphql'] = Receive['/graphql/v2'] = -> r {
+      r.env.map{|k,v|puts "#{k}\t #{v}"}
       [202,{},[]]
     }
 
