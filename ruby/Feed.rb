@@ -298,6 +298,10 @@ class WebResource
 
   module Webize
 
+    def indexFeed
+      ('file:' + localPath).R.indexRDF(:format => :feed, :base_uri => uri)
+    end
+
     def triplrOPML
       # doc
       base = stripDoc

@@ -5,8 +5,10 @@ class WebResource
       newResources = []
       # load resource
       g = RDF::Repository.load self, options
+
       # visit named-graph resources
       g.each_graph.map{|graph|
+
         # find timestamp for timeline-linkage
         graph.query(RDF::Query::Pattern.new(:s,R[R::Date],:o)).first_value.do{|t|
 
@@ -15,7 +17,7 @@ class WebResource
           slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
           doc =  R["/#{time}#{slug}.ttl"]
 
-          unless doc.e # TODO timestamp-check and archival for updates without a URI change
+          unless doc.e # TODO oldversion-archival for updates happening without a URI change
             doc.dir.mkdir
             resource = doc.stripDoc
             graph << RDF::Statement.new(graph.name, R[Cache], resource)
@@ -28,14 +30,6 @@ class WebResource
       newResources
     rescue Exception => e
       puts uri, e.class, e.message
-    end
-
-    def indexFeed
-      ('file:' + localPath).R.indexRDF(:format => :feed, :base_uri => uri)
-    end
-
-    def indexHTML
-       []
     end
 
   end

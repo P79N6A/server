@@ -4,8 +4,8 @@ class WebResource
     def fetch
       # URL
       format = host.match?(/reddit.com$/) ? '.rss' : ''
-      url     = 'https://' + host + path + format +  qs
-      urlHTTP = 'http://'  + host + path + qs
+      urlHTTPS = 'https://' + host + path + format +  qs
+      urlHTTP  = 'http://'  + host + path + qs
 
       # storage
       hash = (path + qs).sha2
@@ -34,6 +34,8 @@ class WebResource
       # fetcher lambda
       fetch = -> url {
         begin
+          puts "FETCH #{url}" unless @r
+
           open(url, head) do |response|
             eTag = response.meta['etag']
             mimeType = response.meta['content-type']
@@ -65,11 +67,11 @@ class WebResource
                              end
              end
           end
-        # 304 isn't an error, toss it
+        # 304 isn't an error
         rescue OpenURI::HTTPError => e
           case e.message
           when /304/
-#            puts " 304 #{url}"
+#            puts "GET 304 #{uri}" unless @r
           else
             raise
           end
@@ -79,9 +81,9 @@ class WebResource
       if _mimeType && (_mimeType.match?(MediaMIME) || _mimeType.match?(/javascript/) ||  %w{application/octet-stream text/css}.member?(_mimeType))
         #puts "HIT #{uri}"
       else
-        begin # HTTPS
-          fetch[url]
-        rescue # HTTP
+        begin
+          fetch[urlHTTPS]
+        rescue
           fetch[urlHTTP]
         end
       end

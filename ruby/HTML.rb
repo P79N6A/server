@@ -147,6 +147,15 @@ class WebResource
   include HTML
   module Webize
     include URIs
+
+    def indexHTML
+      case host
+      when /twitter.com$/
+
+      else
+      end
+    end
+
     # HTML -> RDF
     def triplrHTML &f
       triplrFile &f
