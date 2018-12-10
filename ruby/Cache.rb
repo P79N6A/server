@@ -78,9 +78,11 @@ class WebResource
         end}
 
       # update cache
-      if _mimeType && (_mimeType.match?(MediaMIME) || _mimeType.match?(/javascript/) ||  %w{application/octet-stream text/css}.member?(_mimeType))
-        #puts "HIT #{uri}"
-      else
+      fresh = false
+      staticResource = _mimeType && (_mimeType.match?(MediaMIME) ||
+                                     _mimeType.match?(/javascript/) ||
+                                     %w{application/octet-stream text/css}.member?(_mimeType))
+      unless fresh || staticResource
         begin
           fetch[urlHTTPS]
         rescue
