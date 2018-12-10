@@ -26,7 +26,6 @@ class WebResource
     def lines; e ? (open localPath).readlines.map(&:chomp) : [] end
 
     def touch
-      dir.mkdir
       FileUtils.touch localPath
     end
 
@@ -62,8 +61,11 @@ class WebResource
     # storage usage
     def du; `du -s #{sh}| cut -f 1`.chomp.to_i end
 
-    # create container
-    def mkdir; FileUtils.mkdir_p localPath unless exist?; self end
+    # make container
+    def mkdir
+      FileUtils.mkdir_p localPath unless exist?
+      self
+    end
 
     # fs-path -> URI
     def self.path p; p.sub(/^\./,'').gsub(' ','%20').gsub('#','%23').R end

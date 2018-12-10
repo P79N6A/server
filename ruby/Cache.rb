@@ -10,7 +10,7 @@ class WebResource
       # storage
       hash = (path + qs).sha2
       updates = []
-      cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
+      cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')].mkdir
       etag  = cache + 'etag'  # etag URI
       mime  = cache + 'MIME'  # MIME URI   TODO use file-extension on body-file
       mtime = cache + 'mtime' # mtime URI  TODO use fs mtime
@@ -34,8 +34,8 @@ class WebResource
       # fetcher lambda
       fetch = -> url {
         begin
-          puts "FETCH #{url}" unless @r
           cache.touch # mark access
+          puts "\e[30;1mGET #{url}\e[0m"
           open(url, head) do |response|
             eTag = response.meta['etag']
             mimeType = response.meta['content-type']
@@ -70,7 +70,8 @@ class WebResource
 
         # 304 isn't an error but is represented as one
         rescue OpenURI::HTTPError => e
-          raise unless e.message.match? /304/
+          unmodified = e.message.match? /304/
+          raise unless unmodified
         end}
 
       # update cache
@@ -99,8 +100,6 @@ class WebResource
       else
         self
       end
-    rescue
-      @r ? notfound : self
     end
 
     def multiFetch resources=nil
