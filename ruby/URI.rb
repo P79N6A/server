@@ -84,8 +84,11 @@ class WebResource < RDF::URI
   include URIs
 
   module HTTP
+    # GET handler lambdas (host and path)
     Host = {}
     Path = {}
+    #POST handlers (path mapping)
+    POST = {}
 
     # expand URL on file at third-party server
     def shortURL

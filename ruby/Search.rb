@@ -15,18 +15,23 @@ class WebResource
       case args.size
       when 0
         return []
-      when 2 # two terms in any order
+      when 2 # two terms
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -il #{args[1].sh}"
-      when 3 # three terms in any order
+      when 3 # three terms
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -il #{args[2].sh}"
-      when 4 # four terms in any order
+      when 4 # four terms
         cmd = "grep -rilZ #{args[0].sh} #{sh} | xargs -0 grep -ilZ #{args[1].sh} | xargs -0 grep -ilZ #{args[2].sh} | xargs -0 grep -il #{args[3].sh}"
-      else # N terms in sequential order of appearance. one scan less invocations..go nuts
+      else # N terms in sequential order of appearance in match in one process invocation (if anyone reaches this, maybe theyre pasting in a sentence in which case the args are ordered)
         pattern = args.join '.*'
         cmd = "grep -ril #{pattern.sh} #{sh}"
       end
       `#{cmd} | head -n 1024`.lines.map{|path| POSIX.path path.chomp}
     end
+
+  end
+  module HTTP
+
+    POST['/graphql'] = -> r {}
 
   end
   module HTML
