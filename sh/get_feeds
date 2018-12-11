@@ -1,0 +1,3 @@
+#!/bin/sh
+cd ~/web
+r multiFetch .conf/feeds.u 
