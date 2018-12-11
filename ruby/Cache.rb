@@ -74,7 +74,7 @@ class WebResource
         end}
 
       # update cache
-      warm = (Time.now - cache.mtime) < (@r ? 144 : 1800)
+      warm = (Time.now - cache.mtime) < (@r ? 10 : 1800) # throttle requests
       staticResource = _mimeType && (_mimeType.match?(MediaMIME) ||
                                      _mimeType.match?(/javascript/) ||
                                      %w{application/octet-stream text/css}.member?(_mimeType))
