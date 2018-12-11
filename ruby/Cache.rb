@@ -35,7 +35,7 @@ class WebResource
       fetch = -> url {
         begin
           cache.touch # mark access
-          puts "\e[30;1mGET #{url}\e[0m"
+          puts "\e[37mGET #{url}\e[0m"
           open(url, head) do |response|
             eTag = response.meta['etag']
             mimeType = response.meta['content-type']
@@ -68,18 +68,17 @@ class WebResource
              end
           end
 
-        # 304 isn't an error but is represented as one
+        # 304 is represented in OpenURi as an error
         rescue OpenURI::HTTPError => e
-          unmodified = e.message.match? /304/
-          raise unless unmodified
+          raise unless e.message.match? /(304|403)/
         end}
 
       # update cache
-      fresh = false
+      warm = (Time.now - cache.mtime) < (@r ? 144 : 1800)
       staticResource = _mimeType && (_mimeType.match?(MediaMIME) ||
                                      _mimeType.match?(/javascript/) ||
                                      %w{application/octet-stream text/css}.member?(_mimeType))
-      unless staticResource || fresh
+      unless staticResource || warm
         begin
           fetch[urlHTTPS]
         rescue

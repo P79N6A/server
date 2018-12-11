@@ -22,7 +22,7 @@ class WebResource
             resource = doc.stripDoc
             graph << RDF::Statement.new(graph.name, R[Cache], resource)
             RDF::Writer.open(doc.localPath){|f|f << graph}
-            puts "http://localhost" + resource
+            puts  "\e[7mhttp://localhost" + resource +  "\e[0m"
             newResources << doc
           end
           true}}
