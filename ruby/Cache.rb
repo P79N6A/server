@@ -47,7 +47,7 @@ class WebResource
             unless body.e && body.readFile == resp
               # update content
               body.writeFile resp
-              updates.concat case mimeType
+              updates.concat(case mimeType
                              when /^application\/atom/
                                body.indexFeed
                              when /^application\/rss/
@@ -64,7 +64,7 @@ class WebResource
                                body.indexFeed
                              else
                                []
-                             end
+                             end || [])
              end
           end
 
