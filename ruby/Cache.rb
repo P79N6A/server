@@ -10,7 +10,12 @@ class WebResource
       # storage
       hash = (path + qs).sha2
       updates = []
-      cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')].mkdir
+      cache = R['/cache/Resource/' + host + path + (path[-1] == '/' ? '' : '/') + (qs && !qs.empty? && (qs.sha2 + '/') || '')]
+      if cache.e
+        repeatVisit = true
+      else
+        cache.mkdir
+      end
       etag  = cache + 'etag'  # etag URI
       mime  = cache + 'MIME'  # MIME URI   TODO use file-extension on body-file
       mtime = cache + 'mtime' # mtime URI  TODO use fs mtime
@@ -74,7 +79,7 @@ class WebResource
         end}
 
       # update cache
-      warm = (Time.now - cache.mtime) < (@r ? 10 : 3600) # throttle requests
+      warm = repeatVisit && (Time.now - cache.mtime) < (@r ? 60 : 3600) # throttle update requests
       staticResource = _mimeType && (_mimeType.match?(MediaMIME) ||
                                      _mimeType.match?(/javascript/) ||
                                      %w{application/octet-stream text/css}.member?(_mimeType))
