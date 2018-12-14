@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require 'open3'
+Open3.popen3("tail -f log/access_log") do |stdout, stderr, status, thread|
+  while line = stdout.gets do 
+    puts line
+  end
+end
+
