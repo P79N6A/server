@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 require 'open3'
-Open3.popen3("tail -f log/access_log") do |stdout, stderr, status, thread|
-  while line = stdout.gets do 
-    puts line
+Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
+  while line = stdout.gets do
+    t = line.split ' '
+    srcAddr,status,method,destAddr,action,mime = [t[2],t[3],t[5],t[6],t[8],t[9]]
+    puts "s  #{srcAddr} d #{destAddr}"
   end
 end
-
