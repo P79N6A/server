@@ -1,9 +1,0 @@
-#/system/bin/sh
-u=$1
-mount /dev/block/sda2 /data/mnt
-mount -o bind /data/mnt/home/$u /data/data/com.termux/files/home
-cd /data/mnt
-mount -o bind /dev dev
-mount -t proc none proc
-mount -o bind /sys sys
-#sh home/$u/src/pw/sh/routes home/$u/src/pw/sh
