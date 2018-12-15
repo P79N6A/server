@@ -1,7 +1,0 @@
-#!/bin/sh
-while true
-do
-    r multiFetch .conf/feeds.u
-    date
-    sleep 8h
-done

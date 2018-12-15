@@ -19,5 +19,6 @@ idsync
 /RecordHit
 /stats
 /tbproxy
+/track
 /wp-rum
 (ad[s_\-]|[bB]id|[tT](aboola|argeting|rack)|/sw).*\.js
