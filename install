@@ -25,7 +25,8 @@ ruby install
 gem install bundler
 bundle install
 
-## init file layout
+##files
 mkdir -p ~/web/log
 cd ~/web
+touch log/access.log
 ln -s ../src/pw/config/ .conf
