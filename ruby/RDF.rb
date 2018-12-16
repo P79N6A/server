@@ -45,9 +45,39 @@ class WebResource
       def each_triple &block; each_statement{|s| block.call *s.to_triple} end
     end
   end
-
   include JSON
+  module MIME
+    # file -> bool
+    def isRDF
+      %w{atom n3 owl rdf ttl}.member? ext # name-extension matches RDF format
+    end
 
+    # file -> file
+    def toRDF
+      isRDF ? self : rdfize
+    end
+
+    # file -> file
+    def rdfize
+      return self if ext == 'e'
+      hash = node.stat.ino.to_s.sha2
+      doc = R['/cache/RDF/'+hash[0..2]+'/'+hash[3..-1]+'.e']
+      unless doc.e && doc.m > m
+        tree = {}
+        triplr = Triplr[mime]
+        unless triplr
+          puts "#{uri}: triplr for #{mime} missing"
+          triplr = :triplrFile
+        end
+        send(*triplr){|s,p,o|
+          tree[s] ||= {'uri' => s}
+          tree[s][p] ||= []
+          tree[s][p].push o}
+        doc.writeFile tree.to_json
+      end
+      doc
+    end
+  end
   module HTTP
     # load JSON and RDF to URI-indexed Hash. HTML and Feed renderers take this as input
     def load set # file-set argument
@@ -56,8 +86,7 @@ class WebResource
       rdf,non_rdf = set.partition &:isRDF
       puts "RDF: #{rdf.join ' '} nonRDF: #{non_rdf.join ' '}"
       # load RDF
-      rdf.map{|n|
-        graph.load n.localPath, :base_uri => n}
+      rdf.map{|n|graph.load n.localPath, :base_uri => n}
       graph.each_triple{|s,p,o| # each triple
         s = s.to_s; p = p.to_s # subject, predicate
         o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object
