@@ -129,13 +129,13 @@ class WebResource
       # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # response body is file content, return
+          set[0] # single file and its MIME is the client preference. no merge or transcode required
         else # merge and transcode
           if format == 'text/html'
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF formats
+          else # RDF format
             g = RDF::Graph.new
             set.map{|n|
               g.load n.toRDF.localPath, :base_uri => n.stripDoc }
@@ -145,7 +145,7 @@ class WebResource
     end
 
     def notfound
-      dateMeta # page hints, something adjacent may exist
+      dateMeta # add temporal page hints as something adjacent may exist
       [404,{'Content-Type' => 'text/html'},[htmlDocument]]
     end
 
