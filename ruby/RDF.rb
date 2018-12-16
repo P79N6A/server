@@ -49,7 +49,12 @@ class WebResource
   module MIME
     # file -> bool
     def isRDF
-      %w{atom n3 owl rdf ttl}.member? ext # name-extension matches RDF format
+      if %w{atom n3 owl rdf ttl}.member? ext
+        return true
+      elsif feedMIME?
+        return true
+      end
+      false
     end
 
     # file -> file
@@ -84,9 +89,13 @@ class WebResource
       g = {}                 # JSON tree
       graph = RDF::Graph.new # RDF graph
       rdf,non_rdf = set.partition &:isRDF
-      puts "RDF: #{rdf.join ' '} nonRDF: #{non_rdf.join ' '}"
+#      puts "RDF: #{rdf.join ' '} nonRDF: #{non_rdf.join ' '}"
       # load RDF
-      rdf.map{|n|graph.load n.localPath, :base_uri => n}
+      rdf.map{|n|
+        opts = {:base_uri => n}
+        opts[:format] = :feed if n.feedMIME?
+        graph.load n.localPath, opts
+      }
       graph.each_triple{|s,p,o| # each triple
         s = s.to_s; p = p.to_s # subject, predicate
         o = [RDF::Node, RDF::URI, WebResource].member?(o.class) ? o.R : o.value # object

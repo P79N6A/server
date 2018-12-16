@@ -286,13 +286,18 @@ class WebResource
                                     c: d[Content]}}]}}]}]
     end
   end
+
   include Feed
 
   module HTTP
 
-    Path['/feeds'] = -> r {
-      r.files ['.conf/feeds.u'.R]
-    }
+    Path['/feeds'] = -> r { r.files ['.conf/feeds.u'.R] }
+
+  end
+
+  module MIME
+
+    def feedMIME?; mime.match? /(atom|rss|xml)/ end
 
   end
 
