@@ -15,10 +15,10 @@ Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
                   else
                     '30' # gray
                   end
-    destColor = if method == 'CONNECT'
-                  '37' # white
-                elsif blocked
+    destColor = if blocked
                   '31' # red
+                elsif method == 'CONNECT'
+                  '32' # green
                 else
                   case action
                   when /(ORIGINAL|DIRECT)/
