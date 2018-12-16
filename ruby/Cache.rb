@@ -73,13 +73,13 @@ class WebResource
              end
           end
 
-        # 304 is represented in OpenURi as an error
+        # excuse 304 responses from exception flow
         rescue OpenURI::HTTPError => e
-          puts "#{url} #{e.class} #{e.message}" unless e.message.match? /304/
+          raise unless e.message.match? /304/
         end}
 
       # update cache
-      warm = repeatVisit && (Time.now - cache.mtime) < (@r ? 60 : 3600) # throttle update requests
+      warm = repeatVisit && (Time.now - cache.mtime) < 80 # throttle update requests
       staticResource = _mimeType && (_mimeType.match?(MediaMIME) ||
                                      _mimeType.match?(/javascript/) ||
                                      %w{application/octet-stream text/css}.member?(_mimeType))
@@ -109,6 +109,8 @@ class WebResource
       else
         self
       end
+    rescue Exception => e
+      puts "#{uri} #{e.class} #{e.message}"
     end
 
     def multiFetch resources=nil
