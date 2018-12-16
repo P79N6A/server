@@ -3,7 +3,26 @@ require 'open3'
 Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
   while line = stdout.gets do
     t = line.split ' '
-    src,status,method,dest,action,mime = [t[2],t[3],t[5],t[6],t[8],t[9]]
-    puts "#{src} #{status} #{method} #{dest} #{action} #{mime}"
+    status,method,addr,action,mime = [t[3],t[5],t[6],t[8],t[9]]
+    statusColor = case status
+                  when /200/
+                    '32' # green
+                  when /304/
+                    '37' # white
+                  when /(40[03]|500)/
+                    '31' # red
+                  else
+                    '30' # gray
+                  end
+    destColor = case action
+                when /(ORIGINAL|DIRECT)/
+                  '32' # green
+                when /NONE/
+                  '31' # red
+                else
+                  '37' # white
+                end
+
+    puts "\e[7m" + method + "\e[" + statusColor + ";1m " + status + "\e[" + destColor + ";1m " + addr + "\e[0m " + "#{action} #{mime}"
   end
 end
