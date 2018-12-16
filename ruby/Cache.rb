@@ -97,7 +97,12 @@ class WebResource
           files updates
         elsif body.exist?
           @r[:Cached] = true
-          files [body]
+          if body.feedMIME? # transcodable MIME
+            files [body]
+          else # origin-server MIME
+            @r[:Response]['Content-Type'] = mimeType
+            body.env(env).fileResponse
+          end
         else
           notfound
         end
