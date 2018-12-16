@@ -78,15 +78,10 @@ class WebResource
                              if graph.empty?
                                HTML.kv (HTML.urifyHash @r), @r
                              else
-                               if q.has_key? 't'
-                                 # Graph -> Markup
-                                 HTML.tabular graph.values, @r
-                               else
-                                 # Graph -> Tree -> Markup
-                                 treeize = Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
-                                 Markup[Container][treeize[graph], @r]
-                               end
-                             end,
+                               # Graph -> Tree -> Markup
+                               treeize = Group[q['g']] || Group[path == '/' ? 'decades' : 'tree']
+                               Markup[Container][treeize[graph], @r]
+                              end,
                              link[:down,'&#9660;'],
                              cssFiles.map{|f|css[f]}, "\n",
                              {_: :script, c: ["\n", '.conf/site.js'.R.readFile]}, "\n"

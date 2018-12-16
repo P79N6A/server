@@ -65,29 +65,5 @@ class WebResource
            "\n"]}}, "\n"]
     end
 
-    # [res0,res1,..,resN] -> Markup
-    def self.tabular resources, env, head = true
-      ks = resources.map(&:keys).flatten.uniq
-      {_: :table, class: :table,
-       c: [({_: :tr,
-             c: ks.map{|k|
-               {_: :td, c: Markup[Type][k.R]}}} if head),
-           resources.sort_by{|r|
-             (case env.q['sort']
-              when 'date'
-                r[Date].justArray[0]
-              else
-                r.R.basename
-              end) || ''
-           }.reverse.map{|r|
-             {_: :tr,
-              c: ks.map{|k|
-                keys = k==Title ? [Title,Image,Video] : [k]
-                {_: :td,
-                 c: keys.map{|key|
-                   r[key].justArray.map{|v|
-                     HTML.value key,v,env }.intersperse(' ')}}}}}]}
-    end
-
   end
 end

@@ -96,8 +96,7 @@ class WebResource
         if !updates.empty?
           files updates
         elsif body.exist?
-          @r[:Response]['Content-Type'] = mimeType
-          body.env(env).fileResponse
+          files [body]
         else
           notfound
         end
