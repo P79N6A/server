@@ -1,4 +1,5 @@
 #!/bin/sh
+
 ## packages
 # https://termux.com/
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
@@ -15,7 +16,8 @@ cd ruby
 ruby install
 gem install bundler
 bundle install
-## files
+
+## file layout
 mkdir -p ~/web/log
 cd ~/web
 touch log/access.log

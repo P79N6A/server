@@ -1,9 +1,12 @@
 #!/bin/sh
-# cert storage-path
+
+# storage path
 cert=$(realpath ~/src/pw/config/CA.pem)
-# mint cert if none found
+
+# mint certificate if none found
 [ -e $cert ] || openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout myCA.pem -out $cert
+
 # hash and install
-hash=$(openssl x509 -inform PEM -subject_hash_old -in $cert -noout)
-su -c "cp $cert /system/etc/security/cacerts/$hash.0"
-su -c "chmod 644 /system/etc/security/cacerts/$hash.0"
+h=$(openssl x509 -inform PEM -subject_hash_old -in $cert -noout)
+su -c "cp $cert /system/etc/security/cacerts/$h.0"
+su -c "chmod 644 /system/etc/security/cacerts/$h.0"
