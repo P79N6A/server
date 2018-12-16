@@ -21,12 +21,15 @@ class WebResource < RDF::URI
 
   module URIs
     InsecureShorteners = %w{bhne.ws bos.gl w.bos.gl}
-    FeedURI={}
-    open('.conf/feeds.u').readlines.map(&:chomp).map{|feedURI| FeedURI[feedURI] = true} rescue nil
+    FeedURL={}
+    open('.conf/feeds.u').readlines.map(&:chomp).map{|u| FeedURL[u] = true} rescue nil
 
     def track?
-      # TODO parse/handle dstdomain directives if request-tagging frontend not in use
-      (env.has_key? 'HTTP_TRACK') || host.match(/google.com$/)
+      env.has_key? 'HTTP_TRACK'
+    end
+
+    def feedURL?
+      (env.has_key? 'HTTP_FEEDURL') || FeedURL[uri] || path == '/feed/'
     end
 
     def shortURL?

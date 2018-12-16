@@ -60,7 +60,7 @@ class WebResource
                              when /^application\/xml/
                                body.indexFeed
                              when /^text\/html/
-                               if FeedURI[uri] # add URL to <feeds.u> to override defective MIME headers
+                               if feedURL? # override defective MIME header
                                  body.indexFeed
                                else
                                  body.indexHTML
