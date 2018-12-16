@@ -14,11 +14,15 @@ Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
                   else
                     '30' # gray
                   end
-    destColor = case action
-                when /(ORIGINAL|DIRECT)/
-                  '32' # green
-                else
+    destColor = if method == 'CONNECT'
                   '37' # white
+                else
+                  case action
+                  when /(ORIGINAL|DIRECT)/
+                    '32' # green
+                  else
+                    '37' # white
+                  end
                 end
 
     puts "\e[7m" + method + "\e[" + statusColor + ";1m " + status + "\e[" + destColor + ";1m " + addr + "\e[0m " + "#{action} #{mime}"
