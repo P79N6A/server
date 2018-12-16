@@ -2,6 +2,7 @@
 class WebResource
   module HTTP
     Methods = %w{GET HEAD OPTIONS POST}
+    include MIME
     include URIs
 
     def self.call env
@@ -103,6 +104,44 @@ class WebResource
           [(env[:Status]||200), env[:Response], [body]]
         end
       end
+    end
+
+    # file -> HTTP Response
+    def fileResponse
+      @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
+      @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
+      @r[:Response].update({'Cache-Control' => 'no-transform'}) if @r[:Response]['Content-Type'].match MediaMIME
+      if q.has_key?('preview') && ext.match(/(mp4|mkv|png|jpg)/i)
+        filePreview
+      else
+        entity @r
+      end
+    end
+
+    # files -> HTTP Response
+    def files set
+      return notfound if !set || set.empty?
+      # header
+      dateMeta
+      format = selectMIME
+      @r[:Response].update({'Link' => @r[:links].map{|type,uri|"<#{uri}>; rel=#{type}"}.intersperse(', ').join}) unless @r[:links].empty?
+      @r[:Response].update({'Content-Type' => %w{text/html text/turtle}.member?(format) ? (format+'; charset=utf-8') : format, 'ETag' => [set.sort.map{|r|[r,r.m]}, format].join.sha2})
+      # body
+      entity @r, ->{
+        if set.size == 1 && set[0].mime == format
+          set[0] # response body is file content, return
+        else # merge and transcode
+          if format == 'text/html'
+            htmlDocument load set
+          elsif format == 'application/atom+xml'
+            renderFeed load set
+          else # RDF formats
+            g = RDF::Graph.new
+            set.map{|n|
+              g.load n.toRDF.localPath, :base_uri => n.stripDoc }
+            g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
+          end
+        end}
     end
 
     def notfound

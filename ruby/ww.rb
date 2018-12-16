@@ -3,7 +3,7 @@
 %w{cgi csv date digest/sha2 dimensions fileutils icalendar json linkeddata mail nokogiri open-uri pathname rack rdf redcarpet shellwords}.map{|r|require r}
 
 # this library
-%w{URI HTML HTTP JSON MIME POSIX RDF Cache Calendar Chat Container Feed Image Mail Post Proxy Search Style Text Time}.map{|i|require_relative i}
+%w{URI MIME HTML HTTP POSIX RDF Cache Calendar Chat Container Feed Image Mail Post Proxy Search Style Text Time}.map{|i|require_relative i}
 
 # class name shorthand
 R = WebResource

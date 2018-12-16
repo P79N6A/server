@@ -162,6 +162,8 @@ class WebResource
            MIMEprefix[prefix]
          elsif Rack::Mime::MIME_TYPES['.'+suffix] # suffix mapping (Rack fallback)
            Rack::Mime::MIME_TYPES['.'+suffix]
+         elsif basename == 'body'
+           R[dirname+'/MIME'].readFile.split(';')[0]
          else
            puts "WARNING undefined extension for #{localPath}, sniffing content"
            `file --mime-type -b #{Shellwords.escape localPath.to_s}`.chomp
