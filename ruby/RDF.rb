@@ -135,12 +135,12 @@ class WebResource
           slug = (graph.name.to_s.sub(/https?:\/\//,'.').gsub(/[\W_]/,'..').sub(/\d{12,}/,'')+'.').gsub(/\.+/,'.')[0..127].sub(/\.$/,'')
           doc =  R["/#{time}#{slug}.ttl"]
 
-          unless doc.e # TODO oldversion-archival for updates happening without a URI change
+          unless doc.e
             doc.dir.mkdir
             resource = doc.stripDoc
             graph << RDF::Statement.new(graph.name, R[Cache], resource)
             RDF::Writer.open(doc.localPath){|f|f << graph}
-            puts  "\e[7mhttp://localhost" + resource +  "\e[0m"
+            puts  "\e[32;7mhttp://localhost" + resource +  "\e[0m"
             newResources << doc
           end
           true}}
