@@ -96,6 +96,7 @@ class WebResource
         if !updates.empty?
           files updates
         elsif body.exist?
+          @r[:Cached] = true
           files [body]
         else
           notfound

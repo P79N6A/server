@@ -46,8 +46,15 @@ class WebResource
       # name -> CSS
       css = -> s {{_: :style, c: ["\n", ".conf/#{s}.css".R.readFile]}}
       cssFiles = %w{site icons code}
+      bgcolor = if track?
+                  'red'
+                elsif @r[:Cached]
+                  'white'
+                else
+                  'black'
+                end
 
-      # header (k,v) -> HTML
+        # header (k,v) -> HTML
       link = -> key, displayname {
         @r[:links][key].do{|uri|
           [uri.R.data({id: key, label: displayname}),
@@ -67,7 +74,7 @@ class WebResource
                                links.map{|type,uri|
                                  {_: :link, rel: type, href: CGI.escapeHTML(uri.to_s)}}}
                             ].map{|e|['  ',e,"\n"]}}, "\n\n",
-                        {_: :body, style: track? ? 'background-color: red' : '',
+                        {_: :body, style: 'background-color: ' + bgcolor,
                          c: ["\n",
                              link[:up, '&#9650;'],
                              link[:prev, '&#9664;'],

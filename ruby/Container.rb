@@ -42,8 +42,8 @@ class WebResource
       contents = container.delete(Contains).do{|cs|
         # children representable as an Object, array of Object, or URI-indexed table
         cs.class == Hash ? cs.values : cs}.justArray
-
-      {class: :container, style: "background: repeating-linear-gradient( -45deg, #000000, #000000 .92em, #{color} .92em, #{color} 1em ); border: .08em solid #{color}",
+      bg = env[:Cached] ? '#ffffff' : '#000000'
+      {class: :container, style: "background: repeating-linear-gradient( -45deg, #{bg}, #{bg} .92em, #{color} .92em, #{color} 1em ); border: .08em solid #{color}",
        c: [title ? Markup[Title][title.justArray[0], env, uri.justArray[0]] : (name ? ("<span class=name style='background-color: #{color}'>"+(CGI.escapeHTML name) + "</span>") : ''),
            contents.map{|c|
              HTML.value(nil,c,env)},
