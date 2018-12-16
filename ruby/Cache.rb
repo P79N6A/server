@@ -75,7 +75,7 @@ class WebResource
 
         # 304 is represented in OpenURi as an error
         rescue OpenURI::HTTPError => e
-          raise unless e.message.match? /(304|403)/
+          puts "#{url} #{e.class} #{e.message}" unless e.message.match? /(304|403)/
         end}
 
       # update cache
