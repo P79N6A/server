@@ -9,7 +9,7 @@ Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
                     '32' # green
                   when /304/
                     '37' # white
-                  when /(40[03]|500)/
+                  when /(40[03]|500|ABORT)/
                     '31' # red
                   else
                     '30' # gray
@@ -17,8 +17,6 @@ Open3.popen3("tail -f log/access.log") do |stdin, stdout, stderr, thread|
     destColor = case action
                 when /(ORIGINAL|DIRECT)/
                   '32' # green
-                when /NONE/
-                  '31' # red
                 else
                   '37' # white
                 end
