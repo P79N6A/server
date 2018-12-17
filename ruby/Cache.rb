@@ -110,7 +110,7 @@ class WebResource
         self
       end
     rescue Exception => e
-      puts "#{uri} #{e.class} #{e.message}"
+      puts "\e[31;1m#{uri}\e[0m #{e.class} #{e.message}"
     end
 
     def multiFetch resources=nil

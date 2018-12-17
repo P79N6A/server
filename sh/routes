@@ -3,10 +3,10 @@ uid=$1
 scripts=$2
 # policy
 echo 1 > /proc/sys/net/ipv4/ip_forward
-iptables  -P INPUT DROP
-ip6tables -P INPUT DROP
-iptables  -P OUTPUT DROP
-ip6tables -P OUTPUT DROP
+#iptables  -P INPUT DROP
+#ip6tables -P INPUT DROP
+#iptables  -P OUTPUT DROP
+#ip6tables -P OUTPUT DROP
 
 #localhost
 iptables  -A INPUT -i lo -j ACCEPT

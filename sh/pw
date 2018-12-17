@@ -18,4 +18,7 @@ tmux send-keys -t web:0 'unicorn -N -l 127.0.0.1:8000 -l [::1]:8000 .conf/rack.r
 # log window
 tmux new-window -t web:1 -d $app/ruby/log_view
 
+# data sync
+tmux new-window -t web:2 -d syncthing -no-browser
+
 tmux attach-session -t web
