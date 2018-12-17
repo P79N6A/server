@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# system packages
+#system dependencies
 #  https://termux.com/
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
 #  https://www.alpinelinux.org/
@@ -10,7 +10,8 @@ which apt-add-repository && su -c 'apt-get install graphicsmagick git ruby ruby-
 #  https://www.archlinux.org/
 which pacman && su -c 'pacman -S graphicsmagick git base-devel ruby ruby-rdoc python-pip pkg-config tmux squid make rsync'
 
-# language packages
+
+#language libraries
 #  https://www.ruby-lang.org/
 cd ruby
 ruby install
@@ -20,7 +21,7 @@ bundle install
 pip install --upgrade pip
 pip install --upgrade pygments
 
-# files
+#files
 #  server root
 mkdir -p ~/web/log; cd ~/web
 #  server log
