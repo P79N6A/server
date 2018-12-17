@@ -111,6 +111,7 @@ class WebResource
       end
     rescue Exception => e
       puts "\e[31;1m#{uri}\e[0m #{e.class} #{e.message}"
+      notfound
     end
 
     def multiFetch resources=nil
