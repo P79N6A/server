@@ -1,24 +1,31 @@
 #!/bin/sh
 
-## packages
-# https://termux.com/
+# system packages
+#  https://termux.com/
 which pkg && pkg install graphicsmagick git ruby ruby-dev grep file findutils pkg-config libxslt-dev clang tmux squid make rsync libffi-dev python python-dev libcrypt-dev openssl-tool openssl-dev
-# https://www.alpinelinux.org/
+#  https://www.alpinelinux.org/
 which apk && su -c 'apk add alpine-sdk graphicsmagick ruby ruby-dev python python3-dev py3-cffi py3-pip openssl-dev rsync libxslt-dev tmux squid'
-# https://www.debian.org/
+#  https://www.debian.org/
 which apt-add-repository && su -c 'apt-get install graphicsmagick git ruby ruby-dev grep file pkg-config libssl-dev libxslt-dev tmux squid make rsync libffi-dev python-dev python3-pip'
-# https://www.archlinux.org/
+#  https://www.archlinux.org/
 which pacman && su -c 'pacman -S graphicsmagick git base-devel ruby ruby-rdoc python-pip pkg-config tmux squid make rsync'
-# https://www.python.org/
-pip install --upgrade pygments
-# https://www.ruby-lang.org/
+
+# language packages
+#  https://www.ruby-lang.org/
 cd ruby
 ruby install
 gem install bundler
 bundle install
+#  https://www.python.org/
+pip install --upgrade pip
+pip install --upgrade pygments
 
-## file layout
-mkdir -p ~/web/log
-cd ~/web
+# files
+#  server root
+mkdir -p ~/web/log; cd ~/web
+#  server log
 touch log/access.log
-ln -s ../src/pw/config/ .conf
+#  configuration files
+ln -s ~/src/pw/config/ .conf
+#  SSL certificate (Android)
+which pkg && sh ~/src/pw/sh/certificate

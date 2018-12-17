@@ -86,6 +86,9 @@ class WebResource
 
     def POST
       return Receive[path][self] if Receive[path]
+      env.map{|k,v|
+        puts [k,v].join "\t"
+      }
       [202,{},[]]
     end
 
