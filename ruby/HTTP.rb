@@ -121,7 +121,7 @@ class WebResource
       }
     end
 
-    # file -> HTTP Response
+    # file -> Response
     def fileResponse
       @r[:Response]['Content-Type'] ||= (%w{text/html text/turtle}.member?(mime) ? (mime + '; charset=utf-8') : mime)
       @r[:Response].update({'ETag' => [m,size].join.sha2, 'Access-Control-Allow-Origin' => '*'})
@@ -133,7 +133,7 @@ class WebResource
       end
     end
 
-    # files -> HTTP Response
+    # file(s) -> Response
     def files set
       return notfound if !set || set.empty?
       # header
@@ -144,7 +144,7 @@ class WebResource
       # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # single file and its MIME is the client preference. return it
+          set[0] # single file and its MIME is client preference. return it
         else # merge and/or transcode
           if format == 'text/html'
             htmlDocument load set
