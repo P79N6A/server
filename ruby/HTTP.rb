@@ -95,11 +95,11 @@ class WebResource
       etags = env['HTTP_IF_NONE_MATCH'].do{|m| m.strip.split /\s*,\s*/ }
       if etags && (etags.include? env[:Response]['ETag'])
         [304, {}, []] # client has entity, exit
-      else # produce entity
-        body = lambda ? lambda.call : self
-        if body.class == WebResource
-          # hand reference to file handler
-          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b|
+      else
+        body = lambda ? lambda.call : self # response body
+        if body.class == WebResource # resource reference
+          # dispatch to file handler
+          (Rack::File.new nil).serving((Rack::Request.new env),body.localPath).do{|s,h,b| # response
             [s,h.update(env[:Response]),b]} # attach metadata and return
         else
           [(env[:Status]||200), env[:Response], [body]]
@@ -110,8 +110,14 @@ class WebResource
     # logging
     def print_header
       env.map{|k,v| puts [k,v].join "\t"}
-      @r['rack.input'].do{|body|
-        puts body.read
+      @r['rack.input'].do{|input|
+        body = input.read
+        case @r['CONTENT_TYPE']
+        when /application\/json/
+          puts ::JSON.pretty_generate ::JSON.parse body
+        else
+          puts body
+        end
       }
     end
 
@@ -138,16 +144,18 @@ class WebResource
       # body
       entity @r, ->{
         if set.size == 1 && set[0].mime == format
-          set[0] # single file and its MIME is the client preference. no merge or transcode required
-        else # merge and transcode
+          set[0] # single file and its MIME is the client preference. return it
+        else # merge and/or transcode
           if format == 'text/html'
             htmlDocument load set
           elsif format == 'application/atom+xml'
             renderFeed load set
-          else # RDF format
+          else # RDF formats
             g = RDF::Graph.new
+
             set.map{|n|
               g.load n.toRDF.localPath, :base_uri => n.stripDoc }
+
             g.dump (RDF::Writer.for :content_type => format).to_sym, :base_uri => self, :standard_prefixes => true
           end
         end}
