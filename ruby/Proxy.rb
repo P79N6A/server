@@ -15,7 +15,6 @@ class WebResource
 
     # Google
     Host['google.com'] = Host['google.com'] = -> re {re.Google}
-
     def Google
       case parts[0]
       when 'complete'
@@ -36,6 +35,8 @@ class WebResource
         deny
       end
     end
+    # YouTube
+    Path['/redirect'] = -> re {[302,{'Location' => re.q['q']},[]]}
 
     # DuckDuckGo
     Path['/iu/']  = -> re {[302,{'Location' => re.q['u']},[]]}

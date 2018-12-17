@@ -21,4 +21,4 @@ idsync
 /tbproxy
 /track
 /wp-rum
-(ad[s_\-]|[bB]id|[tT](aboola|argeting|rack)|/sw).*\.js
+([bB]id|[tT](aboola|arget|rack)|/sw).*\.js
