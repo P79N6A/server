@@ -111,7 +111,7 @@ class WebResource
     def print_header
       env.map{|k,v| puts [k,v].join "\t"}
       @r['rack.input'].do{|body|
-        puts body
+        puts body.read
       }
     end
 
