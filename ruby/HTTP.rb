@@ -170,15 +170,19 @@ class WebResource
       R['.conf/squid/ERR_ACCESS_DENIED'].env(env).setMIME('text/html').fileResponse
     end
 
-    # environment -> Hash
+    # parsed query-string
+    # request-environment or identifier -> Hash
     def q
       @q ||= HTTP.parseQs qs[1..-1]
     end
 
-    # environment -> String
+    # unparsed query-string
+    # request-environment or identifier -> String
     def qs
       if @r && @r['QUERY_STRING'] && !@r['QUERY_STRING'].empty?
-        '?' + @r['QUERY_STRING']
+        '?' +  @r['QUERY_STRING']
+      elsif        query          && !query.empty?
+        '?' +      query
       else
         ''
       end
