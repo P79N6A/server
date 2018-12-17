@@ -119,6 +119,8 @@ class WebResource
         case @r['CONTENT_TYPE']
         when /application\/json/
           puts ::JSON.pretty_generate ::JSON.parse body
+        when /application\/x-www-form-urlencoded/
+          puts CGI.unescape body
         else
           puts body
         end
