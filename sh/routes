@@ -46,6 +46,7 @@ sh $scripts/open_port  8080 # HTTPS transparent
 sh $scripts/open_port  8081 # HTTP  transparent
 sh $scripts/open_port  8888 # HTTPS explicit proxy
 sh $scripts/open_port  9418 # Git
+sh $scripts/open_port 22000 # Syncthing
 sh $scripts/open_port 60001 # Mosh
 sh $scripts/open_port 60002
 sh $scripts/open_port 60003

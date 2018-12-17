@@ -31,7 +31,7 @@ class WebResource
          end).do{|loc|
           [302,{'Location' => loc},[]]}
       when 'search'
-        [302, {'Location' =>  "https://duckduckgo.com/?q=#{URI.escape (q['q']||'')}"},[]]
+        cache
       else
         deny
       end
