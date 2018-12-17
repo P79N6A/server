@@ -2,25 +2,23 @@ class WebResource
   module HTTP
 
     def track
-      case host
-      when /google.com$/
-        google
+      print_header
+      case ext
+      when 'css'
+        [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
+      when 'js'
+        [200, {'Content-Type' => 'application/javascript'}, []]
       else
-        case ext
-        when 'css'
-          [200, {'Content-Type' => 'text/css', 'Content-Length' => 0}, []]
-        when 'js'
-          [200, {'Content-Type' => 'application/javascript'}, []]
-        else
-          deny
-        end
+        deny
       end
     end
 
-    def google
+    # Google
+    Host['google.com'] = Host['google.com'] = -> re {re.Google}
+
+    def Google
       case parts[0]
       when 'complete'
-        puts q['q']
         [200, {'Content-Length' => 0}, []]
       when 'maps'
         (if ll = path.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
@@ -39,7 +37,7 @@ class WebResource
       end
     end
 
-    # remove duckduckgo proxy
+    # DuckDuckGo
     Path['/iu/']  = -> re {[302,{'Location' => re.q['u']},[]]}
     Path['/iur/'] = -> re {[302,{'Location' => re.q['image_host']},[]]}
 

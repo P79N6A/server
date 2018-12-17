@@ -86,9 +86,7 @@ class WebResource
 
     def POST
       return Receive[path][self] if Receive[path]
-      env.map{|k,v|
-        puts [k,v].join "\t"
-      }
+      print_header
       [202,{},[]]
     end
 
@@ -107,6 +105,14 @@ class WebResource
           [(env[:Status]||200), env[:Response], [body]]
         end
       end
+    end
+
+    # logging
+    def print_header
+      env.map{|k,v| puts [k,v].join "\t"}
+      @r['rack.input'].do{|body|
+        puts body
+      }
     end
 
     # file -> HTTP Response
